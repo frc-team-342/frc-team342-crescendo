@@ -19,12 +19,13 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class DriveConstants { // ***UPDATE CONSTANTS***
 
-    public static final double TRACK_WIDTH = Units.inchesToMeters(0); // *
+    public static final double TRACK_WIDTH = Units.inchesToMeters(29   ); // *
 
     public static final double DRIVE_GEAR_RATIO = 1 / 6.75;
     public static final double ROTATE_GEAR_RATIO = 1 / 12.75;
 
-    public static final double MAX_SPEED = 14.5;
+    public static final double MAX_DRIVE_SPEED = 14.5;
+    public static final double MAX_ROTATE_SPEED = 4 * Math.PI;
 
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI;
@@ -35,7 +36,7 @@ public final class Constants {
     public static final double ROTATE_POSITION_CONVERSION = ROTATE_GEAR_RATIO * Math.PI * 2;
     public static final double ROTATE_VELOCITY_CONVERSION = ROTATE_POSITION_CONVERSION / 60;
 
-    public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+    public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
       new Translation2d(TRACK_WIDTH / 2, TRACK_WIDTH / 2),
       new Translation2d(TRACK_WIDTH / 2, -TRACK_WIDTH / 2),
       new Translation2d(-TRACK_WIDTH / 2, TRACK_WIDTH / 2),
@@ -64,7 +65,7 @@ public final class Constants {
     public static int[] BACK_LEFT = {BACK_LEFT_DRIVE_ID, BACK_LEFT_ROTATE_ID};
     public static int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
   }
-  
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

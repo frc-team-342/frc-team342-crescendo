@@ -47,7 +47,7 @@ public class SwerveDrive extends SubsystemBase {
 
     gyro = new AHRS(SPI.Port.kMXP);
 
-    swerveOdometry = new SwerveDriveOdometry(DriveConstants.kinematics, null, positions);
+    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), positions);
 
     fieldOriented = false;
 
@@ -107,7 +107,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MAX_SPEED);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MAX_DRIVE_SPEED);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
@@ -139,12 +139,19 @@ public class SwerveDrive extends SubsystemBase {
     });
   }
 
+  public void stopModules() {
+    frontLeft.stop();
+    frontRight.stop();
+    backLeft.stop();
+    backRight.stop();
+  }
+
   public Command toggleFieldOriented() {
     return run(()->{
       fieldOriented = !fieldOriented;
     });
   }
-  
+
   public boolean getFieldOriented() {
     return fieldOriented;
   }

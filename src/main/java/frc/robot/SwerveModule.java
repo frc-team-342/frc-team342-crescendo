@@ -87,7 +87,7 @@ public class SwerveModule extends SubsystemBase {
   public double getOffsets() {
     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     angle *= 2 * Math.PI;
-    
+
     return angle * (absEncoderReverse ? -1.0 : 1.0); 
   }
 
@@ -111,7 +111,7 @@ public class SwerveModule extends SubsystemBase {
       return;
     }
     state = SwerveModuleState.optimize(state, getState().angle);
-    driveMotor.set(state.speedMetersPerSecond / DriveConstants.MAX_SPEED);
+    driveMotor.set(state.speedMetersPerSecond / DriveConstants.MAX_DRIVE_SPEED);
     rotateMotor.set(rotateController.calculate(getRotatePosition(), state.angle.getRadians()));
   }
 
