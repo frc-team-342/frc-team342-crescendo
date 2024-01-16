@@ -38,10 +38,10 @@ public class DriveWithJoystick extends Command {
   private SwerveDriveKinematics swerveKinematics;
 
   /** Creates a new DriveWithJoystick. */
-  public DriveWithJoystick(SwerveDrive swerve, Joystick joy, boolean fieldOriented) {
+  public DriveWithJoystick(SwerveDrive swerve, XboxController joy, boolean fieldOriented) {
 
-    this.swerve = new SwerveDrive();
-    this.joy = new XboxController(0);
+    this.swerve = swerve;
+    this.joy = joy;
     this.fieldOriented = fieldOriented;
 
     xLimiter = new SlewRateLimiter(3);
@@ -49,7 +49,7 @@ public class DriveWithJoystick extends Command {
     rotateLimiter = new SlewRateLimiter(3);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve);
+    addRequirements(swerve);  
   }
 
   // Called when the command is initially scheduled.
@@ -59,9 +59,9 @@ public class DriveWithJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpeed = joy.getRightX();
-    double ySpeed = joy.getLeftY();
-    double rotateSpeed = joy.getAxisType(4);
+    double xSpeed = joy.getLeftY();
+    double ySpeed = joy.getLeftX();
+    double rotateSpeed = joy.getRawAxis(4);
 
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.15);
     ySpeed = MathUtil.applyDeadband(ySpeed, 0.15);
@@ -83,9 +83,9 @@ public class DriveWithJoystick extends Command {
     SmartDashboard.putNumber("Chassis x-speed", chassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Chassis y-speed", chassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("Chassis rotate-speed", chassisSpeeds.omegaRadiansPerSecond);
-    SmartDashboard.putNumber("Joystick X", joy.getRightX());
-    SmartDashboard.putNumber("Joystick Y", joy.getLeftY());
-    SmartDashboard.putNumber("Joystick Z", joy.getRawAxis(4));
+    // SmartDashboard.putNumber("Joystick X", joy.getRightX());
+    // SmartDashboard.putNumber("Joystick Y", joy.getLeftY());
+    // SmartDashboard.putNumber("Joystick Z", joy.getRawAxis(4));
   }
 
   // Called once the command ends or is interrupted.

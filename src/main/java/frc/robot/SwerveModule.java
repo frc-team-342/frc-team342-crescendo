@@ -36,6 +36,7 @@ public class SwerveModule extends SubsystemBase {
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveID, int rotateID, int magEncoderPort, boolean invertRotate, boolean invertDrive, double encoderOffset) {
     
+    System.out.println("Drive: " + driveID + " rotate: " + rotateID);
     driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
     rotateMotor = new CANSparkMax(rotateID, MotorType.kBrushless);
 

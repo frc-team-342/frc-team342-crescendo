@@ -16,7 +16,6 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
@@ -43,12 +42,26 @@ public class SwerveDrive extends SubsystemBase {
     frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT[0], DriveConstants.FRONT_LEFT[1], 0, false, false, 0);
     frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT[0], DriveConstants.FRONT_RIGHT[1], 0, false, false, 0);
     backLeft = new SwerveModule(DriveConstants.BACK_LEFT[0], DriveConstants.BACK_LEFT[1], 0, false, false, 0);
-    backRight = new SwerveModule(DriveConstants.BACK_RIGHT[0], DriveConstants.BACK_RIGHT[1], 0, false, false, 0);
+    backRight = new SwerveModule(DriveConstants.BACK_RIGHT[0], DriveConstants.BACK_RIGHT[1], 0, false, false, DriveConstants.BACK_RIGHT_OFFSET);
 
     gyro = new AHRS(SPI.Port.kMXP);
 
-    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), positions);
+    positions = new SwerveModulePosition[] {
+      getModulePosition("Front Left"),
+      getModulePosition("Front Right"),
+      getModulePosition("Back Left"),
+      getModulePosition("Back Right"),
+    };
 
+    states = new SwerveModuleState[] {
+      frontLeft.getState(),
+      frontRight.getState(),
+      backLeft.getState(),
+      backRight.getState()
+    };
+
+    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), positions);
+    
     fieldOriented = false;
 
     new Thread(() -> {

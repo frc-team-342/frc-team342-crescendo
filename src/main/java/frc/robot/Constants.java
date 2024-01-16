@@ -55,15 +55,18 @@ public final class Constants {
 
     // Rotate Motor IDs
     private static final int FRONT_LEFT_ROTATE_ID = 5;
-    private static final int FRONT_RIGHT_ROTATE_ID = 6;
+    private static final int FRONT_RIGHT_ROTATE_ID = 6  ;
     private static final int BACK_LEFT_ROTATE_ID = 7;
     private static final int BACK_RIGHT_ROTATE_ID = 8;
 
     // Swerve Modules
-    public static int[] FRONT_LEFT = {FRONT_LEFT_DRIVE_ID, FRONT_LEFT_ROTATE_ID};
-    public static int[] FRONT_RIGHT = {FRONT_RIGHT_DRIVE_ID, FRONT_RIGHT_ROTATE_ID};
-    public static int[] BACK_LEFT = {BACK_LEFT_DRIVE_ID, BACK_LEFT_ROTATE_ID};
-    public static int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
+    public static final int[] FRONT_LEFT = {FRONT_LEFT_DRIVE_ID, FRONT_LEFT_ROTATE_ID};
+    public static final int[] FRONT_RIGHT = {FRONT_RIGHT_DRIVE_ID, FRONT_RIGHT_ROTATE_ID};
+    public static final int[] BACK_LEFT = {BACK_LEFT_DRIVE_ID, BACK_LEFT_ROTATE_ID};
+    public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
+
+    // Offsets
+    public static final double BACK_RIGHT_OFFSET = 1.097 + (Math.PI / 2);
   }
 
   public static class OperatorConstants {
