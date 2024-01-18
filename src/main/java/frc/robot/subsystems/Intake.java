@@ -7,7 +7,10 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+
 
 public class Intake extends SubsystemBase {
 
@@ -25,12 +28,14 @@ public class Intake extends SubsystemBase {
   }
 
 
-  public void spinIntake(double speed){
-    intake.set(speed);
+  public Command spinIntake(double speed){
+    return runEnd( () -> {intake.set(speed);}, () -> {intake.set(0);});
+
+
   }
 
   public void rotateWrist(double angle){
-    wrist.set(50%);
+    wrist.set(.5);
   }
 
   public void raiseElevatorwithSpeed(double speed){
