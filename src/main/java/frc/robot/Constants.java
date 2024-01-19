@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -19,13 +24,15 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class DriveConstants { // ***UPDATE CONSTANTS***
 
-    public static final double TRACK_WIDTH = Units.inchesToMeters(29   ); // *
+    public static final double TRACK_WIDTH = Units.inchesToMeters(29); // *
 
     public static final double DRIVE_GEAR_RATIO = 1 / 6.75;
     public static final double ROTATE_GEAR_RATIO = 1 / 12.75;
 
-    public static final double MAX_DRIVE_SPEED = 14.5;
-    public static final double MAX_ROTATE_SPEED = 4 * Math.PI;
+    public static final double MAX_DRIVE_SPEED = Units.feetToMeters(15.1); // M/S
+    public static final double MAX_ROTATE_SPEED = 4 * Math.PI; // M/S
+    public static final double MAX_ACCELERATION = Units.feetToMeters(5);
+    public static final double MAX_RPS = 5820;
 
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI;
@@ -67,6 +74,14 @@ public final class Constants {
 
     // Offsets
     public static final double BACK_RIGHT_OFFSET = 1.097 + (Math.PI / 2);
+
+    public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
+      new PIDConstants(5, 0, 0), 
+      new PIDConstants(5, 0, 0), 
+      MAX_DRIVE_SPEED, 
+      (TRACK_WIDTH / 2), 
+      new ReplanningConfig()
+      );
   }
 
   public static class OperatorConstants {

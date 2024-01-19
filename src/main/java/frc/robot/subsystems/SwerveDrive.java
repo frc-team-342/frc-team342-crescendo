@@ -4,15 +4,23 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+import java.util.function.Supplier;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +43,8 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModuleState[] states;
 
   private boolean fieldOriented;
+
+  public static ChassisSpeeds chassisSpeeds;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -70,6 +80,8 @@ public class SwerveDrive extends SubsystemBase {
         zeroHeading();
       } catch (Exception e) {}
     }).start();
+
+    configureAutoBuilder();
   }
 
   private SwerveModulePosition getModulePosition(String module){
@@ -167,6 +179,52 @@ public class SwerveDrive extends SubsystemBase {
 
   public boolean getFieldOriented() {
     return fieldOriented;
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+  }
+
+  public void drive(double xInput, double yInput, double rotateInput) {
+    SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+    SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+    SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+    
+    double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
+    double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
+    double rotateSpeed = rotateLimiter.calculate(rotateInput) * DriveConstants.MAX_ROTATE_SPEED;
+
+    if(fieldOriented) {
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, getGyro().getRotation2d());
+    } else {
+      chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
+      }
+    }
+
+    
+  public void drive(ChassisSpeeds speeds) {
+    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(moduleStates);
+  }
+
+  public boolean shouldFlip() {
+    var alliance = DriverStation.getAlliance();
+    if (DriverStation.getAlliance().isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
+  }
+
+  public void configureAutoBuilder() {
+    AutoBuilder.configureHolonomic(
+      this::getPose, 
+      this::resetOdometry,
+      this::getChassisSpeeds,
+      this::drive,
+      DriveConstants.PATH_CONFIG,
+      this::shouldFlip,
+      this
+      ); 
   }
 
   @Override
