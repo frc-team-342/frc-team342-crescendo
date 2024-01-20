@@ -38,7 +38,7 @@ public class RobotContainer {
 
 
     intake = new Intake();
-    xxcontroller = new XboxController(5);
+    xxcontroller = new XboxController(0);
     xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
 
     // Configure the trigger bindings
