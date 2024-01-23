@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void raiseElevatorwithSpeed(double speed){
-    elevator.set(.7);
+    elevator.set(.5);
   }
 
   public void raiseElevatorwithPosition(double pos){
