@@ -5,19 +5,19 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
-<<<<<<< Updated upstream
-=======
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
->>>>>>> Stashed changes
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +38,8 @@ public class SwerveDrive extends SubsystemBase {
   
   private SwerveModulePosition[] positions;
   private SwerveModuleState[] states;
+
+  private ChassisSpeeds chassisSpeeds;
 
   private boolean fieldOriented;
 
@@ -96,7 +98,8 @@ public class SwerveDrive extends SubsystemBase {
     };
 
     swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), positions);
-    
+    chassisSpeeds = new ChassisSpeeds();
+
     fieldOriented = false;
 
     new Thread(() -> {
@@ -204,8 +207,6 @@ public class SwerveDrive extends SubsystemBase {
     return fieldOriented;
   }
 
-<<<<<<< Updated upstream
-=======
   public ChassisSpeeds getChassisSpeeds() {
     return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
   }
@@ -255,7 +256,6 @@ public class SwerveDrive extends SubsystemBase {
       ); 
   }
 
->>>>>>> Stashed changes
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
     sendableBuilder.setSmartDashboardType("Encoder Values");
