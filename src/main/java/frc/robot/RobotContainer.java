@@ -8,6 +8,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import frc.robot.subsystems.SwerveDrive;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +32,7 @@ public class RobotContainer {
   private XboxController joy;
   private DriveWithJoystick driveWithJoystick;
   private JoystickButton toggleFieldOrientedBtn;
+  private JoystickButton goToZeroBtn;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -39,6 +43,7 @@ public class RobotContainer {
     
     swerve.setDefaultCommand(driveWithJoystick);
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
+    goToZeroBtn = new JoystickButton(joy, XboxController.Button.kX.value);
 
     SmartDashboard.putData(swerve);
 
@@ -57,6 +62,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+    goToZeroBtn.whileTrue(swerve.goToZero());
   }
 
   /**
@@ -66,6 +72,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new PathPlannerAuto("Basic Auto");
   }
 }

@@ -4,16 +4,16 @@
 
 package frc.robot;
 
-import com.revrobotics.AnalogInput;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAnalogSensor;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -34,11 +34,13 @@ public class SwerveModule extends SubsystemBase {
   private double encoderOffset;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveID, int rotateID, int magEncoderPort, boolean invertRotate, boolean invertDrive, double encoderOffset) {
+  public SwerveModule(int driveID, int rotateID, int magEncoderPort, boolean invertRotate, boolean invertDrive, double encoderOffset, double[] PID_values) {
     
     System.out.println("Drive: " + driveID + " rotate: " + rotateID);
     driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
     rotateMotor = new CANSparkMax(rotateID, MotorType.kBrushless);
+
+    this.encoderOffset = encoderOffset;
 
     driveMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.setInverted(invertDrive);
@@ -54,9 +56,9 @@ public class SwerveModule extends SubsystemBase {
     rotateEncoder.setPositionConversionFactor(DriveConstants.ROTATE_POSITION_CONVERSION);
     rotateEncoder.setVelocityConversionFactor(DriveConstants.ROTATE_VELOCITY_CONVERSION);
 
-    absoluteEncoder = rotateMotor.getAnalog(SparkAnalogSensor.Mode.kAbsolute);
+    absoluteEncoder = new AnalogInput(magEncoderPort);
 
-    rotateController = new PIDController(DriveConstants.ROTATE_P_VALUE, DriveConstants.ROTATE_I_VALUE, DriveConstants.ROTATE_D_VALUE);
+    rotateController = new PIDController(PID_values[0], PID_values[1], PID_values[2]);
     rotateController.enableContinuousInput(-Math.PI, Math.PI);
 
     resetEncoder();
@@ -80,7 +82,9 @@ public class SwerveModule extends SubsystemBase {
 
   public double getAbsoluteEncoderRad() {
     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
-    angle *= Math.PI;
+    angle *= 2 * Math.PI;
+    angle -= encoderOffset;
+    angle %= 2 * Math.PI;
 
     return angle * (absEncoderReverse ? -1.0 : 1.0);
   }
@@ -119,5 +123,6 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+     
   }
 }

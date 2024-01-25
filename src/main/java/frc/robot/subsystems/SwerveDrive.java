@@ -13,6 +13,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
+<<<<<<< Updated upstream
+=======
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+>>>>>>> Stashed changes
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,10 +44,40 @@ public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
 
-    frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT[0], DriveConstants.FRONT_LEFT[1], 0, false, false, 0);
-    frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT[0], DriveConstants.FRONT_RIGHT[1], 0, false, false, 0);
-    backLeft = new SwerveModule(DriveConstants.BACK_LEFT[0], DriveConstants.BACK_LEFT[1], 0, false, false, 0);
-    backRight = new SwerveModule(DriveConstants.BACK_RIGHT[0], DriveConstants.BACK_RIGHT[1], 0, false, false, DriveConstants.BACK_RIGHT_OFFSET);
+    frontLeft = new SwerveModule(
+      DriveConstants.FRONT_LEFT[0],
+      DriveConstants.FRONT_LEFT[1],
+      DriveConstants.FL_ENCODER_PORT,
+      false,
+      false,
+      DriveConstants.FRONT_LEFT_OFFSET,
+      DriveConstants.PID_VALUES);
+
+    frontRight = new SwerveModule(
+      DriveConstants.FRONT_RIGHT[0], 
+      DriveConstants.FRONT_RIGHT[1],
+      DriveConstants.FR_ENCODER_PORT,
+      false, false,
+      DriveConstants.FRONT_RIGHT_OFFSET,
+      DriveConstants.PID_VALUES);
+   
+    backLeft = new SwerveModule(
+      DriveConstants.BACK_LEFT[0],
+      DriveConstants.BACK_LEFT[1],
+      DriveConstants.BL_ENCODER_PORT,
+      false,
+      false,
+      DriveConstants.BACK_LEFT_OFFSET,
+      DriveConstants.BL_PID_VALUES);  
+      
+    backRight = new SwerveModule(
+      DriveConstants.BACK_RIGHT[0],
+      DriveConstants.BACK_RIGHT[1],
+      DriveConstants.BR_ENCODER_PORT,
+      false,
+      false,
+      DriveConstants.BACK_RIGHT_OFFSET,
+      DriveConstants.PID_VALUES);
 
     gyro = new AHRS(SPI.Port.kMXP);
 
@@ -80,15 +115,15 @@ public class SwerveDrive extends SubsystemBase {
       return position;
     } else
     if(module.equals("Front Right")){
-      position = new SwerveModulePosition(frontRight.getDrivePosition(), new Rotation2d(frontLeft.getRotatePosition()));
+      position = new SwerveModulePosition(frontRight.getDrivePosition(), new Rotation2d(frontRight.getRotatePosition()));
       return position;
     } else
     if(module.equals("Back Left")){
-      position = new SwerveModulePosition(frontLeft.getDrivePosition(), new Rotation2d(frontLeft.getRotatePosition()));
+      position = new SwerveModulePosition(backLeft.getDrivePosition(), new Rotation2d(backLeft.getRotatePosition()));
       return position;
     } else
     if(module.equals("Back Right")){
-      position = new SwerveModulePosition(frontLeft.getDrivePosition(), new Rotation2d(frontLeft.getRotatePosition()));
+      position = new SwerveModulePosition(backRight.getDrivePosition(), new Rotation2d(backRight.getRotatePosition()));
       return position;
     }
     return null;
@@ -141,7 +176,7 @@ public class SwerveDrive extends SubsystemBase {
     states[0] = new SwerveModuleState(frontLeft.getDriveVelocity(), new Rotation2d(frontLeft.getRotatePosition()));
     states[1] = new SwerveModuleState(frontRight.getDriveVelocity(), new Rotation2d(frontRight.getRotatePosition()));
     states[2] = new SwerveModuleState(backLeft.getDriveVelocity(), new Rotation2d(backLeft.getRotatePosition()));
-    states[3] = new SwerveModuleState(backRight.getDriveVelocity(), new Rotation2d(backLeft.getRotatePosition()));
+    states[3] = new SwerveModuleState(backRight.getDriveVelocity(), new Rotation2d(backRight.getRotatePosition()));
     return states;
   }
 
@@ -169,6 +204,58 @@ public class SwerveDrive extends SubsystemBase {
     return fieldOriented;
   }
 
+<<<<<<< Updated upstream
+=======
+  public ChassisSpeeds getChassisSpeeds() {
+    return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+  }
+
+  public void drive(double xInput, double yInput, double rotateInput) {
+    SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+    SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+    SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+    
+    double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
+    double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
+    double rotateSpeed = rotateLimiter.calculate(rotateInput) * DriveConstants.MAX_ROTATE_SPEED;
+
+    if(fieldOriented) {
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, getGyro().getRotation2d());
+    } else {
+      chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
+      }
+  }
+    
+  public void drive(ChassisSpeeds speeds) {
+    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(moduleStates);
+  }
+
+  public boolean shouldFlip() {
+    var alliance = DriverStation.getAlliance();
+    if (DriverStation.getAlliance().isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
+  }
+
+  public double get5V() {
+    return RobotController.getVoltage5V();
+  }
+
+  public void configureAutoBuilder() {
+    AutoBuilder.configureHolonomic(
+      this::getPose, 
+      this::resetOdometry,
+      this::getChassisSpeeds,
+      this::drive,
+      DriveConstants.PATH_CONFIG,
+      this::shouldFlip,
+      this
+      ); 
+  }
+
+>>>>>>> Stashed changes
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
     sendableBuilder.setSmartDashboardType("Encoder Values");
@@ -176,6 +263,7 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.addDoubleProperty("Front Right", () -> frontRight.getOffsets(), null);
     sendableBuilder.addDoubleProperty("Back Left", () -> backLeft.getOffsets(), null);
     sendableBuilder.addDoubleProperty("Back Right", () -> backRight.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("5 Volt", () -> get5V(), null);
   }
 
   @Override

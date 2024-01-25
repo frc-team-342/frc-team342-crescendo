@@ -43,21 +43,26 @@ public final class Constants {
       new Translation2d(-TRACK_WIDTH / 2, -TRACK_WIDTH / 2)
     );
 
-    public static final double ROTATE_P_VALUE = 0.5;
-    public static final double ROTATE_I_VALUE = 0.0;
-    public static final double ROTATE_D_VALUE = 0.0;
+    public static final double[] PID_VALUES = {0.5, 0, 0};
+    public static final double[] BL_PID_VALUES = {0.3, 0, 0.05};
 
     // Drive Motor IDs
-    private static final int FRONT_LEFT_DRIVE_ID = 1;
-    private static final int FRONT_RIGHT_DRIVE_ID = 2;
-    private static final int BACK_LEFT_DRIVE_ID = 3;  
-    private static final int BACK_RIGHT_DRIVE_ID = 4;
+    public static final int FRONT_LEFT_DRIVE_ID = 1;
+    public static final int FRONT_RIGHT_DRIVE_ID = 2;
+    public static final int BACK_LEFT_DRIVE_ID = 3;  
+    public static final int BACK_RIGHT_DRIVE_ID = 4;
 
     // Rotate Motor IDs
-    private static final int FRONT_LEFT_ROTATE_ID = 5;
-    private static final int FRONT_RIGHT_ROTATE_ID = 6  ;
-    private static final int BACK_LEFT_ROTATE_ID = 7;
-    private static final int BACK_RIGHT_ROTATE_ID = 8;
+    public static final int FRONT_LEFT_ROTATE_ID = 5;
+    public static final int FRONT_RIGHT_ROTATE_ID = 6;
+    public static final int BACK_LEFT_ROTATE_ID = 7;
+    public static final int BACK_RIGHT_ROTATE_ID = 8;
+
+    // Encoder Ports
+    public static final int FL_ENCODER_PORT = 1;
+    public static final int FR_ENCODER_PORT = 0;
+    public static final int BL_ENCODER_PORT = 3;
+    public static final int BR_ENCODER_PORT = 2;
 
     // Swerve Modules
     public static final int[] FRONT_LEFT = {FRONT_LEFT_DRIVE_ID, FRONT_LEFT_ROTATE_ID};
@@ -66,7 +71,22 @@ public final class Constants {
     public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
 
     // Offsets
+<<<<<<< Updated upstream
     public static final double BACK_RIGHT_OFFSET = 1.097 + (Math.PI / 2);
+=======
+    public static final double FRONT_LEFT_OFFSET = 1.88;
+    public static final double FRONT_RIGHT_OFFSET = 2.35;
+    public static final double BACK_LEFT_OFFSET = 3.39;
+    public static final double BACK_RIGHT_OFFSET = 1.12;
+
+    public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
+      new PIDConstants(5, 0, 0), 
+      new PIDConstants(5, 0, 0), 
+      MAX_DRIVE_SPEED, 
+      (TRACK_WIDTH / 2), 
+      new ReplanningConfig()
+      );
+>>>>>>> Stashed changes
   }
 
   public static class OperatorConstants {
