@@ -9,10 +9,13 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import frc.robot.subsystems.SwerveDrive;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -72,6 +75,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new PathPlannerAuto("Basic Auto");
+    PathPlannerAuto auto = new PathPlannerAuto("Basic Auto");
+    System.out.println("Got here");
+    return auto;
   }
 }

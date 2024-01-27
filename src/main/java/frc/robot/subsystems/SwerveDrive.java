@@ -5,7 +5,13 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -40,6 +46,11 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModuleState[] states;
 
   private ChassisSpeeds chassisSpeeds;
+  private Supplier<Pose2d> poseSupplier;
+  private Consumer<Pose2d> resetPoseConsumer;
+  private Consumer<ChassisSpeeds> robotRelativeOutput;
+  private Supplier<ChassisSpeeds> chassisSpeedSupplier;
+  private BooleanSupplier shouldFlipSupplier;
 
   private boolean fieldOriented;
 
@@ -100,6 +111,15 @@ public class SwerveDrive extends SubsystemBase {
     swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), positions);
     chassisSpeeds = new ChassisSpeeds();
 
+    poseSupplier = () -> getPose();
+    resetPoseConsumer = pose -> resetOdometry(pose);
+    robotRelativeOutput = inputSpeed -> {
+      // System.out.println(inputSpeed);
+      drive(inputSpeed);
+    };
+    chassisSpeedSupplier = () -> getChassisSpeeds();
+    shouldFlipSupplier = () -> shouldFlip();
+
     fieldOriented = false;
 
     new Thread(() -> {
@@ -108,6 +128,8 @@ public class SwerveDrive extends SubsystemBase {
         zeroHeading();
       } catch (Exception e) {}
     }).start();
+    
+    configureAutoBuilder();
   }
 
   private SwerveModulePosition getModulePosition(String module){
@@ -228,6 +250,7 @@ public class SwerveDrive extends SubsystemBase {
   }
     
   public void drive(ChassisSpeeds speeds) {
+    System.out.println(speeds);
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates);
   }
@@ -246,14 +269,15 @@ public class SwerveDrive extends SubsystemBase {
 
   public void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
-      this::getPose, 
-      this::resetOdometry,
-      this::getChassisSpeeds,
-      this::drive,
+      poseSupplier, 
+      resetPoseConsumer,
+      chassisSpeedSupplier,
+      robotRelativeOutput,
       DriveConstants.PATH_CONFIG,
-      this::shouldFlip,
+      shouldFlipSupplier,
       this
-      ); 
+      );
+    System.out.println("Auto builder configured");
   }
 
   @Override

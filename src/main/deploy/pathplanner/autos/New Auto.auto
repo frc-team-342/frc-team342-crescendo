@@ -7,6 +7,7 @@
     },
     "rotation": 0
   },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
