@@ -24,8 +24,8 @@ import frc.robot.subsystems.Intake;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //xxcontroller - xbox controller
-    private final XboxController xxcontroller; 
-    private final JoystickButton xButton;
+    //private final XboxController xxcontroller; 
+    //private final JoystickButton xButton;
 
     private final Intake intake;
 
@@ -38,9 +38,7 @@ public class RobotContainer {
 
 
     intake = new Intake();
-    xxcontroller = new XboxController(0);
-    xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
-
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -56,7 +54,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
-    xButton.whileTrue(intake.spinIntake(0.5));
+//    xButton.whileTrue(intake.spinIntake(0.5));
 
   }
 

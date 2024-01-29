@@ -10,9 +10,12 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Intake;
+
  
 
 /**
@@ -28,6 +31,10 @@ public class Robot extends TimedRobot {
   private CANSparkMax m_motor;
   private SparkPIDController pid_elevator;
 
+  private XboxController xxcontroller; 
+  private JoystickButton xButton;
+//took away final - in robot containter it used final
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -41,6 +48,9 @@ public class Robot extends TimedRobot {
     
     pid_elevator = m_motor.getPIDController();
     pid_elevator.setP(.05);
+
+    xxcontroller = new XboxController(0);
+    xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
       
   }
 
@@ -98,7 +108,18 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    pid_elevator.setReference(378, CANSparkMax.ControlType.kPosition);
+    double rot = 3;
+    double gr = 12.75;
+    double input = rot/gr*42;
+
+    if (xxcontroller.getXButtonPressed()){
+     pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);
+    }
+    else {
+      pid_elevator.setReference(0, CANSparkMax.ControlType.kPosition);
+    }
+
+//    pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);
 //gear ratio 12.76 : 1
 
 
