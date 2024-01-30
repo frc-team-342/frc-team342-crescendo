@@ -83,9 +83,6 @@ public class DriveWithJoystick extends Command {
     SmartDashboard.putNumber("Chassis x-speed", chassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Chassis y-speed", chassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("Chassis rotate-speed", chassisSpeeds.omegaRadiansPerSecond);
-    // SmartDashboard.putNumber("Joystick X", joy.getRightX());
-    // SmartDashboard.putNumber("Joystick Y", joy.getLeftY());
-    // SmartDashboard.putNumber("Joystick Z", joy.getRawAxis(4));
   }
 
   // Called once the command ends or is interrupted.

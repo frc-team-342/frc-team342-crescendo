@@ -12,6 +12,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -30,6 +31,8 @@ public final class Constants {
     public static final double ROTATE_GEAR_RATIO = 1 / 12.75;
 
     public static final double MAX_DRIVE_SPEED = Units.feetToMeters(15.1); // M/S
+    public static final double SLOWER_DRIVE_SPEED = Units.feetToMeters(5);
+
     public static final double MAX_ROTATE_SPEED = 4 * Math.PI; // M/S
     public static final double MAX_ACCELERATION = Units.feetToMeters(5);
     public static final double MAX_RPS = 5820;
@@ -86,7 +89,7 @@ public final class Constants {
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 
       new PIDConstants(5, 0, 0), 
-      MAX_DRIVE_SPEED, 
+      SLOWER_DRIVE_SPEED, 
       (TRACK_WIDTH / 2), 
       new ReplanningConfig()
       );

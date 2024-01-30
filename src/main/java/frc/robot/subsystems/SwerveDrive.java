@@ -247,11 +247,18 @@ public class SwerveDrive extends SubsystemBase {
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
       }
+    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(moduleStates);
   }
     
   public void drive(ChassisSpeeds speeds) {
+
+    ChassisSpeeds targetSpeeds = new ChassisSpeeds(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+    
     System.out.println(speeds);
-    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    
+    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds);
     setModuleStates(moduleStates);
   }
 
