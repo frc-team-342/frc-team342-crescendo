@@ -54,6 +54,10 @@ public class SwerveDrive extends SubsystemBase {
 
   private boolean fieldOriented;
 
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
 
@@ -234,9 +238,6 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
-    SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-    SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-    SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
     
     double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
     double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
