@@ -254,7 +254,7 @@ public class SwerveDrive extends SubsystemBase {
     
   public void drive(ChassisSpeeds speeds) {
 
-    ChassisSpeeds targetSpeeds = new ChassisSpeeds(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    ChassisSpeeds targetSpeeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     
     System.out.println(speeds);

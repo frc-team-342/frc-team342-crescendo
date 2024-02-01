@@ -54,7 +54,7 @@ public final class Constants {
     );
 
     public static final double[] PID_VALUES = {0.5, 0, 0};
-    public static final double[] BL_PID_VALUES = {0.3, 0, 0.05};
+    public static final double[] BL_PID_VALUES = {0.5, 0.075, 0};
 
     // Drive Motor IDs
     public static final int FRONT_LEFT_DRIVE_ID = 1;
