@@ -12,19 +12,25 @@ import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.Timer;
 
 
-public class DriveFoward extends Command {
+public class TimedDrive extends Command {
   /** Creates a new DriveFoward. */
 
   private final Timer m_timer = new Timer();
-  private SwerveDrive swere;
+  private SwerveDrive swerve;
   private double driveTime;
+  private double xSpeed;
+  private double ySpeed;
   
-  public DriveFoward( SwerveDrive swere, double driveTime) {
+  public TimedDrive( SwerveDrive swerve, double driveTime, double xSpeed, double ySpeed ) {
     // Use addRequirements() here to declare subsystem dependencies.
     
-      this.swere = swere; 
+      this.swerve = swerve; 
       this.driveTime = driveTime; 
-      addRequirements(swere);
+      this.xSpeed = xSpeed;
+      this.ySpeed = ySpeed;
+    
+
+      addRequirements(swerve);
 
 
 
@@ -46,14 +52,14 @@ public class DriveFoward extends Command {
   public void execute() {
 
     System.out.println("Timer: " + m_timer.get() + " ");
-    swere.drive(0, .2, 0);
+    swerve.drive(xSpeed, ySpeed, 0);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swere.stopModules();
+    swerve.stopModules();
   }
 
   // Returns true when the command should end.

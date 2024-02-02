@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.DriveFoward;
+import frc.robot.commands.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import frc.robot.subsystems.SwerveDrive;
 
@@ -38,7 +38,7 @@ public class RobotContainer {
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton goToZeroBtn;
   private JoystickButton timedDriveButton;
-  private DriveFoward driveFoward;
+  private TimedDrive driveFoward;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,7 +47,7 @@ public class RobotContainer {
     joy = new XboxController(0);
     driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
     timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
-    driveFoward = new DriveFoward(swerve, 2);
+    driveFoward = new TimedDrive(swerve, 2, 0, .2);
 
     
     swerve.setDefaultCommand(driveWithJoystick);
