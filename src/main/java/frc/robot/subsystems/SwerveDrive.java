@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -25,6 +26,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -51,6 +53,7 @@ public class SwerveDrive extends SubsystemBase {
   private Consumer<ChassisSpeeds> robotRelativeOutput;
   private Supplier<ChassisSpeeds> chassisSpeedSupplier;
   private BooleanSupplier shouldFlipSupplier;
+  private Field2d field;
 
   private boolean fieldOriented;
 
@@ -113,14 +116,13 @@ public class SwerveDrive extends SubsystemBase {
 
     poseSupplier = () -> getPose();
     resetPoseConsumer = pose -> resetOdometry(pose);
-    robotRelativeOutput = inputSpeed -> {
-      // System.out.println(inputSpeed);
-      drive(inputSpeed);
-    };
+    robotRelativeOutput = inputSpeed -> drive(inputSpeed);
     chassisSpeedSupplier = () -> getChassisSpeeds();
     shouldFlipSupplier = () -> shouldFlip();
 
     fieldOriented = false;
+
+    field = new Field2d();
 
     new Thread(() -> {
       try {
@@ -180,7 +182,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MAX_DRIVE_SPEED);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.SLOWER_DRIVE_SPEED);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
@@ -253,10 +255,10 @@ public class SwerveDrive extends SubsystemBase {
     
   public void drive(ChassisSpeeds speeds) {
 
-    ChassisSpeeds targetSpeeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-    targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+    targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, 0.02);
     
-    System.out.println(speeds);
+    System.out.println(targetSpeeds);
     
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds);
     setModuleStates(moduleStates);
@@ -285,6 +287,9 @@ public class SwerveDrive extends SubsystemBase {
       this
       );
     System.out.println("Auto builder configured");
+
+    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
+    SmartDashboard.putData("Field", field);
   }
 
   @Override

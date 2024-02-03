@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.1457600058057265,
+      "y": 6.816647919010124
+    },
+    "rotation": 0.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -9,6 +15,12 @@
           "type": "path",
           "data": {
             "pathName": "Deposit N1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         }
       ]
