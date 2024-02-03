@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 public class Intake extends SubsystemBase {
@@ -52,7 +54,6 @@ public class Intake extends SubsystemBase {
     
     () -> {intake.set(0);});
 
-
   }
 
   //change to use position not percent
@@ -72,5 +73,6 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("DI", sensor1.get());
   }
 }

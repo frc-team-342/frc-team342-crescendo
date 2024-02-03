@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -24,8 +25,8 @@ import frc.robot.subsystems.Intake;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //xxcontroller - xbox controller
-    //private final XboxController xxcontroller; 
-    //private final JoystickButton xButton;
+    private final XboxController xxcontroller; 
+    private final JoystickButton xButton;
 
     private final Intake intake;
 
@@ -36,8 +37,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-
     intake = new Intake();
+    xxcontroller = new XboxController(0);
+    xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
     
     // Configure the trigger bindings
     configureBindings();
@@ -54,7 +56,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
-//    xButton.whileTrue(intake.spinIntake(0.5));
+   xButton.whileTrue(intake.spinIntake(0.5));
 
   }
 
