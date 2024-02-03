@@ -14,13 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Deposit N1"
+            "pathName": "Collect N1"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Deposit N1"
           }
         }
       ]
