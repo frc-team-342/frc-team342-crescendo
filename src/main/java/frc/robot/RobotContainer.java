@@ -75,7 +75,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    PathPlannerAuto auto = new PathPlannerAuto("Basic Auto");
+    PathPlannerAuto auto = new PathPlannerAuto("New Auto");
     System.out.println("Got here");
     return auto;
   }

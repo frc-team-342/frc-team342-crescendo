@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1457600058057265,
-      "y": 6.816647919010124
+      "x": 1.2776951268188257,
+      "y": 5.511956166769477
     },
     "rotation": 0.0
   },
@@ -20,13 +20,19 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Deposit N1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         }
       ]

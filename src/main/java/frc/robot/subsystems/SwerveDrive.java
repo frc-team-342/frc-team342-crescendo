@@ -55,6 +55,10 @@ public class SwerveDrive extends SubsystemBase {
   private BooleanSupplier shouldFlipSupplier;
   private Field2d field;
 
+  SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+
   private boolean fieldOriented;
 
   /** Creates a new SwerveDrive. */
@@ -236,10 +240,6 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
-    SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-    SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-    SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
-    
     double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
     double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
     double rotateSpeed = rotateLimiter.calculate(rotateInput) * DriveConstants.MAX_ROTATE_SPEED;
@@ -255,7 +255,7 @@ public class SwerveDrive extends SubsystemBase {
     
   public void drive(ChassisSpeeds speeds) {
 
-    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vyMetersPerSecond, -speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
     targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, 0.02);
     
     System.out.println(targetSpeeds);
