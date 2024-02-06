@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.subsystems.Intake;
+
+
 
 
  
@@ -121,8 +124,6 @@ public class Robot extends TimedRobot {
       pid_elevator.setReference(0, CANSparkMax.ControlType.kPosition);
     }
 
-  SmartDashboard.getData("intake", intake);
-  //fix this ^ trying to put DIOs on smart dashbaord !
 
 
 //    pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);

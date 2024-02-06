@@ -14,7 +14,10 @@ package frc.robot;
  */
 public final class Constants {
 
+  public static final int INTAKE_SENSOR_0 = 0;
   public static final int INTAKE_SENSOR_1 = 1;
+  public static final int INTAKE_SENSOR_2 = 2;
+  public static final int INTAKE_SENSOR_3 = 3;
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

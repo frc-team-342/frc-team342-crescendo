@@ -24,7 +24,11 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax wrist;
   private final CANSparkMax elevator;
   private final SparkPIDController pid_elevator;
+  
+  private DigitalInput sensor0;
   private DigitalInput sensor1;
+  private DigitalInput sensor2;
+  private DigitalInput sensor3;
 
 
   /** Creates a new Intake. */
@@ -34,7 +38,10 @@ public class Intake extends SubsystemBase {
     elevator = new CANSparkMax(3, MotorType.kBrushless);
     pid_elevator = elevator.getPIDController();
 
+    sensor0 = new DigitalInput(Constants.INTAKE_SENSOR_0);
     sensor1 = new DigitalInput(Constants.INTAKE_SENSOR_1);
+    sensor2 = new DigitalInput(Constants.INTAKE_SENSOR_2);
+    sensor3 = new DigitalInput(Constants.INTAKE_SENSOR_3);
   }
 
 
@@ -56,6 +63,17 @@ public class Intake extends SubsystemBase {
 
   }
 
+  public Command getSensors(){
+    return runEnd( () -> {
+      SmartDashboard.putBoolean("sensor0", sensor0.get());
+      SmartDashboard.putBoolean("sensor1", sensor1.get());
+      SmartDashboard.putBoolean("sensor2", sensor2.get());
+      SmartDashboard.putBoolean("sensor3", sensor3.get());
+    },
+
+    () -> {});
+  }
+
   //change to use position not percent
   public void rotateWrist(double angle){
     wrist.set(.5);
@@ -73,6 +91,6 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("DI", sensor1.get());
+   
   }
 }
