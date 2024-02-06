@@ -20,14 +20,16 @@ public class TimedDrive extends Command {
   private double driveTime;
   private double xSpeed;
   private double ySpeed;
+  private double rotate;
   
-  public TimedDrive( SwerveDrive swerve, double driveTime, double xSpeed, double ySpeed ) {
+  public TimedDrive( SwerveDrive swerve, double driveTime, double xSpeed, double ySpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     
       this.swerve = swerve; 
       this.driveTime = driveTime; 
       this.xSpeed = xSpeed;
       this.ySpeed = ySpeed;
+      this.rotate = rotate;
     
 
       addRequirements(swerve);
@@ -52,7 +54,7 @@ public class TimedDrive extends Command {
   public void execute() {
 
     System.out.println("Timer: " + m_timer.get() + " ");
-    swerve.drive(xSpeed, ySpeed, 0);
+    swerve.drive(xSpeed, ySpeed, rotate);
 
   }
 

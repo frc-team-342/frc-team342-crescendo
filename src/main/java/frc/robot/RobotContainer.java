@@ -47,7 +47,7 @@ public class RobotContainer {
     joy = new XboxController(0);
     driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
     timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
-    driveFoward = new TimedDrive(swerve, 2, 0, .2);
+    driveFoward = new TimedDrive(swerve, 2, 0, 0);
 
     
     swerve.setDefaultCommand(driveWithJoystick);
