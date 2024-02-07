@@ -37,6 +37,8 @@ public class RobotContainer {
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton goToZeroBtn;
 
+  private SendableChooser<Command> autoChooser;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
@@ -48,6 +50,8 @@ public class RobotContainer {
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
     goToZeroBtn = new JoystickButton(joy, XboxController.Button.kX.value);
 
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     SmartDashboard.putData(swerve);
 
     // Configure the trigger bindings
@@ -75,8 +79,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    PathPlannerAuto auto = new PathPlannerAuto("New Auto");
-    System.out.println("Got here");
-    return auto;
+    // PathPlannerAuto auto = new PathPlannerAuto("Circle Auto");
+    
+    return autoChooser.getSelected();
   }
 }
