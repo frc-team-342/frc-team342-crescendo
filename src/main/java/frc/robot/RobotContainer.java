@@ -27,6 +27,7 @@ public class RobotContainer {
   //xxcontroller - xbox controller
     private final XboxController xxcontroller; 
     private final JoystickButton xButton;
+    private final JoystickButton aButton;
 
     private final Intake intake;
 
@@ -40,6 +41,7 @@ public class RobotContainer {
     intake = new Intake();
     xxcontroller = new XboxController(0);
     xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
+    aButton = new JoystickButton(xxcontroller, XboxController.Button.kA.value);
     
     // Configure the trigger bindings
     configureBindings();
@@ -57,6 +59,7 @@ public class RobotContainer {
   private void configureBindings() {
     
    xButton.whileTrue(intake.spinIntake(0.5));
+   aButton.whileTrue(intake.getSensors());
 
   }
 
