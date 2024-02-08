@@ -61,7 +61,7 @@ public class SwerveDrive extends SubsystemBase {
   SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
 
   private boolean fieldOriented;
-  private boolean slowMode;
+  public boolean slowMode;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -99,10 +99,9 @@ public class SwerveDrive extends SubsystemBase {
       false,
       false,
       DriveConstants.BACK_RIGHT_OFFSET,
-      DriveConstants.PID_VALUES);
+      DriveConstants.BL_PID_VALUES);
 
     gyro = new AHRS(SerialPort.Port.kUSB);
-    slowMode = false;
 
     positions = new SwerveModulePosition[] {
       getModulePosition("Front Left"),
@@ -128,6 +127,7 @@ public class SwerveDrive extends SubsystemBase {
     shouldFlipSupplier = () -> shouldFlip();
 
     fieldOriented = false;
+    slowMode = false;
 
     field = new Field2d();
 
@@ -275,7 +275,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public boolean shouldFlip() {
     var alliance = DriverStation.getAlliance();
-    if (DriverStation.getAlliance().isPresent()) {
+    if (alliance.isPresent()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
     return false;

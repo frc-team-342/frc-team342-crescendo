@@ -44,7 +44,7 @@ public class RobotContainer {
     
     swerve = new SwerveDrive();
     joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented(), swerve.getSlowMode());
+    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
     
     swerve.setDefaultCommand(driveWithJoystick);
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
