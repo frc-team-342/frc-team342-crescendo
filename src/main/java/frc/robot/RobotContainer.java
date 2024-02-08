@@ -35,7 +35,7 @@ public class RobotContainer {
   private XboxController joy;
   private DriveWithJoystick driveWithJoystick;
   private JoystickButton toggleFieldOrientedBtn;
-  private JoystickButton goToZeroBtn;
+  private JoystickButton toggleSlowModeBtn;
 
   private SendableChooser<Command> autoChooser;
 
@@ -44,11 +44,11 @@ public class RobotContainer {
     
     swerve = new SwerveDrive();
     joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented(), swerve.getSlowMode());
     
     swerve.setDefaultCommand(driveWithJoystick);
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
-    goToZeroBtn = new JoystickButton(joy, XboxController.Button.kX.value);
+    toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -69,7 +69,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
-    goToZeroBtn.whileTrue(swerve.goToZero());
+    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
   }
 
   /**

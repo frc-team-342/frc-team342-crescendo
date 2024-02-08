@@ -37,12 +37,15 @@ public class DriveWithJoystick extends Command {
   private SwerveModuleState[] moduleStates;
   private SwerveDriveKinematics swerveKinematics;
 
+  private boolean slowMode;
+
   /** Creates a new DriveWithJoystick. */
-  public DriveWithJoystick(SwerveDrive swerve, XboxController joy, boolean fieldOriented) {
+  public DriveWithJoystick(SwerveDrive swerve, XboxController joy, boolean fieldOriented, boolean slowMode) {
 
     this.swerve = swerve;
     this.joy = joy;
     this.fieldOriented = fieldOriented;
+    this.slowMode = slowMode;
 
     xLimiter = new SlewRateLimiter(3);
     yLimiter = new SlewRateLimiter(3);
@@ -62,13 +65,14 @@ public class DriveWithJoystick extends Command {
     double xSpeed = joy.getLeftY();
     double ySpeed = joy.getLeftX();
     double rotateSpeed = joy.getRawAxis(4);
+    double maxDriveSpeed = slowMode ? DriveConstants.SLOWER_DRIVE_SPEED : DriveConstants.MAX_DRIVE_SPEED;
 
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.15);
     ySpeed = MathUtil.applyDeadband(ySpeed, 0.15);
     rotateSpeed = MathUtil.applyDeadband(rotateSpeed, 0.15);
 
-    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.MAX_DRIVE_SPEED;
-    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.MAX_DRIVE_SPEED;
+    xSpeed = xLimiter.calculate(xSpeed) * maxDriveSpeed;
+    ySpeed = yLimiter.calculate(ySpeed) * maxDriveSpeed;
     rotateSpeed = rotateLimiter.calculate(rotateSpeed) * DriveConstants.MAX_ROTATE_SPEED;
 
     if(fieldOriented) {
@@ -83,7 +87,9 @@ public class DriveWithJoystick extends Command {
     SmartDashboard.putNumber("Chassis x-speed", chassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Chassis y-speed", chassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("Chassis rotate-speed", chassisSpeeds.omegaRadiansPerSecond);
-    SmartDashboard.putNumber("Gyro", swerve.getGyro().getRotation2d());
+    SmartDashboard.putNumber("Gyro", swerve.getGyro().getRotation2d().getRadians());
+    SmartDashboard.putBoolean("Slow Mode", swerve.getSlowMode());
+    SmartDashboard.putNumber("Current Max Speed", maxDriveSpeed);
   }
 
   // Called once the command ends or is interrupted.

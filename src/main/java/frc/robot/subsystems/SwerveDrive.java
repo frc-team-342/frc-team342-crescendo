@@ -26,6 +26,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,6 +61,7 @@ public class SwerveDrive extends SubsystemBase {
   SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
 
   private boolean fieldOriented;
+  private boolean slowMode;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -88,7 +90,7 @@ public class SwerveDrive extends SubsystemBase {
       false,
       false,
       DriveConstants.BACK_LEFT_OFFSET,
-      DriveConstants.BL_PID_VALUES);  
+      DriveConstants.PID_VALUES);  
       
     backRight = new SwerveModule(
       DriveConstants.BACK_RIGHT[0],
@@ -99,7 +101,8 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT_OFFSET,
       DriveConstants.PID_VALUES);
 
-    gyro = new AHRS(SPI.Port.kMXP);
+    gyro = new AHRS(SerialPort.Port.kUSB);
+    slowMode = false;
 
     positions = new SwerveModulePosition[] {
       getModulePosition("Front Left"),
@@ -226,13 +229,19 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Command toggleFieldOriented() {
-    return run(()->{
-      fieldOriented = !fieldOriented;
-    });
+    return run(()-> fieldOriented = !fieldOriented);
   }
 
   public boolean getFieldOriented() {
     return fieldOriented;
+  }
+
+  public boolean getSlowMode() {
+    return slowMode;
+  }
+
+  public Command toggleSlowMode() {
+    return run(() -> slowMode = !slowMode);
   }
 
   public ChassisSpeeds getChassisSpeeds() {
