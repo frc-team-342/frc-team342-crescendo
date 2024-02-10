@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
+import static frc.robot.Constants.IntakeConstants.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
@@ -12,9 +12,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 
@@ -38,10 +41,10 @@ public class Intake extends SubsystemBase {
     elevator = new CANSparkMax(3, MotorType.kBrushless);
     pid_elevator = elevator.getPIDController();
 
-    sensor0 = new DigitalInput(Constants.INTAKE_SENSOR_0);
-    sensor1 = new DigitalInput(Constants.INTAKE_SENSOR_1);
-    sensor2 = new DigitalInput(Constants.INTAKE_SENSOR_2);
-    sensor3 = new DigitalInput(Constants.INTAKE_SENSOR_3);
+    sensor0 = new DigitalInput(INTAKE_SENSOR_0);
+    sensor1 = new DigitalInput(INTAKE_SENSOR_1);
+    sensor2 = new DigitalInput(INTAKE_SENSOR_2);
+    sensor3 = new DigitalInput(INTAKE_SENSOR_3);
   }
 
 
@@ -91,6 +94,16 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Elevator Position",elevator.getEncoder().getPosition());
    
   }
+
+  @Override
+    public void initSendable(SendableBuilder sendableBuilder) {
+      sendableBuilder.setSmartDashboardType("intake Values");
+      sendableBuilder.addBooleanProperty("sensor0", () -> sensor0.get(), null);
+      sendableBuilder.addBooleanProperty("sensor1", () -> sensor1.get(), null);
+      sendableBuilder.addBooleanProperty("sensor2", () -> sensor2.get(), null);
+      sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
+    }
 }

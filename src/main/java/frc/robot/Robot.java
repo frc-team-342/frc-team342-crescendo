@@ -48,15 +48,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    //m_robotContainer = new RobotContainer();
-    m_motor = new CANSparkMax(1, MotorType.kBrushless);
-    
-    pid_elevator = m_motor.getPIDController();
-    pid_elevator.setP(.05);
-
-    xxcontroller = new XboxController(0);
-    xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
-      
+    m_robotContainer = new RobotContainer();
+ 
   }
 
   /**
@@ -113,6 +106,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    /* 
     double rot = 3;
     double gr = 12.75;
     double input = rot/gr*42;
@@ -124,9 +118,9 @@ public class Robot extends TimedRobot {
       pid_elevator.setReference(0, CANSparkMax.ControlType.kPosition);
     }
 
+*/
 
-
-//    pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);
+//pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);
 //gear ratio 12.76 : 1
 
 

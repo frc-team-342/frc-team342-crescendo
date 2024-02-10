@@ -6,15 +6,18 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+
 import edu.wpi.first.wpilibj.XboxController;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.SwerveDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,7 +34,6 @@ public class RobotContainer {
 
     private final Intake intake;
 
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
 
 
@@ -39,13 +41,20 @@ public class RobotContainer {
   public RobotContainer() {
 
     intake = new Intake();
+   // swerve = new SwerveDrive();
+
     xxcontroller = new XboxController(0);
     xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
     aButton = new JoystickButton(xxcontroller, XboxController.Button.kA.value);
-    
-    // Configure the trigger bindings
-    configureBindings();
-  }
+
+
+    SmartDashboard.putData(intake);
+   // SmartDashboard.putData(swerve);
+  } 
+
+
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+ 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -57,9 +66,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
     
    xButton.whileTrue(intake.spinIntake(0.5));
-   aButton.whileTrue(intake.getSensors());
+   //aButton.whileTrue(intake.getSensors());
+
 
   }
 
@@ -70,6 +81,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+   return null;
+    
   }
 }
