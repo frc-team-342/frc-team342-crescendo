@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-
+import frc.robot.commands.OperatorCommands;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -35,7 +35,7 @@ public class RobotContainer {
     private final Intake intake;
 
 
-
+    private final OperatorCommands opCommands;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,7 +46,10 @@ public class RobotContainer {
     xxcontroller = new XboxController(0);
     xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
     aButton = new JoystickButton(xxcontroller, XboxController.Button.kA.value);
+    
+    opCommands = new OperatorCommands(intake, xxcontroller);
 
+    intake.setDefaultCommand(opCommands);
 
     SmartDashboard.putData(intake);
    // SmartDashboard.putData(swerve);
@@ -68,7 +71,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     
-   xButton.whileTrue(intake.spinIntake(0.5));
+   xButton.whileTrue(intake.spinIntake());
    //aButton.whileTrue(intake.getSensors());
 
 

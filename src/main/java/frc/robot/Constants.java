@@ -25,10 +25,19 @@ import edu.wpi.first.units.Unit;
 public final class Constants {
 
 public static class IntakeConstants {
-  public static final int INTAKE_SENSOR_0 = 0;
-  public static final int INTAKE_SENSOR_1 = 1;
-  public static final int INTAKE_SENSOR_2 = 2;
-  public static final int INTAKE_SENSOR_3 = 3;
+  public static final int INTAKE_SENSOR = 1;
+  public static final int ELEVATORSWITCHLOW = 2;
+  public static final int ELEVATORSWITCHHIGH = 3;
+
+  //capitalize constants
+
+  public static final double intakeSpeed = 0.2;
+  public static final double feedShooterSpeed = -0.2;
+  public static final double raiseWithElevatorSpeed = 0.2;
+  public static final double wristSpeed = 0.2;
+
+  public static final double LOWWRISTPOS = -1;
+  public static final double HIGHWRISTPOS = 1;
 }
 
   public static class DriveConstants { // ***UPDATE CONSTANTS***

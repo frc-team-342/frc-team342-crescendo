@@ -6,9 +6,13 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.IntakeConstants.*;
 
+import com.revrobotics.AnalogInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAnalogSensor.Mode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,40 +29,62 @@ public class Intake extends SubsystemBase {
 
   private final CANSparkMax intake;
   private final CANSparkMax wrist;
-  private final CANSparkMax elevator;
+  private final CANSparkMax elevator_left;
+
+  private final CANSparkMax elevator_right;
+
   private final SparkPIDController pid_elevator;
   
-  private DigitalInput sensor0;
-  private DigitalInput sensor1;
-  private DigitalInput sensor2;
-  private DigitalInput sensor3;
+  private DigitalInput intakeSensor;
+  private DigitalInput elevatorSwitchLow;
+  private DigitalInput elevatorSwitchHigh;
+
+  private AnalogInput throughBore;
+
+  //private DigitalInput wristSwitchIn;
+  //private DigitalInput wristSwitchOut;
 
 
   /** Creates a new Intake. */
   public Intake() {
     intake = new CANSparkMax(1, MotorType.kBrushless);
     wrist = new CANSparkMax(2, MotorType.kBrushless);
-    elevator = new CANSparkMax(3, MotorType.kBrushless);
-    pid_elevator = elevator.getPIDController();
+    elevator_left = new CANSparkMax(3, MotorType.kBrushless);
+    elevator_right = new CANSparkMax(4, MotorType.kBrushless);
 
-    sensor0 = new DigitalInput(INTAKE_SENSOR_0);
-    sensor1 = new DigitalInput(INTAKE_SENSOR_1);
-    sensor2 = new DigitalInput(INTAKE_SENSOR_2);
-    sensor3 = new DigitalInput(INTAKE_SENSOR_3);
+    throughBore = wrist.getAnalog(Mode.kAbsolute);
+      
+    pid_elevator = elevator_left.getPIDController();
+
+    elevator_left.setIdleMode(IdleMode.kBrake);
+    elevator_right.setIdleMode(IdleMode.kBrake);
+    intake.setIdleMode(IdleMode.kBrake);
+    wrist.setIdleMode(IdleMode.kBrake);
+
+    //right elevaor will follow the left one 
+    elevator_right.follow(elevator_left);
+
+    intakeSensor = new DigitalInput(INTAKE_SENSOR);
+    elevatorSwitchLow = new DigitalInput(ELEVATORSWITCHLOW);
+    elevatorSwitchHigh = new DigitalInput(ELEVATORSWITCHHIGH); 
+    
+    
   }
 
+  
 
-  public Command spinIntake(double speed){
+
+  public Command spinIntake(){
     return runEnd( () -> {
-      if(!sensor1.get()){
+      if(!intakeSensor.get()){
 
-      intake.set(speed);
+      intake.set(intakeSpeed);
 
       }
       else {
 
         intake.set(0);
-        
+
       }
     }, 
     
@@ -66,12 +92,22 @@ public class Intake extends SubsystemBase {
 
   }
 
+  public Command feedShooter(){
+      return runEnd( () -> {
+        intake.set(feedShooterSpeed);
+      }
+        
+      ,  () -> {
+        intake.set(0);
+      });
+  }
+
   public Command getSensors(){
     return runEnd( () -> {
-      SmartDashboard.putBoolean("sensor0", sensor0.get());
-      SmartDashboard.putBoolean("sensor1", sensor1.get());
-      SmartDashboard.putBoolean("sensor2", sensor2.get());
-      SmartDashboard.putBoolean("sensor3", sensor3.get());
+      SmartDashboard.putBoolean("intakeSensor", intakeSensor.get());
+      SmartDashboard.putBoolean("elevatorSwitchLow", elevatorSwitchLow.get());
+      SmartDashboard.putBoolean("elevatorSwitchHigh", elevatorSwitchHigh.get());
+      //SmartDashboard.putBoolean("sensor3", sensor3.get());
     },
 
     () -> {});
@@ -83,27 +119,51 @@ public class Intake extends SubsystemBase {
   }
 
   public void raiseElevatorwithSpeed(double speed){
-    elevator.set(.5);
+    elevator_left.set(speed);
   }
 
-  public void raiseElevatorwithPosition(double pos){
-    elevator.set(pos);
+  public void raiseElevatorToPosition(double pos){
+    pid_elevator.setReference(pos, ControlType.kPosition);
+  }
+
+
+  /*
+   * Returns the value from the intake Sensor
+   */
+  public boolean getIntakeSenor(){
+    return intakeSensor.get();
+  }
+
+  public boolean getElevatorSwitchLow(){
+    return elevatorSwitchLow.get();
+  }
+
+  public boolean getElevatorSwitchHigh(){
+    return elevatorSwitchHigh.get();
+  }
+
+  public double getElevatorEncoder(){
+    return elevator_left.getEncoder().getPosition();
+  }
+
+  public AnalogInput getthroughBore(){
+    return throughBore;
   }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Position",elevator.getEncoder().getPosition());
+    SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
    
   }
 
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
       sendableBuilder.setSmartDashboardType("intake Values");
-      sendableBuilder.addBooleanProperty("sensor0", () -> sensor0.get(), null);
-      sendableBuilder.addBooleanProperty("sensor1", () -> sensor1.get(), null);
-      sendableBuilder.addBooleanProperty("sensor2", () -> sensor2.get(), null);
-      sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
+      sendableBuilder.addBooleanProperty("intakeSensor", () -> intakeSensor.get(), null);
+      sendableBuilder.addBooleanProperty("elevatorSwitchLow", () -> elevatorSwitchLow.get(), null);
+      sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
+      //sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
     }
 }
