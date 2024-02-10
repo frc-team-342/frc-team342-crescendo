@@ -64,22 +64,36 @@ public class SwerveModule extends SubsystemBase {
     resetEncoder();
   }
 
+  /**
+   * @return Drive encoder position in meters.
+   */
   public double getDrivePosition() {
     return driveEncoder.getPosition();
   }
 
+  /**
+   * @return Rotate encoder position in meters.
+   */
   public double getRotatePosition() {
     return rotateEncoder.getPosition();
   }
 
+  /**
+   * @return Drive encoder velocity in meters/second
+   */
   public double getDriveVelocity() {
     return driveEncoder.getVelocity();
   }
-
+  /**
+   * @return Rotate encoder velocity in radians/second.
+   */
   public double getRotateVelocity() {
     return rotateEncoder.getVelocity();
   }
 
+  /**
+   * @return Absolute encoder angle in radians with offset removed.
+   */
   public double getAbsoluteEncoderRad() {
     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     angle *= 2 * Math.PI;
@@ -89,6 +103,9 @@ public class SwerveModule extends SubsystemBase {
     return angle * (absEncoderReverse ? -1.0 : 1.0);
   }
 
+  /** 
+   * @return Encoder angles with offsets.
+  */
   public double getOffsets() {
     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     angle *= 2 * Math.PI;
@@ -110,6 +127,10 @@ public class SwerveModule extends SubsystemBase {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getRotatePosition()));
   }
 
+  /**
+   * Sets the calculated speed of the drive and rotate motors.
+   * @param state is optimized for minimizing movement 
+   */
   public void setDesiredState(SwerveModuleState state) {
     if (Math.abs(state.speedMetersPerSecond) < 0.001) {
       stop();

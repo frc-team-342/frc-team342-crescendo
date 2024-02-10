@@ -7,12 +7,14 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.DriveWithJoystick;
+import frc.robot.commands.Outtake.OuttakeNote;
+import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
+// import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,29 +32,39 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  private SwerveDrive swerve;
+  // private SwerveDrive swerve;
+  private Outtake outtake;
   
   private XboxController joy;
+
   private DriveWithJoystick driveWithJoystick;
+  private OuttakeNote outtakeNote;
+
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
+  private JoystickButton outtakeNoteBtn;
 
-  private SendableChooser<Command> autoChooser;
+  // private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    swerve = new SwerveDrive();
+    // swerve = new SwerveDrive();
+    System.out.println("Creating outtake...");
+    outtake = new Outtake();
+
     joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
-    
-    swerve.setDefaultCommand(driveWithJoystick);
+    // driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    outtakeNote = new OuttakeNote(0.5, outtake);
+
+    // swerve.setDefaultCommand(driveWithJoystick);
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
+    outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kB.value);
 
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    SmartDashboard.putData(swerve);
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    // SmartDashboard.putData(swerve);
 
     // Configure the trigger bindings
     configureBindings();
@@ -68,8 +80,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
-    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    // toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+    // toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    outtakeNoteBtn.whileTrue(outtakeNote);
   }
 
   /**
@@ -81,6 +94,6 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // PathPlannerAuto auto = new PathPlannerAuto("Circle Auto");
     
-    return autoChooser.getSelected();
+    return null;
   }
 }

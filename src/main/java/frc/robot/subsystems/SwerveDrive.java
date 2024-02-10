@@ -141,6 +141,10 @@ public class SwerveDrive extends SubsystemBase {
     configureAutoBuilder();
   }
 
+  /**
+   * @param module Identifies which module needs position
+   * @return SwerveModulePosition representing the module
+   */
   private SwerveModulePosition getModulePosition(String module){
     SwerveModulePosition position;
 
@@ -188,6 +192,10 @@ public class SwerveDrive extends SubsystemBase {
     swerveOdometry.resetPosition(getRotation2d(), positions, pose);
   }
 
+  /**
+   * 
+   * @param desiredStates
+   */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.SLOWER_DRIVE_SPEED);
     frontLeft.setDesiredState(desiredStates[0]);

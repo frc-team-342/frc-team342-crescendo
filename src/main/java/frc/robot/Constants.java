@@ -99,4 +99,11 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class OuttakeConstants {
+
+    public static final int MOTOR_ONE_ID = 1;
+    public static final int MOTOR_TWO_ID = 2;
+    
+  }
 }
