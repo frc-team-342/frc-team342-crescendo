@@ -8,7 +8,7 @@ import com.revrobotics.AnalogInput;
 
 import static frc.robot.Constants.IntakeConstants.HIGHWRISTPOS;
 import static frc.robot.Constants.IntakeConstants.LOWWRISTPOS;
-import static frc.robot.Constants.IntakeConstants.wristSpeed;
+import static frc.robot.Constants.IntakeConstants.WRISTSPEED;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,8 +20,9 @@ public class MoveWristToPosition extends Command {
   private XboxController joyStick;
   private boolean goingDown = true;
 
-  public MoveWristToPosition() {
+  public MoveWristToPosition(Intake intake) {
      
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
 
@@ -37,15 +38,23 @@ public class MoveWristToPosition extends Command {
   @Override
   public void execute() {
 
-    if (goingDown && intake.getthroughBore().getPosition() > lowWristPos) {
-      wrist.set(LOWWRISTPOS);
+    if (goingDown && intake.getthroughBore().getPosition() > LOWWRISTPOS) {
+      //wrist.set(-WRISTSPEED);
+      intake.rotateWrist(-0.5);
+      
     }
 
-    else if (!goingDown && intake.getthroughBore().getPosition() < highWristPos){
-      wrist.set(HIGHWRISTPOS);
+    else if (!goingDown && intake.getthroughBore().getPosition() < HIGHWRISTPOS){
+      //wrist.set(WRISTSPEED);
+      intake.rotateWrist(0.5);
     }
     
-
+    if (intake.getthroughBore().getPosition() >= HIGHWRISTPOS) {
+      goingDown = true;
+    }
+    else if (intake.getthroughBore().getPosition() < LOWWRISTPOS){
+      goingDown = false;
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -114,8 +114,9 @@ public class Intake extends SubsystemBase {
   }
 
   //change to use position not percent
-  public void rotateWrist(double angle){
-    wrist.set(.5);
+  
+  public void rotateWrist(double speed){
+    wrist.set(speed);
   }
 
   public void raiseElevatorwithSpeed(double speed){

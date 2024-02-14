@@ -34,7 +34,7 @@ public static class IntakeConstants {
   public static final double intakeSpeed = 0.2;
   public static final double feedShooterSpeed = -0.2;
   public static final double raiseWithElevatorSpeed = 0.2;
-  public static final double wristSpeed = 0.2;
+  public static final double WRISTSPEED = 0.2;
 
   public static final double LOWWRISTPOS = -1;
   public static final double HIGHWRISTPOS = 1;
