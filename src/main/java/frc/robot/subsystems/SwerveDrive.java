@@ -249,7 +249,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public ChassisSpeeds getChassisSpeeds() {
-    return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+    return new ChassisSpeeds(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
@@ -268,7 +268,7 @@ public class SwerveDrive extends SubsystemBase {
     
   public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
 
-    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vyMetersPerSecond, speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, 0.02);
     
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds);
