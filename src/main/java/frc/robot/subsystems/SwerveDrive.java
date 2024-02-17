@@ -9,11 +9,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,7 +22,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -122,9 +118,9 @@ public class SwerveDrive extends SubsystemBase {
 
     poseSupplier = () -> getPose();
     resetPoseConsumer = pose -> resetOdometry(pose);
-    robotRelativeOutput = inputSpeed -> drive(inputSpeed);
+    robotRelativeOutput = inputSpeed -> drive(inputSpeed, DriveConstants.SLOWER_DRIVE_SPEED);
     chassisSpeedSupplier = () -> getChassisSpeeds();
-    shouldFlipSupplier = () -> shouldFlip();
+    shouldFlipSupplier = () -> false;
 
     fieldOriented = false;
     slowMode = false;
@@ -141,6 +137,10 @@ public class SwerveDrive extends SubsystemBase {
     configureAutoBuilder();
   }
 
+  /**
+   * @param module Identifies which module needs position
+   * @return SwerveModulePosition representing the module
+   */
   private SwerveModulePosition getModulePosition(String module){
     SwerveModulePosition position;
 
@@ -188,8 +188,12 @@ public class SwerveDrive extends SubsystemBase {
     swerveOdometry.resetPosition(getRotation2d(), positions, pose);
   }
 
-  public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.SLOWER_DRIVE_SPEED);
+  /**
+   * Sets modules to speeds within the allowed range
+   * @param desiredStates
+   */
+  public void setModuleStates(SwerveModuleState[] desiredStates, double maxDriveSpeed) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxDriveSpeed);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
@@ -217,7 +221,7 @@ public class SwerveDrive extends SubsystemBase {
   public Command goToZero() {
     return run(() -> {
       SwerveModuleState[] zeroStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
-      setModuleStates(zeroStates);
+      setModuleStates(zeroStates, DriveConstants.MAX_DRIVE_SPEED);
     });
   }
 
@@ -245,7 +249,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public ChassisSpeeds getChassisSpeeds() {
-    return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+    return new ChassisSpeeds(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
@@ -259,18 +263,17 @@ public class SwerveDrive extends SubsystemBase {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
       }
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates);
+    setModuleStates(moduleStates, DriveConstants.MAX_DRIVE_SPEED);
   }
     
-  public void drive(ChassisSpeeds speeds) {
+  public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
 
-    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vyMetersPerSecond, -speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, 0.02);
     
-    System.out.println(targetSpeeds);
-    
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds);
-    setModuleStates(moduleStates);
+    setModuleStates(moduleStates, maxDriveSpeed);
+    System.out.println(targetSpeeds);
   }
 
   public boolean shouldFlip() {

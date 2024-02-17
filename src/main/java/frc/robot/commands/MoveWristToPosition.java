@@ -38,20 +38,21 @@ public class MoveWristToPosition extends Command {
   @Override
   public void execute() {
 
-    if (goingDown && intake.getthroughBore().getPosition() > LOWWRISTPOS) {
-      //wrist.set(-WRISTSPEED);
-      intake.rotateWrist(-0.5);
-      
-    }
 
+    //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
+    if (goingDown && intake.getthroughBore().getPosition() > LOWWRISTPOS) {
+      intake.rotateWrist(-WRISTSPEED);
+    }
+    //makes sure that its not going too far back to avoid hitting the back
     else if (!goingDown && intake.getthroughBore().getPosition() < HIGHWRISTPOS){
-      //wrist.set(WRISTSPEED);
-      intake.rotateWrist(0.5);
+      intake.rotateWrist(WRISTSPEED);
     }
     
+    //lets the robot know so it wont go too far back and it knows its limits
     if (intake.getthroughBore().getPosition() >= HIGHWRISTPOS) {
       goingDown = true;
     }
+    //so it does not go too far down - sets parameters
     else if (intake.getthroughBore().getPosition() < LOWWRISTPOS){
       goingDown = false;
     }

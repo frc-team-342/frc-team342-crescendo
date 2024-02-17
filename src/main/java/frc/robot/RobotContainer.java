@@ -6,7 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.OperatorCommands;
+import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -27,32 +29,49 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //xxcontroller - xbox controller
-    private final XboxController xxcontroller; 
-    private final JoystickButton xButton;
-    private final JoystickButton aButton;
 
-    private final Intake intake;
+  private final JoystickButton xButton;
+  private final JoystickButton aButton;
+
+  private SwerveDrive swerve;
+  // private Outtake outtake;
+  
+  private XboxController joy;
+
+  private DriveWithJoystick driveWithJoystick;
+  private MoveWristToPosition moveWrist;
+
+  private JoystickButton toggleFieldOrientedBtn;
+  private JoystickButton toggleSlowModeBtn;
+  private JoystickButton outtakeNoteBtn;
+  private JoystickButton wristButton;
+  private final Intake intake;
 
 
-    private final OperatorCommands opCommands;
+  private final OperatorCommands opCommands;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     intake = new Intake();
    // swerve = new SwerveDrive();
+   //joy is xboxcontroller
 
-    xxcontroller = new XboxController(0);
-    xButton = new JoystickButton(xxcontroller, XboxController.Button.kX.value);
-    aButton = new JoystickButton(xxcontroller, XboxController.Button.kA.value);
+    joy = new XboxController(0);
+    xButton = new JoystickButton(joy, XboxController.Button.kX.value);
+    aButton = new JoystickButton(joy, XboxController.Button.kA.value);
+    wristButton = new JoystickButton(joy, XboxController.Button.kY.value);
+
+    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    moveWrist = new MoveWristToPosition(intake);
     
-    opCommands = new OperatorCommands(intake, xxcontroller);
+    opCommands = new OperatorCommands(intake, joy);
 
     intake.setDefaultCommand(opCommands);
 
     SmartDashboard.putData(intake);
    // SmartDashboard.putData(swerve);
+   configureBindings();
   } 
 
 
@@ -69,12 +88,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    
    xButton.whileTrue(intake.spinIntake());
    //aButton.whileTrue(intake.getSensors());
-
-
+   wristButton.whileTrue(moveWrist);
   }
 
   /**
@@ -84,7 +100,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-   return null;
-    
+
+    return null;
   }
 }

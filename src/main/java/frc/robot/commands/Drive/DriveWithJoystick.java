@@ -79,7 +79,7 @@ public class DriveWithJoystick extends Command {
     }
 
     moduleStates = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    swerve.setModuleStates(moduleStates);
+    swerve.setModuleStates(moduleStates, maxDriveSpeed);
 
     SmartDashboard.putNumber("Chassis x-speed", chassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Chassis y-speed", chassisSpeeds.vyMetersPerSecond);
