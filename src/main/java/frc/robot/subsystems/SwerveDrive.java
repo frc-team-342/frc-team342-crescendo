@@ -99,13 +99,6 @@ public class SwerveDrive extends SubsystemBase {
 
     gyro = new AHRS(SerialPort.Port.kUSB);
 
-    positions = new SwerveModulePosition[] {
-      getModulePosition("Front Left"),
-      getModulePosition("Front Right"),
-      getModulePosition("Back Left"),
-      getModulePosition("Back Right"),
-    };
-
     states = new SwerveModuleState[] {
       frontLeft.getState(),
       frontRight.getState(),
@@ -113,7 +106,7 @@ public class SwerveDrive extends SubsystemBase {
       backRight.getState()
     };
 
-    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), positions);
+    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
     chassisSpeeds = new ChassisSpeeds();
 
     poseSupplier = () -> getPose();
@@ -137,33 +130,6 @@ public class SwerveDrive extends SubsystemBase {
     configureAutoBuilder();
   }
 
-  /**
-   * @param module Identifies which module needs position
-   * @return SwerveModulePosition representing the module
-   */
-  private SwerveModulePosition getModulePosition(String module){
-    SwerveModulePosition position;
-
-    if(module.equals("Front Left")){
-      position = new SwerveModulePosition(frontLeft.getDrivePosition(), new Rotation2d(frontLeft.getRotatePosition()));
-      return position;
-    } else
-    if(module.equals("Front Right")){
-      position = new SwerveModulePosition(frontRight.getDrivePosition(), new Rotation2d(frontRight.getRotatePosition()));
-      return position;
-    } else
-    if(module.equals("Back Left")){
-      position = new SwerveModulePosition(backLeft.getDrivePosition(), new Rotation2d(backLeft.getRotatePosition()));
-      return position;
-    } else
-    if(module.equals("Back Right")){
-      position = new SwerveModulePosition(backRight.getDrivePosition(), new Rotation2d(backRight.getRotatePosition()));
-      return position;
-    }
-    return null;
-  }
-
-
   public AHRS getGyro() {
     return gyro;
   }
@@ -185,7 +151,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pose) {
-    swerveOdometry.resetPosition(getRotation2d(), positions, pose);
+    swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), pose);
   }
 
   /**
@@ -249,7 +215,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public ChassisSpeeds getChassisSpeeds() {
-    return new ChassisSpeeds(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+    return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
@@ -267,13 +233,12 @@ public class SwerveDrive extends SubsystemBase {
   }
     
   public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
-
-    ChassisSpeeds targetSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-    targetSpeeds = ChassisSpeeds.discretize(targetSpeeds, 0.02);
+    chassisSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+    System.out.println(chassisSpeeds + "[\n]" + this.getChassisSpeeds());
+    chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     
-    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(targetSpeeds);
+    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, maxDriveSpeed);
-    System.out.println(targetSpeeds);
   }
 
   public boolean shouldFlip() {
@@ -307,10 +272,6 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
     sendableBuilder.setSmartDashboardType("Encoder Values");
-    sendableBuilder.addDoubleProperty("Front Left", () -> frontLeft.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Front Right", () -> frontRight.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Back Left", () -> backLeft.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Back Right", () -> backRight.getOffsets(), null);
     sendableBuilder.addDoubleProperty("5 Volt", () -> get5V(), null);
   }
 
@@ -320,5 +281,6 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Robot Heading", getHeading());
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     SmartDashboard.putBoolean("Field Oriented", fieldOriented);
+    SmartDashboard.putString("Pose", getPose().toString());
   }
 }
