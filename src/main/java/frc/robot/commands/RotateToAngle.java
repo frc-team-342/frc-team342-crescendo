@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics.SwerveDriveWheelStates;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 
 import static frc.robot.Constants.DriveConstants.*;
@@ -22,34 +23,31 @@ public class RotateToAngle extends Command {
   private SwerveDrive swerve; 
   private  PIDController rotateController; 
   
-  private Rotation2d start; 
-  private Rotation2d end; 
+  private double start; 
+  private double end; 
   
-  private Rotation2d angle;
+  private double angle;
+  private double current;
 
 
   /** Creates a new RotateToAngle. */
 
-  public RotateToAngle( Rotation2d angle, SwerveDrive swerve) {
+  public RotateToAngle( double angle, SwerveDrive swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     this.angle = angle;
     this.swerve = swerve; 
     addRequirements(swerve);
 
-
-
     rotateController = new PIDController(
      
-    0,
+    2,
     0, 
     0
 
     );
 
-    rotateController.setTolerance(.15);
-    
-
+    rotateController.setTolerance(.05);
 
   }
 
@@ -57,9 +55,15 @@ public class RotateToAngle extends Command {
   @Override
   public void initialize() {
 
-    start = swerve.getGyro().getRotation2d();
+   // start = normalizeAngle(swerve.getGyro().getRotation2d().getRadians());
+    
+   angle = normalizeAngle(angle);
+   
+   start = 0;
 
-    end = start.plus(angle);
+    end = start + angle;
+
+    
 
     rotateController.reset();
 
@@ -70,17 +74,36 @@ public class RotateToAngle extends Command {
   @Override
   public void execute() {
 
-    Rotation2d current = swerve.getGyro().getRotation2d();
+    rotateController.setSetpoint(end);
 
-    double rotationSpeed = rotateController.calculate(current.getRadians(), end.getRadians());
+    current = swerve.getGyro().getRotation2d().getRadians();
+    current = normalizeAngle(current);
+
+    double rotationSpeed = rotateController.calculate(current, end);
 
     ChassisSpeeds radial = new ChassisSpeeds(0, 0, -rotationSpeed);
-    
+    ChassisSpeeds negRadial = new ChassisSpeeds(0,0, rotationSpeed);
+      
     SwerveDriveKinematics.desaturateWheelSpeeds(swerve.getModuleStates(), MAX_ROTATE_SPEED);
    
-    swerve.drive(radial);
+    swerve.drive(radial); 
+
+
+    SmartDashboard.putNumber("Current",current);
+    SmartDashboard.putNumber("Start", start);
+    SmartDashboard.putNumber("end",end);
 
   }
+  
+  //Changes the angle range from (-180 to 180) to (0 to 360)
+
+  public double normalizeAngle(double angle) {
+
+    double twopi = Math.PI * 2;
+
+    return (angle >= 0 ? angle%twopi : (twopi - ((-twopi) % twopi))) % twopi;
+
+  } 
 
   // Called once the command ends or is interrupted.
   @Override
@@ -93,6 +116,9 @@ public class RotateToAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println("isFinished Reporting: " + rotateController.atSetpoint());
+    
     return rotateController.atSetpoint();
+    //return current.getRadians() == end.getRadians();
   }
 }

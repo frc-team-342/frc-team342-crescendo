@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import frc.robot.subsystems.SwerveDrive;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.SwerveDrive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -38,7 +40,9 @@ public class RobotContainer {
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton goToZeroBtn;
   private JoystickButton timedDriveButton;
+  private JoystickButton rotateToAngleButton; 
   private TimedDrive driveFoward;
+  private RotateToAngle rotate90;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,6 +52,8 @@ public class RobotContainer {
     driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
     timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
     driveFoward = new TimedDrive(swerve, 2, 0, 0);
+    rotate90 = new RotateToAngle( -Math.PI/2, swerve);
+    rotateToAngleButton = new JoystickButton(joy, XboxController.Button.kB.value);
 
     
     swerve.setDefaultCommand(driveWithJoystick);
@@ -73,6 +79,8 @@ public class RobotContainer {
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     goToZeroBtn.whileTrue(swerve.goToZero());
     timedDriveButton.whileTrue(driveFoward);
+    rotateToAngleButton.whileTrue(rotate90);
+    
   }
 
   /**
