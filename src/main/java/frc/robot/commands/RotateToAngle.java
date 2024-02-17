@@ -41,7 +41,7 @@ public class RotateToAngle extends Command {
 
     rotateController = new PIDController(
      
-    2,
+    0.05,
     0, 
     0
 
@@ -57,13 +57,13 @@ public class RotateToAngle extends Command {
 
    // start = normalizeAngle(swerve.getGyro().getRotation2d().getRadians());
     
-   angle = normalizeAngle(angle);
+   //angle = normalizeAngle(angle);
+
+   rotateController.enableContinuousInput(0, 360);
    
    start = 0;
 
-    end = start + angle;
-
-    
+   end = start + angle;
 
     rotateController.reset();
 
@@ -76,13 +76,13 @@ public class RotateToAngle extends Command {
 
     rotateController.setSetpoint(end);
 
-    current = swerve.getGyro().getRotation2d().getRadians();
-    current = normalizeAngle(current);
+    current = swerve.getGyro().getRotation2d().getDegrees();
+    //current = normalizeAngle(current);
 
     double rotationSpeed = rotateController.calculate(current, end);
 
     ChassisSpeeds radial = new ChassisSpeeds(0, 0, -rotationSpeed);
-    ChassisSpeeds negRadial = new ChassisSpeeds(0,0, rotationSpeed);
+    //ChassisSpeeds negRadial = new ChassisSpeeds(0,0, rotationSpeed);
       
     SwerveDriveKinematics.desaturateWheelSpeeds(swerve.getModuleStates(), MAX_ROTATE_SPEED);
    
@@ -97,13 +97,13 @@ public class RotateToAngle extends Command {
   
   //Changes the angle range from (-180 to 180) to (0 to 360)
 
-  public double normalizeAngle(double angle) {
+  //public double normalizeAngle(double angle) {
 
-    double twopi = Math.PI * 2;
+    //double twopi = Math.PI * 2;
 
-    return (angle >= 0 ? angle%twopi : (twopi - ((-twopi) % twopi))) % twopi;
+    //return (angle >= 0 ? angle%twopi : (twopi - ((-twopi) % twopi))) % twopi;
 
-  } 
+  //} 
 
   // Called once the command ends or is interrupted.
   @Override

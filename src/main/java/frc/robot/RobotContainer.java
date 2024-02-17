@@ -52,7 +52,7 @@ public class RobotContainer {
     driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
     timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
     driveFoward = new TimedDrive(swerve, 2, 0, 0);
-    rotate90 = new RotateToAngle( -Math.PI/2, swerve);
+    rotate90 = new RotateToAngle( 270, swerve);
     rotateToAngleButton = new JoystickButton(joy, XboxController.Button.kB.value);
 
     
