@@ -277,7 +277,7 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    swerveOdometry.update(getRotation2d(), positions);
+    swerveOdometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("Robot Heading", getHeading());
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     SmartDashboard.putBoolean("Field Oriented", fieldOriented);

@@ -54,7 +54,7 @@ public class RobotContainer {
     // outtake = new Outtake();
 
     joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    driveWithJoystick = new DriveWithJoystick(swerve, joy);
     // outtakeNote = new OuttakeNote(0.5, outtake);
 
     swerve.setDefaultCommand(driveWithJoystick);

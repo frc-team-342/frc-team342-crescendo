@@ -38,11 +38,12 @@ public class DriveWithJoystick extends Command {
   private SwerveDriveKinematics swerveKinematics;
 
   /** Creates a new DriveWithJoystick. */
-  public DriveWithJoystick(SwerveDrive swerve, XboxController joy, boolean fieldOriented) {
+  public DriveWithJoystick(SwerveDrive swerve, XboxController joy) {
 
     this.swerve = swerve;
     this.joy = joy;
-    this.fieldOriented = fieldOriented;
+
+    fieldOriented = swerve.getFieldOriented();
 
     xLimiter = new SlewRateLimiter(3);
     yLimiter = new SlewRateLimiter(3);
@@ -64,6 +65,8 @@ public class DriveWithJoystick extends Command {
     double rotateSpeed = joy.getRawAxis(4);
     double maxDriveSpeed = swerve.getSlowMode() ? DriveConstants.SLOWER_DRIVE_SPEED : DriveConstants.MAX_DRIVE_SPEED;
 
+    fieldOriented = swerve.getFieldOriented();
+
     xSpeed = MathUtil.applyDeadband(xSpeed, 0.15);
     ySpeed = MathUtil.applyDeadband(ySpeed, 0.15);
     rotateSpeed = MathUtil.applyDeadband(rotateSpeed, 0.15);
@@ -74,8 +77,10 @@ public class DriveWithJoystick extends Command {
 
     if(fieldOriented) {
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getGyro().getRotation2d());
+      System.out.println("Driving field oriented");
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
+      System.out.println("Driving robot oriented");
     }
 
     moduleStates = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
