@@ -35,8 +35,6 @@ public class Outtake extends SubsystemBase {
 
     encoder = motorOne.getEncoder();    
     pidController = motorOne.getPIDController();
-
-    System.out.println("In Constructor");
   }
 
   public void shootPercent(double speed){
