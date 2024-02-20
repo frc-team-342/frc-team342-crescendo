@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Drive.DriveDistance;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import frc.robot.commands.Outtake.OuttakeNote;
 import frc.robot.subsystems.Outtake;
@@ -38,11 +39,13 @@ public class RobotContainer {
   private XboxController joy;
 
   private DriveWithJoystick driveWithJoystick;
+  private DriveDistance driveDistance;
   private OuttakeNote outtakeNote;
 
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
   private JoystickButton outtakeNoteBtn;
+  private JoystickButton driveDistanceButton;
 
   private SendableChooser<Command> autoChooser;
 
@@ -56,11 +59,14 @@ public class RobotContainer {
     joy = new XboxController(0);
     driveWithJoystick = new DriveWithJoystick(swerve, joy);
     // outtakeNote = new OuttakeNote(0.5, outtake);
+    driveDistance = new DriveDistance(1, 5, swerve);
 
     swerve.setDefaultCommand(driveWithJoystick);
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
     // outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kB.value);
+    driveDistanceButton = new JoystickButton(joy, XboxController.Button.kY.value);
+
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
