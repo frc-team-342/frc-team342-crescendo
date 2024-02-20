@@ -33,11 +33,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private CANSparkMax m_motor;
-  private SparkPIDController pid_elevator;
-
-  private XboxController xxcontroller; 
-  private JoystickButton xButton;
+ 
 //took away final - in robot containter it used final
 
   /**

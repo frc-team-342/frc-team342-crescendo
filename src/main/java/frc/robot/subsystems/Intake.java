@@ -47,10 +47,12 @@ public class Intake extends SubsystemBase {
 
   /** Creates a new Intake. */
   public Intake() {
-    intake = new CANSparkMax(1, MotorType.kBrushless);
-    wrist = new CANSparkMax(2, MotorType.kBrushless);
-    elevator_left = new CANSparkMax(3, MotorType.kBrushless);
-    elevator_right = new CANSparkMax(4, MotorType.kBrushless);
+    //motor ids changed for load 
+    intake = new CANSparkMax(INTAKE_MOTOR, MotorType.kBrushless);
+
+    wrist = new CANSparkMax(WRIST_ID, MotorType.kBrushless);
+    elevator_left = new CANSparkMax(LEFT_ELEV_ID, MotorType.kBrushless);
+    elevator_right = new CANSparkMax(RIGHT_ElEV_ID, MotorType.kBrushless);
 
     throughBore = wrist.getAnalog(Mode.kAbsolute);
       
@@ -66,14 +68,13 @@ public class Intake extends SubsystemBase {
 
     intakeSensor = new DigitalInput(INTAKE_SENSOR);
     elevatorSwitchLow = new DigitalInput(ELEVATORSWITCHLOW);
-    elevatorSwitchHigh = new DigitalInput(ELEVATORSWITCHHIGH); 
-    
-    
+    elevatorSwitchHigh = new DigitalInput(ELEVATORSWITCHHIGH);
   }
 
-  
 
 
+
+  //command version
   public Command spinIntake(){
     return runEnd( () -> {
       if(!intakeSensor.get()){
@@ -92,7 +93,12 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public Command feedShooter(){
+  public void feedShooter(){
+    intake.set(feedShooterSpeed);
+  }
+
+
+ /*public Command feedShooter(){
       return runEnd( () -> {
         intake.set(feedShooterSpeed);
       }
@@ -100,7 +106,7 @@ public class Intake extends SubsystemBase {
       ,  () -> {
         intake.set(0);
       });
-  }
+  }*/ 
 
   public Command getSensors(){
     return runEnd( () -> {
@@ -127,6 +133,9 @@ public class Intake extends SubsystemBase {
     pid_elevator.setReference(pos, ControlType.kPosition);
   }
 
+  public void stop(){
+    intake.set(0);
+  }
 
   /*
    * Returns the value from the intake Sensor
@@ -167,4 +176,12 @@ public class Intake extends SubsystemBase {
       sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
       //sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
     }
+
+
+
+
+  public void set(double intakespeed) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'set'");
+  }
 }

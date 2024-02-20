@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import javax.management.relation.Relation;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -13,6 +14,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OuttakeConstants;
 
@@ -35,6 +37,9 @@ public class Outtake extends SubsystemBase {
 
     encoder = motorOne.getEncoder();    
     pidController = motorOne.getPIDController();
+    
+    //This didn't help
+    pidController.setP(0.005);
 
     System.out.println("In Constructor");
   }
@@ -44,8 +49,12 @@ public class Outtake extends SubsystemBase {
     System.out.println("Shooting at " + speed);
   }
 
+  public void stop(){
+    motorOne.set(0);
+  }
+
   public void shootVelocity(double velocity){
-    pidController.setReference(velocity, ControlType.kVelocity);
+    pidController.setReference(velocity, CANSparkBase.ControlType.kVelocity);
   }
 
   public boolean isUpToSpeed(double targetSpeed){
@@ -55,5 +64,6 @@ public class Outtake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Velocity", encoder.getVelocity());
   }
 }
