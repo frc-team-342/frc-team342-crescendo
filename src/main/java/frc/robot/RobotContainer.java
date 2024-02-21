@@ -79,6 +79,8 @@ public class RobotContainer {
     wristButton = new JoystickButton(joy, XboxController.Button.kY.value);
     loadButton = new JoystickButton(joy, XboxController.Button.kB.value);
 
+    SmartDashboard.putData(outtake);
+
     //commented  out swerve to test load
    // driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
     //moveWrist = new MoveWristToPosition(intake);

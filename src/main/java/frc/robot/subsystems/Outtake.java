@@ -35,11 +35,22 @@ public class Outtake extends SubsystemBase {
     motorTwo.follow(motorOne);
     motorTwo.setInverted(true);
 
+    motorOne.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
+    motorTwo.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
+
     encoder = motorOne.getEncoder();    
     pidController = motorOne.getPIDController();
     
     //This didn't help
-    pidController.setP(0.005);
+    pidController.setP(6e-5);
+    pidController.setI(0);
+    pidController.setD(0);
+    pidController.setFF(0.000015);
+    pidController.setSmartMotionAllowedClosedLoopError(100, 0);
+
+    SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
+    SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
+    SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
 
     System.out.println("In Constructor");
   }
@@ -54,7 +65,7 @@ public class Outtake extends SubsystemBase {
   }
 
   public void shootVelocity(double velocity){
-    pidController.setReference(velocity, CANSparkBase.ControlType.kVelocity);
+    pidController.setReference(velocity, CANSparkBase.ControlType.kVelocity, 0);
   }
 
   public boolean isUpToSpeed(double targetSpeed){
@@ -65,5 +76,18 @@ public class Outtake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Velocity", encoder.getVelocity());
+    SmartDashboard.putNumber("P Report",pidController.getP());
+    SmartDashboard.putNumber("I Report", pidController.getI());
+    SmartDashboard.putNumber("D Report", pidController.getD());
+
+    double p = SmartDashboard.getNumber("setP", 1);
+    double i = SmartDashboard.getNumber("setI", 1);
+    double d = SmartDashboard.getNumber("setD", 1);
+    pidController.setP(p);
+    pidController.setI(i);
+    pidController.setD(d);
+
+    // System.out.println(encoder.getVelocity());
+
   }
 }

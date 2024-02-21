@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.IntakeConstants.*;
 
 import com.revrobotics.AnalogInput;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -48,11 +49,11 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake() {
     //motor ids changed for load 
-    intake = new CANSparkMax(INTAKE_MOTOR, MotorType.kBrushless);
+    intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
 
-    wrist = new CANSparkMax(WRIST_ID, MotorType.kBrushless);
-    elevator_left = new CANSparkMax(LEFT_ELEV_ID, MotorType.kBrushless);
-    elevator_right = new CANSparkMax(RIGHT_ElEV_ID, MotorType.kBrushless);
+    wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
+    elevator_left = new CANSparkMax(LEFT_ELEV_ID, CANSparkLowLevel.MotorType.kBrushless);
+    elevator_right = new CANSparkMax(RIGHT_ElEV_ID, CANSparkLowLevel.MotorType.kBrushless);
 
     throughBore = wrist.getAnalog(Mode.kAbsolute);
       

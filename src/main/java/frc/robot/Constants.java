@@ -50,7 +50,7 @@ public static class IntakeConstants {
   public static final double HIGHWRISTPOS = 1;
 
   //check 
-  public static final double DESIREDSPEED = 4;
+  public static final double DESIREDSPEED = 3000;
 }
 
   public static class DriveConstants { // ***UPDATE CONSTANTS***
@@ -135,6 +135,11 @@ public static class IntakeConstants {
 
     public static final int MOTOR_ONE_ID = 4;
     public static final int MOTOR_TWO_ID = 3;
+
+    public static final double P_VALUE = 0.01;
+    public static final double I_VALUE = 0;
+    public static final double D_VALUE = 0;
     
+    public static final int CURRENT_LIMIT = 60;
   }
 }
