@@ -55,17 +55,13 @@ public class RotateToAngle extends Command {
   @Override
   public void initialize() {
 
-   // start = normalizeAngle(swerve.getGyro().getRotation2d().getRadians());
-    
-   //angle = normalizeAngle(angle);
-
    rotateController.enableContinuousInput(0, 360);
    
    start = 0;
 
    end = start + angle;
 
-    rotateController.reset();
+   rotateController.reset();
 
   }
 
@@ -77,33 +73,20 @@ public class RotateToAngle extends Command {
     rotateController.setSetpoint(end);
 
     current = swerve.getGyro().getRotation2d().getDegrees();
-    //current = normalizeAngle(current);
 
     double rotationSpeed = rotateController.calculate(current, end);
 
     ChassisSpeeds radial = new ChassisSpeeds(0, 0, -rotationSpeed);
-    //ChassisSpeeds negRadial = new ChassisSpeeds(0,0, rotationSpeed);
-      
+    
     SwerveDriveKinematics.desaturateWheelSpeeds(swerve.getModuleStates(), MAX_ROTATE_SPEED);
    
     swerve.drive(radial); 
-
 
     SmartDashboard.putNumber("Current",current);
     SmartDashboard.putNumber("Start", start);
     SmartDashboard.putNumber("end",end);
 
   }
-  
-  //Changes the angle range from (-180 to 180) to (0 to 360)
-
-  //public double normalizeAngle(double angle) {
-
-    //double twopi = Math.PI * 2;
-
-    //return (angle >= 0 ? angle%twopi : (twopi - ((-twopi) % twopi))) % twopi;
-
-  //} 
 
   // Called once the command ends or is interrupted.
   @Override
@@ -116,9 +99,10 @@ public class RotateToAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     System.out.println("isFinished Reporting: " + rotateController.atSetpoint());
     
     return rotateController.atSetpoint();
-    //return current.getRadians() == end.getRadians();
+
   }
 }
