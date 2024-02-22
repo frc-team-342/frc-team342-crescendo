@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -35,6 +36,9 @@ public class Outtake extends SubsystemBase {
     motorTwo.follow(motorOne);
     motorTwo.setInverted(true);
 
+    motorOne.setIdleMode(IdleMode.kCoast);
+    motorTwo.setIdleMode(IdleMode.kCoast);
+
     motorOne.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
     motorTwo.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
 
@@ -42,17 +46,15 @@ public class Outtake extends SubsystemBase {
     pidController = motorOne.getPIDController();
     
     //This didn't help
-    pidController.setP(6e-5);
-    pidController.setI(0);
-    pidController.setD(0);
-    pidController.setFF(0.000015);
+    pidController.setP(0.000001);
+    pidController.setFF(0.55);
     pidController.setSmartMotionAllowedClosedLoopError(100, 0);
+    pidController.setOutputRange(0, 5000);
 
     SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
     SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
     SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
-
-    System.out.println("In Constructor");
+    SmartDashboard.putNumber("setFF", 0);
   }
 
   public void shootPercent(double speed){
@@ -65,7 +67,7 @@ public class Outtake extends SubsystemBase {
   }
 
   public void shootVelocity(double velocity){
-    pidController.setReference(velocity, CANSparkBase.ControlType.kVelocity, 0);
+    pidController.setReference(velocity, ControlType.kVelocity);
   }
 
   public boolean isUpToSpeed(double targetSpeed){
@@ -83,11 +85,13 @@ public class Outtake extends SubsystemBase {
     double p = SmartDashboard.getNumber("setP", 1);
     double i = SmartDashboard.getNumber("setI", 1);
     double d = SmartDashboard.getNumber("setD", 1);
+    double ff = SmartDashboard.getNumber("setFF", 0);
     pidController.setP(p);
     pidController.setI(i);
     pidController.setD(d);
+    pidController.setFF(ff);
 
-    // System.out.println(encoder.getVelocity());
+    System.out.println(encoder.getVelocity());
 
   }
 }
