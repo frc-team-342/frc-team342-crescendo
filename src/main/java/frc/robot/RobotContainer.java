@@ -37,7 +37,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final JoystickButton xButton;
-  private final JoystickButton aButton;
+  // private final JoystickButton aButton;
   
 
   private SwerveDrive swerve;
@@ -75,23 +75,21 @@ public class RobotContainer {
 
     joy = new XboxController(0);
     xButton = new JoystickButton(joy, XboxController.Button.kX.value);
-    aButton = new JoystickButton(joy, XboxController.Button.kA.value);
+    // aButton = new JoystickButton(joy, XboxController.Button.kA.value);
     wristButton = new JoystickButton(joy, XboxController.Button.kY.value);
     loadButton = new JoystickButton(joy, XboxController.Button.kB.value);
 
     SmartDashboard.putData(outtake);
 
-    //commented  out swerve to test load
-   // driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
-    //moveWrist = new MoveWristToPosition(intake);
-    
-   // opCommands = new OperatorCommands(intake, joy);
+    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    moveWrist = new MoveWristToPosition(intake);
+    opCommands = new OperatorCommands(intake, joy);
+    intake.setDefaultCommand(opCommands);
 
-   // intake.setDefaultCommand(opCommands);
-
+    outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kA.value);
     
    // SmartDashboard.putData(swerve);
-   configureBindings();
+    configureBindings();
   } 
 
 
@@ -108,9 +106,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   //xButton.whileTrue(intake.spinIntake());
-   //aButton.whileTrue(intake.getSensors());
-   //wristButton.whileTrue(moveWrist);
+   xButton.whileTrue(intake.spinIntake());
+  //  aButton.whileTrue(intake.getSensors());
+   wristButton.whileTrue(moveWrist);
 
    loadButton.whileTrue(load);
   }

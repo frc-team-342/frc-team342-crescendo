@@ -133,8 +133,8 @@ public static class IntakeConstants {
 
   public static class OuttakeConstants {
 
-    public static final int MOTOR_ONE_ID = 4;
-    public static final int MOTOR_TWO_ID = 3;
+    public static final int MOTOR_ONE_ID = 12;
+    public static final int MOTOR_TWO_ID = 11;
 
     public static final double P_VALUE = 0.01;
     public static final double I_VALUE = 0;
