@@ -33,13 +33,12 @@ public static class IntakeConstants {
   //for intake sub.sys.
   public static final int WRIST_ID = 1;
 
-  public static final double intakeSpeed = 0.2;
-  public static final double feedShooterSpeed = -0.2;
-  public static final double raiseWithElevatorSpeed = 0.2;
-  public static final double WRISTSPEED = 0.2;
+  public static final double INTAKE_SPEED = 0.2;
+  public static final double FEED_SHOOTER_SPEED = -0.2;
+  public static final double WRIST_SPEED = 0.2;
 
-  public static final double LOWWRISTPOS = -1;
-  public static final double HIGHWRISTPOS = 1;
+  public static final double LOW_WRIST_POS = -1;
+  public static final double HIGH_WRIST_POS = 1;
 
   //check 
   public static final double DESIREDSPEED = 3000;
@@ -51,9 +50,9 @@ public static class ElevatorConstants {
   public static final int ELEVATOR_SWITCH_HIGH = 3;
 
   public static final int LEFT_ELEV_ID = 9;
-  public static final int RIGHT_ElEV_ID = 8;
-  
-  public static final double raiseWithElevatorSpeed = 0.2;
+  public static final int RIGHT_ELEV_ID = 8;
+
+  public static final double ELEVATOR_SPEED = 0.2;
 }
 
   public static class DriveConstants { // ***UPDATE CONSTANTS***

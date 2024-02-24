@@ -12,7 +12,7 @@ import frc.robot.commands.OperatorCommands;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
-import static frc.robot.Constants.IntakeConstants.feedShooterSpeed;
+import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 

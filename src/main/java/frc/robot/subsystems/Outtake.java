@@ -17,7 +17,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.OuttakeConstants;
+import static frc.robot.Constants.OuttakeConstants.*;
 
 public class Outtake extends SubsystemBase {
   
@@ -30,8 +30,8 @@ public class Outtake extends SubsystemBase {
   /** Creates a new Shooter. */
   public Outtake() {
 
-    motorOne = new CANSparkMax(OuttakeConstants.MOTOR_ONE_ID, MotorType.kBrushless);
-    motorTwo = new CANSparkMax(OuttakeConstants.MOTOR_TWO_ID, MotorType.kBrushless);
+    motorOne = new CANSparkMax(MOTOR_ONE_ID, MotorType.kBrushless);
+    motorTwo = new CANSparkMax(MOTOR_TWO_ID, MotorType.kBrushless);
 
     motorTwo.follow(motorOne);
     motorTwo.setInverted(true);
@@ -39,8 +39,8 @@ public class Outtake extends SubsystemBase {
     motorOne.setIdleMode(IdleMode.kCoast);
     motorTwo.setIdleMode(IdleMode.kCoast);
 
-    motorOne.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
-    motorTwo.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
+    motorOne.setSmartCurrentLimit(CURRENT_LIMIT);
+    motorTwo.setSmartCurrentLimit(CURRENT_LIMIT);
 
     encoder = motorOne.getEncoder();    
     pidController = motorOne.getPIDController();
@@ -50,9 +50,9 @@ public class Outtake extends SubsystemBase {
     pidController.setSmartMotionAllowedClosedLoopError(100, 0);
     pidController.setOutputRange(0, 5000);
 
-    SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
-    SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
-    SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
+    SmartDashboard.putNumber("setP", P_VALUE);
+    SmartDashboard.putNumber("setI", I_VALUE);
+    SmartDashboard.putNumber("setD", D_VALUE);
     SmartDashboard.putNumber("setFF", 0);
   }
 
@@ -77,7 +77,7 @@ public class Outtake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Velocity", encoder.getVelocity());
-    SmartDashboard.putNumber("P Report",pidController.getP());
+    SmartDashboard.putNumber("P Report", pidController.getP());
     SmartDashboard.putNumber("I Report", pidController.getI());
     SmartDashboard.putNumber("D Report", pidController.getD());
 

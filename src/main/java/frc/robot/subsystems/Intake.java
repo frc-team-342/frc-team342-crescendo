@@ -23,9 +23,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
-
-
 public class Intake extends SubsystemBase {
 
   private final CANSparkMax intake;
@@ -54,27 +51,21 @@ public class Intake extends SubsystemBase {
     intakeSensor = new DigitalInput(INTAKE_SENSOR);
   }
 
-  //command version
   public Command spinIntake(){
     return runEnd( () -> {
       if(!intakeSensor.get()){
-
-      intake.set(intakeSpeed);
-
+        intake.set(INTAKE_SPEED);
       }
       else {
-
         intake.set(0);
-
       }
     }, 
     
     () -> {intake.set(0);});
-
   }
 
   public void feedShooter(){
-    intake.set(feedShooterSpeed);
+    intake.set(FEED_SHOOTER_SPEED);
   }
 
  /*public Command feedShooter(){
@@ -99,7 +90,6 @@ public class Intake extends SubsystemBase {
   }
 
   //change to use position not percent
-  
   public void rotateWrist(double speed){
     wrist.set(speed);
   }

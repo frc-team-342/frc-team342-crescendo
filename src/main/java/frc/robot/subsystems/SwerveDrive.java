@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
-import frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.DriveConstants.*;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -63,39 +63,39 @@ public class SwerveDrive extends SubsystemBase {
   public SwerveDrive() {
 
     frontLeft = new SwerveModule(
-      DriveConstants.FRONT_LEFT[0],
-      DriveConstants.FRONT_LEFT[1],
-      DriveConstants.FL_ENCODER_PORT,
+      FRONT_LEFT[0],
+      FRONT_LEFT[1],
+      FL_ENCODER_PORT,
       false,
       false,
-      DriveConstants.FRONT_LEFT_OFFSET,
-      DriveConstants.PID_VALUES);
+      FRONT_LEFT_OFFSET,
+      PID_VALUES);
 
     frontRight = new SwerveModule(
-      DriveConstants.FRONT_RIGHT[0], 
-      DriveConstants.FRONT_RIGHT[1],
-      DriveConstants.FR_ENCODER_PORT,
+      FRONT_RIGHT[0], 
+      FRONT_RIGHT[1],
+      FR_ENCODER_PORT,
       false, false,
-      DriveConstants.FRONT_RIGHT_OFFSET,
-      DriveConstants.PID_VALUES);
+      FRONT_RIGHT_OFFSET,
+      PID_VALUES);
    
     backLeft = new SwerveModule(
-      DriveConstants.BACK_LEFT[0],
-      DriveConstants.BACK_LEFT[1],
-      DriveConstants.BL_ENCODER_PORT,
+      BACK_LEFT[0],
+      BACK_LEFT[1],
+      BL_ENCODER_PORT,
       false,
       false,
-      DriveConstants.BACK_LEFT_OFFSET,
-      DriveConstants.PID_VALUES);  
+      BACK_LEFT_OFFSET,
+      PID_VALUES);  
       
     backRight = new SwerveModule(
-      DriveConstants.BACK_RIGHT[0],
-      DriveConstants.BACK_RIGHT[1],
-      DriveConstants.BR_ENCODER_PORT,
+      BACK_RIGHT[0],
+      BACK_RIGHT[1],
+      BR_ENCODER_PORT,
       false,
       false,
-      DriveConstants.BACK_RIGHT_OFFSET,
-      DriveConstants.BL_PID_VALUES);
+      BACK_RIGHT_OFFSET,
+      BL_PID_VALUES);
 
     gyro = new AHRS(SerialPort.Port.kUSB);
 
@@ -106,12 +106,12 @@ public class SwerveDrive extends SubsystemBase {
       backRight.getState()
     };
 
-    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
+    swerveOdometry = new SwerveDriveOdometry(KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
     chassisSpeeds = new ChassisSpeeds();
 
     poseSupplier = () -> getPose();
     resetPoseConsumer = pose -> resetOdometry(pose);
-    robotRelativeOutput = inputSpeed -> drive(inputSpeed, DriveConstants.SLOWER_DRIVE_SPEED);
+    robotRelativeOutput = inputSpeed -> drive(inputSpeed, SLOWER_DRIVE_SPEED);
     chassisSpeedSupplier = () -> getChassisSpeeds();
     shouldFlipSupplier = () -> false;
 
@@ -187,7 +187,7 @@ public class SwerveDrive extends SubsystemBase {
   public Command goToZero() {
     return run(() -> {
       SwerveModuleState[] zeroStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
-      setModuleStates(zeroStates, DriveConstants.MAX_DRIVE_SPEED);
+      setModuleStates(zeroStates, MAX_DRIVE_SPEED);
     });
   }
 
@@ -219,17 +219,17 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
-    double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
-    double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
-    double rotateSpeed = rotateLimiter.calculate(rotateInput) * DriveConstants.MAX_ROTATE_SPEED;
+    double xSpeed = xLimiter.calculate(xInput) * MAX_DRIVE_SPEED;
+    double ySpeed = yLimiter.calculate(yInput) * MAX_DRIVE_SPEED;
+    double rotateSpeed = rotateLimiter.calculate(rotateInput) * MAX_ROTATE_SPEED;
 
     if(fieldOriented) {
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, getGyro().getRotation2d());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
       }
-    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates, DriveConstants.MAX_DRIVE_SPEED);
+    SwerveModuleState moduleStates[] = KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(moduleStates, MAX_DRIVE_SPEED);
   }
     
   public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
@@ -237,7 +237,7 @@ public class SwerveDrive extends SubsystemBase {
     System.out.println(chassisSpeeds + "[\n]" + this.getChassisSpeeds());
     chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     
-    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState moduleStates[] = KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, maxDriveSpeed);
   }
 
@@ -259,7 +259,7 @@ public class SwerveDrive extends SubsystemBase {
       resetPoseConsumer,
       chassisSpeedSupplier,
       robotRelativeOutput,
-      DriveConstants.PATH_CONFIG,
+      PATH_CONFIG,
       shouldFlipSupplier,
       this
       );

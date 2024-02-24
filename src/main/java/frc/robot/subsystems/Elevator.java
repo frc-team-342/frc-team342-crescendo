@@ -14,8 +14,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.IntakeConstants;
+import static frc.robot.Constants.ElevatorConstants.*;
 
 public class Elevator extends SubsystemBase {
 
@@ -29,11 +28,11 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   public Elevator() {
 
-    elevator_left = new CANSparkMax(ElevatorConstants.LEFT_ELEV_ID, MotorType.kBrushless);
-    elevator_right = new CANSparkMax(ElevatorConstants.RIGHT_ElEV_ID, MotorType.kBrushless);
+    elevator_left = new CANSparkMax(LEFT_ELEV_ID, MotorType.kBrushless);
+    elevator_right = new CANSparkMax(RIGHT_ELEV_ID, MotorType.kBrushless);
 
-    elevatorSwitchHigh = new DigitalInput(ElevatorConstants.ELEVATOR_SWITCH_HIGH);
-    elevatorSwitchLow = new DigitalInput(ElevatorConstants.ELEVATOR_SWITCH_LOW);
+    elevatorSwitchHigh = new DigitalInput(ELEVATOR_SWITCH_HIGH);
+    elevatorSwitchLow = new DigitalInput(ELEVATOR_SWITCH_LOW);
 
     pid_elevator = elevator_left.getPIDController();
 
@@ -45,7 +44,7 @@ public class Elevator extends SubsystemBase {
   }
 
    public void raiseElevatorwithSpeed(double speed){
-    elevator_left.set(speed);
+    elevator_left.set(ELEVATOR_SPEED);
   }
 
   public void raiseElevatorToPosition(double pos){
