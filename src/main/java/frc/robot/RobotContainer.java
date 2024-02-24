@@ -6,23 +6,26 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Load;
+import frc.robot.commands.MoveWristToPosition;
+import frc.robot.commands.OperatorCommands;
 import frc.robot.commands.Drive.DriveWithJoystick;
-import frc.robot.commands.Outtake.OuttakeNote;
-import frc.robot.subsystems.Outtake;
-import frc.robot.subsystems.SwerveDrive;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
-// import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
+import static frc.robot.Constants.IntakeConstants.feedShooterSpeed;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.SwerveDrive;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,44 +34,61 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
+
+  private final JoystickButton xButton;
+  private final JoystickButton aButton;
+  
 
   private SwerveDrive swerve;
   // private Outtake outtake;
   
-  private XboxController joy;
+  private XboxController driver;
+  private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
-  private OuttakeNote outtakeNote;
+  private MoveWristToPosition moveWrist;
+
+  private Outtake shootVelocity;
+
+  private Load load;
+  private Outtake outtake;
 
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
   private JoystickButton outtakeNoteBtn;
+  private JoystickButton wristButton;
+  private Intake intake;
+  private JoystickButton loadButton;
 
-  private SendableChooser<Command> autoChooser;
+
+  private OperatorCommands opCommands;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
-    swerve = new SwerveDrive();
-    System.out.println("Creating outtake...");
-    // outtake = new Outtake();
 
-    joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy);
-    // outtakeNote = new OuttakeNote(0.5, outtake);
+    intake = new Intake();
+    outtake = new Outtake();
+    load = new Load(outtake, intake);
+    
+    driver = new XboxController(0);
+    operator = new XboxController(1);
+
+    driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
     swerve.setDefaultCommand(driveWithJoystick);
-    toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
-    toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
-    // outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kB.value);
+    toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
+    
+    xButton = new JoystickButton(operator, XboxController.Button.kX.value);
+    aButton = new JoystickButton(operator, XboxController.Button.kA.value);
+    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
+    loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
 
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    SmartDashboard.putData(swerve);
+    SmartDashboard.putData(outtake);
 
-    // Configure the trigger bindings
-    configureBindings();
-  }
+   configureBindings();
+  } 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -80,9 +100,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
-    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
-    // outtakeNoteBtn.whileTrue(outtakeNote);
+   xButton.whileTrue(intake.spinIntake());
+   aButton.whileTrue(intake.getSensors());
+   wristButton.whileTrue(moveWrist);
+
+   loadButton.whileTrue(load);
   }
 
   /**
@@ -92,6 +114,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+
+    return null;
   }
 }
