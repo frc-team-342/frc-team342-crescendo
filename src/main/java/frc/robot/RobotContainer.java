@@ -7,8 +7,8 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Load;
+import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
-import frc.robot.commands.OperatorCommands;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -18,6 +18,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -39,14 +40,14 @@ public class RobotContainer {
   private final JoystickButton xButton;
   // private final JoystickButton aButton;
   
-
   private SwerveDrive swerve;
   // private Outtake outtake;
   
-  private XboxController joy;
+  private XboxController driver;
+  private XboxController operator;
 
-  private DriveWithJoystick driveWithJoystick;
-  private MoveWristToPosition moveWrist;
+  // private DriveWithJoystick driveWithJoystick;
+  // private MoveWristToPosition moveWrist;
 
   private Outtake shootVelocity;
 
@@ -60,8 +61,7 @@ public class RobotContainer {
   private Intake intake;
   private JoystickButton loadButton;
 
-
-  private OperatorCommands opCommands;
+  private MoveWristPercent moveWristPercent;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -71,30 +71,27 @@ public class RobotContainer {
     load = new Load(outtake, intake);
     
    //swerve = new SwerveDrive();
-   //joy is xboxcontroller
 
-    joy = new XboxController(0);
-    xButton = new JoystickButton(joy, XboxController.Button.kX.value);
+    driver = new XboxController(0);
+    operator = new XboxController(1);
+
+    xButton = new JoystickButton(operator, XboxController.Button.kX.value);
     // aButton = new JoystickButton(joy, XboxController.Button.kA.value);
-    wristButton = new JoystickButton(joy, XboxController.Button.kY.value);
-    loadButton = new JoystickButton(joy, XboxController.Button.kB.value);
+    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
+    loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
 
     SmartDashboard.putData(outtake);
 
-    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
-    moveWrist = new MoveWristToPosition(intake);
-    opCommands = new OperatorCommands(intake, joy);
-    intake.setDefaultCommand(opCommands);
+    // driveWithJoystick = new DriveWithJoystick(swerve, driver, swerve.getFieldOriented());
+    // moveWrist = new MoveWristToPosition(intake);
+    moveWristPercent = new MoveWristPercent(operator, intake);
+    intake.setDefaultCommand(moveWristPercent);
 
-    outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kA.value);
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     
    // SmartDashboard.putData(swerve);
     configureBindings();
   } 
-
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
- 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -108,8 +105,7 @@ public class RobotContainer {
   private void configureBindings() {
    xButton.whileTrue(intake.spinIntake());
   //  aButton.whileTrue(intake.getSensors());
-   wristButton.whileTrue(moveWrist);
-
+  //  wristButton.whileTrue(moveWrist);
    loadButton.whileTrue(load);
   }
 
@@ -120,7 +116,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-
     return null;
   }
 }

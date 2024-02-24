@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.IntakeConstants.*;
 
-import com.revrobotics.AnalogInput;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
@@ -16,9 +15,11 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAnalogSensor.Mode;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,11 +31,11 @@ public class Intake extends SubsystemBase {
 
   private final CANSparkMax intake;
   private final CANSparkMax wrist;
-  private final CANSparkMax elevator_left;
+  // private final CANSparkMax elevator_left;
 
-  private final CANSparkMax elevator_right;
+  // private final CANSparkMax elevator_right;
 
-  private final SparkPIDController pid_elevator;
+  // private final SparkPIDController pid_elevator;
   
   private DigitalInput intakeSensor;
   private DigitalInput elevatorSwitchLow;
@@ -50,30 +51,26 @@ public class Intake extends SubsystemBase {
   public Intake() {
     //motor ids changed for load 
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
-
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
-    elevator_left = new CANSparkMax(LEFT_ELEV_ID, CANSparkLowLevel.MotorType.kBrushless);
-    elevator_right = new CANSparkMax(RIGHT_ElEV_ID, CANSparkLowLevel.MotorType.kBrushless);
+    
+    // elevator_left = new CANSparkMax(LEFT_ELEV_ID, CANSparkLowLevel.MotorType.kBrushless);
+    // elevator_right = new CANSparkMax(RIGHT_ElEV_ID, CANSparkLowLevel.MotorType.kBrushless);
 
-    throughBore = wrist.getAnalog(Mode.kAbsolute);
+    throughBore = new AnalogInput(1);
       
-    pid_elevator = elevator_left.getPIDController();
+    // pid_elevator = elevator_left.getPIDController();
 
-    elevator_left.setIdleMode(IdleMode.kBrake);
-    elevator_right.setIdleMode(IdleMode.kBrake);
+    // elevator_left.setIdleMode(IdleMode.kBrake);
+    // elevator_right.setIdleMode(IdleMode.kBrake);
     intake.setIdleMode(IdleMode.kBrake);
     wrist.setIdleMode(IdleMode.kBrake);
 
-    //right elevaor will follow the left one 
-    elevator_right.follow(elevator_left);
+    // elevator_right.follow(elevator_left);
 
     intakeSensor = new DigitalInput(INTAKE_SENSOR);
     elevatorSwitchLow = new DigitalInput(ELEVATORSWITCHLOW);
     elevatorSwitchHigh = new DigitalInput(ELEVATORSWITCHHIGH);
   }
-
-
-
 
   //command version
   public Command spinIntake(){
@@ -81,23 +78,19 @@ public class Intake extends SubsystemBase {
       if(!intakeSensor.get()){
 
       intake.set(intakeSpeed);
-
       }
       else {
 
         intake.set(0);
-
       }
     }, 
     
     () -> {intake.set(0);});
-
   }
 
   public void feedShooter(){
     intake.set(feedShooterSpeed);
   }
-
 
  /*public Command feedShooter(){
       return runEnd( () -> {
@@ -126,13 +119,13 @@ public class Intake extends SubsystemBase {
     wrist.set(speed);
   }
 
-  public void raiseElevatorwithSpeed(double speed){
-    elevator_left.set(speed);
-  }
+  // public void raiseElevatorwithSpeed(double speed){
+  //   elevator_left.set(speed);
+  // }
 
-  public void raiseElevatorToPosition(double pos){
-    pid_elevator.setReference(pos, ControlType.kPosition);
-  }
+  // public void raiseElevatorToPosition(double pos){
+  //   pid_elevator.setReference(pos, ControlType.kPosition);
+  // }
 
   public void stop(){
     intake.set(0);
@@ -153,9 +146,9 @@ public class Intake extends SubsystemBase {
     return elevatorSwitchHigh.get();
   }
 
-  public double getElevatorEncoder(){
-    return elevator_left.getEncoder().getPosition();
-  }
+  // public double getElevatorEncoder(){
+  //   return elevator_left.getEncoder().getPosition();
+  // }
 
   public AnalogInput getthroughBore(){
     return throughBore;
@@ -165,8 +158,8 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
-    SmartDashboard.putNumber("wrist", throughBore.getPosition());
+    // SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
+    SmartDashboard.putNumber("wrist", throughBore);
   }
 
   @Override

@@ -31,12 +31,12 @@ public static class IntakeConstants {
   public static final int ELEVATORSWITCHHIGH = 3;
 
   //intake motor
-  public static final int INTAKE_MOTOR = 2;
+  public static final int INTAKE_MOTOR = 10;
 
   //for intake sub.sys.
-  public static final int WRIST_ID = 1;
-  public static final int LEFT_ELEV_ID = 9;
-  public static final int RIGHT_ElEV_ID = 8;
+  public static final int WRIST_ID = 9;
+  public static final int LEFT_ELEV_ID = 13;
+  public static final int RIGHT_ElEV_ID = 14;
 
 
   //capitalize constants
@@ -46,7 +46,7 @@ public static class IntakeConstants {
   public static final double raiseWithElevatorSpeed = 0.2;
   public static final double WRISTSPEED = 0.2;
 
-  public static final double LOWWRISTPOS = -1;
+  public static final double LOWWRISTPOS = 0.2;
   public static final double HIGHWRISTPOS = 1;
 
   //check 

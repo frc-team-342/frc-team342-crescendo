@@ -91,7 +91,7 @@ public class Outtake extends SubsystemBase {
     pidController.setD(d);
     pidController.setFF(ff);
 
-    System.out.println(encoder.getVelocity());
+    // System.out.println(encoder.getVelocity());
 
   }
 }
