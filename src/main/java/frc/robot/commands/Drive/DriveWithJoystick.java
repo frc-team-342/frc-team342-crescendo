@@ -77,10 +77,8 @@ public class DriveWithJoystick extends Command {
 
     if(fieldOriented) {
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getGyro().getRotation2d());
-      System.out.println("Driving field oriented");
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
-      System.out.println("Driving robot oriented");
     }
 
     moduleStates = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);

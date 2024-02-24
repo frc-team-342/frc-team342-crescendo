@@ -66,8 +66,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FRONT_LEFT[0],
       DriveConstants.FRONT_LEFT[1],
       DriveConstants.FL_ENCODER_PORT,
-      false,
-      false,
+      false, false,
       DriveConstants.FRONT_LEFT_OFFSET,
       DriveConstants.PID_VALUES);
 
@@ -75,7 +74,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FRONT_RIGHT[0], 
       DriveConstants.FRONT_RIGHT[1],
       DriveConstants.FR_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.FRONT_RIGHT_OFFSET,
       DriveConstants.PID_VALUES);
    
@@ -83,8 +82,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_LEFT[0],
       DriveConstants.BACK_LEFT[1],
       DriveConstants.BL_ENCODER_PORT,
-      false,
-      false,
+      false, true,
       DriveConstants.BACK_LEFT_OFFSET,
       DriveConstants.PID_VALUES);  
       
@@ -92,8 +90,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT[0],
       DriveConstants.BACK_RIGHT[1],
       DriveConstants.BR_ENCODER_PORT,
-      false,
-      false,
+      false, false,
       DriveConstants.BACK_RIGHT_OFFSET,
       DriveConstants.BL_PID_VALUES);
 

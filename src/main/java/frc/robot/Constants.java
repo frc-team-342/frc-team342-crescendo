@@ -83,8 +83,8 @@ public final class Constants {
 
     // Offsets
     public static final double FRONT_LEFT_OFFSET = 1.88;
-    public static final double FRONT_RIGHT_OFFSET = 2.35;
-    public static final double BACK_LEFT_OFFSET = 3.39;
+    public static final double FRONT_RIGHT_OFFSET = 2.35 + Math.PI;
+    public static final double BACK_LEFT_OFFSET = 3.39 + Math.PI;
     public static final double BACK_RIGHT_OFFSET = 1.12;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
