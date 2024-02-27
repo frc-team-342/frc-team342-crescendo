@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
     intake.setIdleMode(IdleMode.kBrake);
     wrist.setIdleMode(IdleMode.kBrake);
 
-    intakeSensor = new DigitalInput(1);
+    intakeSensor = new DigitalInput(3);
   }
 
   //command version
@@ -145,7 +145,7 @@ public class Intake extends SubsystemBase {
       sendableBuilder.addBooleanProperty("intakeSensor", () -> intakeSensor.get(), null);
       // sendableBuilder.addBooleanProperty("elevatorSwitchLow", () -> elevatorSwitchLow.get(), null);
       // sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
-      sendableBuilder.addBooleanProperty("wrist value", () -> throughBore.isConnected(), null);
+      sendableBuilder.addDoubleProperty("wrist value", () -> throughBore.getAbsolutePosition(), null);
       //sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
     }
 
