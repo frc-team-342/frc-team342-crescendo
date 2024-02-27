@@ -7,15 +7,16 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.DriveDistance;
+import frc.robot.commands.RotateToAngle;
+import frc.robot.commands.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import frc.robot.commands.Outtake.OuttakeNote;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
-// import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -41,9 +42,14 @@ public class RobotContainer {
   private DriveWithJoystick driveWithJoystick;
   private DriveDistance driveDistance;
   private OuttakeNote outtakeNote;
+  private TimedDrive driveFoward;
+  private RotateToAngle rotate90;
 
+  private JoystickButton goToZeroBtn;
+  private JoystickButton rotateToAngleButton;
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
+  private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
   private JoystickButton driveDistanceButton;
 
@@ -61,6 +67,13 @@ public class RobotContainer {
     // outtakeNote = new OuttakeNote(0.5, outtake);
     driveDistance = new DriveDistance(1, 5, swerve);
 
+    //driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
+    driveFoward = new TimedDrive(swerve, 2, 0, 0);
+    rotate90 = new RotateToAngle( 270, swerve);
+    rotateToAngleButton = new JoystickButton(joy, XboxController.Button.kB.value);
+
+    
     swerve.setDefaultCommand(driveWithJoystick);
     toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
@@ -89,6 +102,10 @@ public class RobotContainer {
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
     // outtakeNoteBtn.whileTrue(outtakeNote);
+    goToZeroBtn.whileTrue(swerve.goToZero());
+    timedDriveButton.whileTrue(driveFoward);
+    rotateToAngleButton.whileTrue(rotate90);
+    
   }
 
   /**
