@@ -46,7 +46,7 @@ public class RobotContainer {
   private XboxController driver;
   private XboxController operator;
 
-  // private DriveWithJoystick driveWithJoystick;
+  private DriveWithJoystick driveWithJoystick;
   // private MoveWristToPosition moveWrist;
 
   private Outtake shootVelocity;
@@ -58,6 +58,8 @@ public class RobotContainer {
   private JoystickButton toggleSlowModeBtn;
   private JoystickButton outtakeNoteBtn;
   private JoystickButton wristButton;
+  private JoystickButton intakeBtn;
+
   private Intake intake;
   private JoystickButton loadButton;
 
@@ -70,7 +72,7 @@ public class RobotContainer {
     outtake = new Outtake();
     load = new Load(outtake, intake);
     
-   //swerve = new SwerveDrive();
+    swerve = new SwerveDrive();
 
     driver = new XboxController(0);
     operator = new XboxController(1);
@@ -79,16 +81,20 @@ public class RobotContainer {
     // aButton = new JoystickButton(joy, XboxController.Button.kA.value);
     wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
+    intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
 
     SmartDashboard.putData(outtake);
+    SmartDashboard.putData(intake);
 
-    // driveWithJoystick = new DriveWithJoystick(swerve, driver, swerve.getFieldOriented());
+    driveWithJoystick = new DriveWithJoystick(swerve, driver, swerve.getFieldOriented());
     // moveWrist = new MoveWristToPosition(intake);
     moveWristPercent = new MoveWristPercent(operator, intake);
     intake.setDefaultCommand(moveWristPercent);
 
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     
+    swerve.setDefaultCommand(driveWithJoystick);
+
    // SmartDashboard.putData(swerve);
     configureBindings();
   } 
@@ -107,6 +113,7 @@ public class RobotContainer {
   //  aButton.whileTrue(intake.getSensors());
   //  wristButton.whileTrue(moveWrist);
    loadButton.whileTrue(load);
+   intakeBtn.whileTrue(intake.spinIntake());
   }
 
   /**

@@ -21,7 +21,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
-
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -38,10 +38,8 @@ public class Intake extends SubsystemBase {
   // private final SparkPIDController pid_elevator;
   
   private DigitalInput intakeSensor;
-  private DigitalInput elevatorSwitchLow;
-  private DigitalInput elevatorSwitchHigh;
 
-  private AnalogInput throughBore;
+  private DutyCycleEncoder throughBore;
 
   //private DigitalInput wristSwitchIn;
   //private DigitalInput wristSwitchOut;
@@ -53,31 +51,20 @@ public class Intake extends SubsystemBase {
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
     
-    // elevator_left = new CANSparkMax(LEFT_ELEV_ID, CANSparkLowLevel.MotorType.kBrushless);
-    // elevator_right = new CANSparkMax(RIGHT_ElEV_ID, CANSparkLowLevel.MotorType.kBrushless);
+    throughBore = new DutyCycleEncoder(2);
 
-    throughBore = new AnalogInput(1);
-      
-    // pid_elevator = elevator_left.getPIDController();
-
-    // elevator_left.setIdleMode(IdleMode.kBrake);
-    // elevator_right.setIdleMode(IdleMode.kBrake);
     intake.setIdleMode(IdleMode.kBrake);
     wrist.setIdleMode(IdleMode.kBrake);
 
-    // elevator_right.follow(elevator_left);
-
-    intakeSensor = new DigitalInput(INTAKE_SENSOR);
-    elevatorSwitchLow = new DigitalInput(ELEVATORSWITCHLOW);
-    elevatorSwitchHigh = new DigitalInput(ELEVATORSWITCHHIGH);
+    intakeSensor = new DigitalInput(1);
   }
 
   //command version
   public Command spinIntake(){
     return runEnd( () -> {
-      if(!intakeSensor.get()){
+      if(intakeSensor.get()){
 
-      intake.set(intakeSpeed);
+      intake.set(-intakeSpeed);
       }
       else {
 
@@ -89,7 +76,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void feedShooter(){
-    intake.set(feedShooterSpeed);
+    intake.set(-feedShooterSpeed);
   }
 
  /*public Command feedShooter(){
@@ -105,8 +92,6 @@ public class Intake extends SubsystemBase {
   public Command getSensors(){
     return runEnd( () -> {
       SmartDashboard.putBoolean("intakeSensor", intakeSensor.get());
-      SmartDashboard.putBoolean("elevatorSwitchLow", elevatorSwitchLow.get());
-      SmartDashboard.putBoolean("elevatorSwitchHigh", elevatorSwitchHigh.get());
       //SmartDashboard.putBoolean("sensor3", sensor3.get());
     },
 
@@ -138,19 +123,11 @@ public class Intake extends SubsystemBase {
     return intakeSensor.get();
   }
 
-  public boolean getElevatorSwitchLow(){
-    return elevatorSwitchLow.get();
-  }
-
-  public boolean getElevatorSwitchHigh(){
-    return elevatorSwitchHigh.get();
-  }
-
   // public double getElevatorEncoder(){
   //   return elevator_left.getEncoder().getPosition();
   // }
 
-  public AnalogInput getthroughBore(){
+  public DutyCycleEncoder getthroughBore(){
     return throughBore;
   }
 
@@ -159,20 +136,18 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
-    SmartDashboard.putNumber("wrist", throughBore);
+    // SmartDashboard.putNumber("wrist", throughBore.getAbsolutePosition());
   }
 
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
       sendableBuilder.setSmartDashboardType("intake Values");
       sendableBuilder.addBooleanProperty("intakeSensor", () -> intakeSensor.get(), null);
-      sendableBuilder.addBooleanProperty("elevatorSwitchLow", () -> elevatorSwitchLow.get(), null);
-      sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
+      // sendableBuilder.addBooleanProperty("elevatorSwitchLow", () -> elevatorSwitchLow.get(), null);
+      // sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
+      sendableBuilder.addBooleanProperty("wrist value", () -> throughBore.isConnected(), null);
       //sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
     }
-
-
-
 
   public void set(double intakespeed) {
     // TODO Auto-generated method stub

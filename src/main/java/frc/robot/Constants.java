@@ -89,10 +89,10 @@ public static class IntakeConstants {
 
     // Drive Motor IDs
     //switch back to 1,2,3,4 - temporarily 9,10,11,12 *
-    public static final int FRONT_LEFT_DRIVE_ID = 9;
-    public static final int FRONT_RIGHT_DRIVE_ID = 10;
-    public static final int BACK_LEFT_DRIVE_ID = 11;  
-    public static final int BACK_RIGHT_DRIVE_ID = 12;
+    public static final int FRONT_LEFT_DRIVE_ID = 1;
+    public static final int FRONT_RIGHT_DRIVE_ID = 2;
+    public static final int BACK_LEFT_DRIVE_ID = 3;  
+    public static final int BACK_RIGHT_DRIVE_ID = 4;
 
     // Rotate Motor IDs
     public static final int FRONT_LEFT_ROTATE_ID = 5;
@@ -136,9 +136,10 @@ public static class IntakeConstants {
     public static final int MOTOR_ONE_ID = 12;
     public static final int MOTOR_TWO_ID = 11;
 
-    public static final double P_VALUE = 0.01;
+    public static final double P_VALUE = 0.00001;
     public static final double I_VALUE = 0;
     public static final double D_VALUE = 0;
+    public static final double FF_VALUE = 0.0002;
     
     public static final int CURRENT_LIMIT = 60;
   }
