@@ -20,6 +20,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -51,6 +53,8 @@ public class RobotContainer {
 
   private MoveWristToPosition moveWristDown;
   private MoveWristToPosition moveWristUp;
+  private MoveWristToPosition moveWristAmp;
+  private SequentialCommandGroup wristDownIntake;
 
   private Outtake shootVelocity;
 
@@ -65,6 +69,7 @@ public class RobotContainer {
 
   private POVButton wristDownBtn;
   private POVButton wristUpBtn;
+  private POVButton wristRightBtn;
 
   private Intake intake;
   private JoystickButton loadButton;
@@ -92,6 +97,10 @@ public class RobotContainer {
 
     moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOWWRISTPOS);
     moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGHWRISTPOS);
+    moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMPPOS);
+
+    //Mr.Neal added this
+    wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
 
     moveWristPercent = new MoveWristPercent(operator, intake);
     intake.setDefaultCommand(moveWristPercent);
@@ -99,12 +108,13 @@ public class RobotContainer {
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     wristDownBtn = new POVButton(operator, 180);
     wristUpBtn = new POVButton(operator, 0);
+    wristRightBtn = new POVButton(operator, 90);
 
     swerve.setDefaultCommand(driveWithJoystick);
 
    // SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
-    SmartDashboard.putData(intake);
+   SmartDashboard.putData(intake);
 
     configureBindings();
   } 
@@ -119,12 +129,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   xButton.whileTrue(intake.spinIntake());
+   xButton.whileTrue(intake.outtake()); // X
   //  wristButton.whileTrue(moveWrist);
    loadButton.whileTrue(load);
-   intakeBtn.whileTrue(intake.outtake());
-  //  wristDownBtn.whileTrue(moveWristDown);
-   wristUpBtn.whileTrue(moveWristUp);
+   intakeBtn.whileTrue(intake.spinIntake()); // A
+   wristDownBtn.onTrue(wristDownIntake);
+   wristUpBtn.onTrue(moveWristUp);
+   wristRightBtn.onTrue(moveWristAmp);
   }
 
   /**

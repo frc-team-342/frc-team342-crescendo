@@ -9,9 +9,11 @@ import com.revrobotics.AnalogInput;
 import static frc.robot.Constants.IntakeConstants.HIGHWRISTPOS;
 import static frc.robot.Constants.IntakeConstants.LOWWRISTPOS;
 import static frc.robot.Constants.IntakeConstants.WRISTSPEED;
+import static frc.robot.Constants.IntakeConstants.intakeSpeed;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
@@ -26,7 +28,7 @@ public class MoveWristToPosition extends Command {
   public MoveWristToPosition(Intake intake, double position) {
      
     this.intake = intake;    
-    boolean goingDown = true;
+    boolean goingDown = false;
     this.position = position;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,38 +43,38 @@ public class MoveWristToPosition extends Command {
   @Override
   public void execute() {
 
+    double currPosition = intake.getthroughBore().getAbsolutePosition();
+    goingDown = currPosition < position;
 
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
-    // if (goingDown && intake.getthroughBore().getAbsolutePosition() > LOWWRISTPOS) {
-    //   intake.rotateWrist(-WRISTSPEED);
-    // }
-    // //makes sure that its not going too far back to avoid hitting the back
-    // else if (!goingDown && intake.getthroughBore().getAbsolutePosition() < HIGHWRISTPOS){
-    //   intake.rotateWrist(WRISTSPEED);
-    // }
-    
-    // //lets the robot know so it wont go too far back and it knows its limits
-    // if (intake.getthroughBore().getAbsolutePosition() >= HIGHWRISTPOS) {
-    //   goingDown = true;
-    // }
-    // //so it does not go too far down - sets parameters
-    // else if (intake.getthroughBore().getAbsolutePosition() < LOWWRISTPOS){
-    //   goingDown = false;
-    // }
-
-    intake.rotateWristToPosition(position);
+    if (goingDown && currPosition < LOWWRISTPOS) {
+      intake.rotateWrist(-.3);
+      System.out.println("Moving Down");
+    }
+    //makes sure that its not going too far back to avoid hitting the back
+    else if (!goingDown && currPosition > HIGHWRISTPOS){
+      intake.rotateWrist(.3);
+      System.out.println("Moving Up");
+    }
+  
+    if(intake.getIntakeSensor()) {
+      intake.hold();
+    }
+    else {
+      intake.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.rotateWristToPosition(position);
+    //intake.rotateWristToPosition(position);
+    intake.rotateWrist(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println((intake.getthroughBore().getAbsolutePosition() >= position - 0.01) && (intake.getthroughBore().getAbsolutePosition() <= position + 0.01));
     return (intake.getthroughBore().getAbsolutePosition() >= position - 0.01) && (intake.getthroughBore().getAbsolutePosition() <= position + 0.01);
   }
 }

@@ -35,6 +35,7 @@ public class Intake extends SubsystemBase {
   
   private DigitalInput intakeSensor;
   private DutyCycleEncoder throughBore;
+  private double velocity;
   
   /** Creates a new Intake. */
   public Intake() {
@@ -52,6 +53,9 @@ public class Intake extends SubsystemBase {
     wrist.setIdleMode(IdleMode.kBrake);
 
     intakeSensor = new DigitalInput(5);
+
+    velocity = 0.1;
+    SmartDashboard.putNumber("Set Velocity", 0.3);
   }
 
   //command version
@@ -72,7 +76,7 @@ public class Intake extends SubsystemBase {
 
   public Command outtake() {
     return runEnd(() -> {
-      intake.set(IntakeConstants.INTAKE_SHOOT_SPEED);
+      intake.set(velocity);
     }, () -> {intake.set(0);});
   }
 
@@ -80,32 +84,18 @@ public class Intake extends SubsystemBase {
     intake.set(-feedShooterSpeed);
   }
 
-  public Command getSensors(){
-    return runEnd( () -> {
-      SmartDashboard.putBoolean("intakeSensor", intakeSensor.get());
-    },
-
-    () -> {});
+  public void hold(){
+      intake.set(-0.4);   
   }
 
   //change to use position not percent
-  
   public void rotateWrist(double speed){
     wrist.set(speed);
-    
   }
 
   public void rotateWristToPosition(double position){
     wristController.setReference(position, ControlType.kPosition);
   }
-
-  // public void raiseElevatorwithSpeed(double speed){
-  //   elevator_left.set(speed);
-  // }
-
-  // public void raiseElevatorToPosition(double pos){
-  //   pid_elevator.setReference(pos, ControlType.kPosition);
-  // }
 
   public void stop(){
     intake.set(0);
@@ -114,13 +104,9 @@ public class Intake extends SubsystemBase {
   /*
    * Returns the value from the intake Sensor
    */
-  public boolean getIntakeSenor(){
+  public boolean getIntakeSensor(){
     return intakeSensor.get();
   }
-
-  // public double getElevatorEncoder(){
-  //   return elevator_left.getEncoder().getPosition();
-  // }
 
   public DutyCycleEncoder getthroughBore(){
     return throughBore;
@@ -130,8 +116,8 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
     // SmartDashboard.putNumber("wrist", throughBore.getAbsolutePosition());
+    velocity = SmartDashboard.getNumber("Set Velocity", velocity);
   }
 
   @Override
@@ -142,7 +128,6 @@ public class Intake extends SubsystemBase {
     }
 
   public void set(double intakespeed) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'set'");
   }
 }

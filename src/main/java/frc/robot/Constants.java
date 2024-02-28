@@ -49,6 +49,7 @@ public static class IntakeConstants {
 
   public static final double LOWWRISTPOS = 0.74;
   public static final double HIGHWRISTPOS = 0.145;
+  public static final double AMPPOS = 0.342;
 
   //check 
   public static final double DESIREDSPEED = 3000;
