@@ -63,7 +63,7 @@ public class Intake extends SubsystemBase {
     return runEnd( () -> {
       if(intakeSensor.get()){
 
-      intake.set(-intakeSpeed);
+      intake.set(-INTAKE_SPEED);
       }
       else {
 
@@ -81,7 +81,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void feedShooter(){
-    intake.set(-feedShooterSpeed);
+    intake.set(-FEED_SHOOTER_SPEED);
   }
 
   public void hold(){
@@ -112,12 +112,16 @@ public class Intake extends SubsystemBase {
     return throughBore;
   }
 
+  public boolean isStuck() {
+    return intake.getOutputCurrent() < IntakeConstants.DEFAULT_CURRENT; 
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("wrist", throughBore.getAbsolutePosition());
     velocity = SmartDashboard.getNumber("Set Velocity", velocity);
+    SmartDashboard.putBoolean("STUCK", isStuck());
   }
 
   @Override
@@ -125,9 +129,6 @@ public class Intake extends SubsystemBase {
       sendableBuilder.setSmartDashboardType("intake Values");
       sendableBuilder.addBooleanProperty("intake Sensor", () -> intakeSensor.get(), null);
       sendableBuilder.addDoubleProperty("wrist value", () -> throughBore.getAbsolutePosition(), null);
+      sendableBuilder.addBooleanProperty("Intake sensor connection", () -> throughBore.isConnected(), null);
     }
-
-  public void set(double intakespeed) {
-    throw new UnsupportedOperationException("Unimplemented method 'set'");
-  }
 }

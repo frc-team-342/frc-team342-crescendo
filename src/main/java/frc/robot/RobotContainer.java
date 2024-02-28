@@ -13,7 +13,7 @@ import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
-import static frc.robot.Constants.IntakeConstants.feedShooterSpeed;
+import static frc.robot.Constants.IntakeConstants.FEED_SHOOTER_SPEED;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 
@@ -95,11 +95,10 @@ public class RobotContainer {
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver, swerve.getFieldOriented());
 
-    moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOWWRISTPOS);
-    moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGHWRISTPOS);
-    moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMPPOS);
+    moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOW_WRIST_POS);
+    moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGH_WRIST_POS);
+    moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMP_POS);
 
-    //Mr.Neal added this
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
 
     moveWristPercent = new MoveWristPercent(operator, intake);
@@ -130,7 +129,6 @@ public class RobotContainer {
    */
   private void configureBindings() {
    xButton.whileTrue(intake.outtake()); // X
-  //  wristButton.whileTrue(moveWrist);
    loadButton.whileTrue(load);
    intakeBtn.whileTrue(intake.spinIntake()); // A
    wristDownBtn.onTrue(wristDownIntake);

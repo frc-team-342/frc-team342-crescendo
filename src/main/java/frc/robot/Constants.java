@@ -27,8 +27,8 @@ public final class Constants {
 
 public static class IntakeConstants {
   public static final int INTAKE_SENSOR = 1;
-  public static final int ELEVATORSWITCHLOW = 2;
-  public static final int ELEVATORSWITCHHIGH = 3;
+  public static final int ELEVATOR_SWITCH_LOW = 2;
+  public static final int ELEVATOR_SWITCH_HIGH = 3;
 
   //intake motor
   public static final int INTAKE_MOTOR = 10;
@@ -41,18 +41,18 @@ public static class IntakeConstants {
 
   //capitalize constants
 
-  public static final double intakeSpeed = 0.4;
+  public static final double INTAKE_SPEED = 0.4;
   public static final double INTAKE_SHOOT_SPEED = 1;
-  public static final double feedShooterSpeed = -0.2;
-  public static final double raiseWithElevatorSpeed = 0.2;
-  public static final double WRISTSPEED = 0.2;
+  public static final double FEED_SHOOTER_SPEED = -0.2;
+  public static final double WRIST_SPEED = 0.2;
 
-  public static final double LOWWRISTPOS = 0.74;
-  public static final double HIGHWRISTPOS = 0.145;
-  public static final double AMPPOS = 0.342;
+  public static final double LOW_WRIST_POS = 0.74;
+  public static final double HIGH_WRIST_POS = 0.145;
+  public static final double AMP_POS = 0.342;
 
-  //check 
-  public static final double DESIREDSPEED = 3000;
+  public static final double DESIRED_SPEED = 3000;
+  
+  public static final double DEFAULT_CURRENT = 30;
 }
 
   public static class DriveConstants { // ***UPDATE CONSTANTS***

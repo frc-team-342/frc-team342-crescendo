@@ -6,10 +6,8 @@ package frc.robot.commands;
 
 import com.revrobotics.AnalogInput;
 
-import static frc.robot.Constants.IntakeConstants.HIGHWRISTPOS;
-import static frc.robot.Constants.IntakeConstants.LOWWRISTPOS;
-import static frc.robot.Constants.IntakeConstants.WRISTSPEED;
-import static frc.robot.Constants.IntakeConstants.intakeSpeed;
+import static frc.robot.Constants.IntakeConstants.HIGH_WRIST_POS;
+import static frc.robot.Constants.IntakeConstants.LOW_WRIST_POS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
@@ -47,12 +45,12 @@ public class MoveWristToPosition extends Command {
     goingDown = currPosition < position;
 
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
-    if (goingDown && currPosition < LOWWRISTPOS) {
+    if (goingDown && currPosition < LOW_WRIST_POS) {
       intake.rotateWrist(-.3);
       System.out.println("Moving Down");
     }
     //makes sure that its not going too far back to avoid hitting the back
-    else if (!goingDown && currPosition > HIGHWRISTPOS){
+    else if (!goingDown && currPosition > HIGH_WRIST_POS){
       intake.rotateWrist(.3);
       System.out.println("Moving Up");
     }

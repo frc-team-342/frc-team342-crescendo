@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import static frc.robot.Constants.IntakeConstants.DESIREDSPEED;
+import static frc.robot.Constants.IntakeConstants.DESIRED_SPEED;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,9 +30,9 @@ public class Load extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    outtake.shootVelocity(DESIREDSPEED);
+    outtake.shootVelocity(DESIRED_SPEED);
      
-    if(outtake.isUpToSpeed(DESIREDSPEED)){
+    if(outtake.isUpToSpeed(DESIRED_SPEED)){
       intake.feedShooter();
     }
   }
@@ -42,7 +42,6 @@ public class Load extends Command {
   public void end(boolean interrupted) {
     outtake.stop();
     intake.stop();
-    System.out.println("At End of Load");
   }
 
   // Returns true when the command should end.
