@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
 
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -23,7 +24,33 @@ import edu.wpi.first.units.Unit;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class DriveConstants { // ***UPDATE CONSTANTS***
+
+public static class IntakeConstants {
+  public static final int INTAKE_SENSOR = 1;
+  public static final int ELEVATOR_SWITCH_LOW = 2;
+  public static final int ELEVATOR_SWITCH_HIGH = 3;
+
+  public static final int INTAKE_MOTOR = 10;
+
+  public static final int WRIST_ID = 9;
+  public static final int LEFT_ELEV_ID = 13;
+  public static final int RIGHT_ElEV_ID = 14;
+
+  public static final double INTAKE_SPEED = 0.4;
+  public static final double INTAKE_SHOOT_SPEED = 1;
+  public static final double FEED_SHOOTER_SPEED = -0.2;
+  public static final double WRIST_SPEED = 0.2;
+
+  public static final double LOW_WRIST_POS = 0.74;
+  public static final double HIGH_WRIST_POS = 0.145;
+  public static final double AMP_POS = 0.342;
+
+  public static final double DESIRED_SPEED = 3000;
+  
+  public static final double DEFAULT_CURRENT = 30;
+}
+
+  public static class DriveConstants {
 
     public static final double TRACK_WIDTH = Units.inchesToMeters(29); // *
 
@@ -54,10 +81,10 @@ public final class Constants {
     );
 
     public static final double[] PID_VALUES = {0.5, 0, 0};
-    // public static final double[] BL_PID_VALUES = {0.5, 0.075, 0};
     public static final double[] BL_PID_VALUES = {0.5, 0.01, 0};
 
     // Drive Motor IDs
+    //switch back to 1,2,3,4 - temporarily 9,10,11,12 *
     public static final int FRONT_LEFT_DRIVE_ID = 1;
     public static final int FRONT_RIGHT_DRIVE_ID = 2;
     public static final int BACK_LEFT_DRIVE_ID = 3;  
@@ -102,8 +129,14 @@ public final class Constants {
 
   public static class OuttakeConstants {
 
-    public static final int MOTOR_ONE_ID = 1;
-    public static final int MOTOR_TWO_ID = 2;
+    public static final int MOTOR_ONE_ID = 12;
+    public static final int MOTOR_TWO_ID = 11;
+
+    public static final double P_VALUE = 0.00001;
+    public static final double I_VALUE = 0;
+    public static final double D_VALUE = 0;
+    public static final double FF_VALUE = 0.0002;
     
+    public static final int CURRENT_LIMIT = 60;
   }
 }
