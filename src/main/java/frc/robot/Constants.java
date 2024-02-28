@@ -41,13 +41,14 @@ public static class IntakeConstants {
 
   //capitalize constants
 
-  public static final double intakeSpeed = 0.2;
+  public static final double intakeSpeed = 0.4;
+  public static final double INTAKE_SHOOT_SPEED = 1;
   public static final double feedShooterSpeed = -0.2;
   public static final double raiseWithElevatorSpeed = 0.2;
   public static final double WRISTSPEED = 0.2;
 
-  public static final double LOWWRISTPOS = 0.2;
-  public static final double HIGHWRISTPOS = 1;
+  public static final double LOWWRISTPOS = 0.74;
+  public static final double HIGHWRISTPOS = 0.145;
 
   //check 
   public static final double DESIREDSPEED = 3000;

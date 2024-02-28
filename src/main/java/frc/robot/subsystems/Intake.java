@@ -17,46 +17,41 @@ import com.revrobotics.SparkAnalogSensor.Mode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
-
 
 public class Intake extends SubsystemBase {
 
   private final CANSparkMax intake;
   private final CANSparkMax wrist;
-  // private final CANSparkMax elevator_left;
 
-  // private final CANSparkMax elevator_right;
-
-  // private final SparkPIDController pid_elevator;
+  private final SparkPIDController wristController;
   
   private DigitalInput intakeSensor;
-
   private DutyCycleEncoder throughBore;
-
-  //private DigitalInput wristSwitchIn;
-  //private DigitalInput wristSwitchOut;
-
-
+  
   /** Creates a new Intake. */
   public Intake() {
     //motor ids changed for load 
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
     
+    wristController = wrist.getPIDController();
+    wristController.setP(0.01);
+    wristController.setSmartMotionAllowedClosedLoopError(0.01, 0);
+
     throughBore = new DutyCycleEncoder(2);
 
     intake.setIdleMode(IdleMode.kBrake);
     wrist.setIdleMode(IdleMode.kBrake);
 
-    intakeSensor = new DigitalInput(3);
+    intakeSensor = new DigitalInput(5);
   }
 
   //command version
@@ -75,24 +70,19 @@ public class Intake extends SubsystemBase {
     () -> {intake.set(0);});
   }
 
+  public Command outtake() {
+    return runEnd(() -> {
+      intake.set(IntakeConstants.INTAKE_SHOOT_SPEED);
+    }, () -> {intake.set(0);});
+  }
+
   public void feedShooter(){
     intake.set(-feedShooterSpeed);
   }
 
- /*public Command feedShooter(){
-      return runEnd( () -> {
-        intake.set(feedShooterSpeed);
-      }
-        
-      ,  () -> {
-        intake.set(0);
-      });
-  }*/ 
-
   public Command getSensors(){
     return runEnd( () -> {
       SmartDashboard.putBoolean("intakeSensor", intakeSensor.get());
-      //SmartDashboard.putBoolean("sensor3", sensor3.get());
     },
 
     () -> {});
@@ -102,6 +92,11 @@ public class Intake extends SubsystemBase {
   
   public void rotateWrist(double speed){
     wrist.set(speed);
+    
+  }
+
+  public void rotateWristToPosition(double position){
+    wristController.setReference(position, ControlType.kPosition);
   }
 
   // public void raiseElevatorwithSpeed(double speed){
@@ -142,11 +137,8 @@ public class Intake extends SubsystemBase {
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
       sendableBuilder.setSmartDashboardType("intake Values");
-      sendableBuilder.addBooleanProperty("intakeSensor", () -> intakeSensor.get(), null);
-      // sendableBuilder.addBooleanProperty("elevatorSwitchLow", () -> elevatorSwitchLow.get(), null);
-      // sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
+      sendableBuilder.addBooleanProperty("intake Sensor", () -> intakeSensor.get(), null);
       sendableBuilder.addDoubleProperty("wrist value", () -> throughBore.getAbsolutePosition(), null);
-      //sendableBuilder.addBooleanProperty("sensor3", () -> sensor3.get(), null);
     }
 
   public void set(double intakespeed) {

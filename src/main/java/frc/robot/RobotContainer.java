@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Load;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -38,7 +40,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final JoystickButton xButton;
-  // private final JoystickButton aButton;
   
   private SwerveDrive swerve;
   // private Outtake outtake;
@@ -47,7 +48,9 @@ public class RobotContainer {
   private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
-  // private MoveWristToPosition moveWrist;
+
+  private MoveWristToPosition moveWristDown;
+  private MoveWristToPosition moveWristUp;
 
   private Outtake shootVelocity;
 
@@ -59,6 +62,9 @@ public class RobotContainer {
   private JoystickButton outtakeNoteBtn;
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
+
+  private POVButton wristDownBtn;
+  private POVButton wristUpBtn;
 
   private Intake intake;
   private JoystickButton loadButton;
@@ -78,24 +84,28 @@ public class RobotContainer {
     operator = new XboxController(1);
 
     xButton = new JoystickButton(operator, XboxController.Button.kX.value);
-    // aButton = new JoystickButton(joy, XboxController.Button.kA.value);
     wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
-
-    SmartDashboard.putData(outtake);
-    SmartDashboard.putData(intake);
-
+    
     driveWithJoystick = new DriveWithJoystick(swerve, driver, swerve.getFieldOriented());
-    // moveWrist = new MoveWristToPosition(intake);
+
+    moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOWWRISTPOS);
+    moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGHWRISTPOS);
+
     moveWristPercent = new MoveWristPercent(operator, intake);
     intake.setDefaultCommand(moveWristPercent);
 
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
-    
+    wristDownBtn = new POVButton(operator, 180);
+    wristUpBtn = new POVButton(operator, 0);
+
     swerve.setDefaultCommand(driveWithJoystick);
 
    // SmartDashboard.putData(swerve);
+   SmartDashboard.putData(outtake);
+    SmartDashboard.putData(intake);
+
     configureBindings();
   } 
 
@@ -110,10 +120,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
    xButton.whileTrue(intake.spinIntake());
-  //  aButton.whileTrue(intake.getSensors());
   //  wristButton.whileTrue(moveWrist);
    loadButton.whileTrue(load);
-   intakeBtn.whileTrue(intake.spinIntake());
+   intakeBtn.whileTrue(intake.outtake());
+  //  wristDownBtn.whileTrue(moveWristDown);
+   wristUpBtn.whileTrue(moveWristUp);
   }
 
   /**
