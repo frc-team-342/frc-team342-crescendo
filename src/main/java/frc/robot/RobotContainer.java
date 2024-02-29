@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+<<<<<<< HEAD
 import frc.robot.commands.Drive.DriveDistance;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.TimedDrive;
@@ -18,13 +19,29 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
+=======
+import frc.robot.commands.Load;
+import frc.robot.commands.MoveWristPercent;
+import frc.robot.commands.MoveWristToPosition;
+import frc.robot.commands.Drive.DriveWithJoystick;
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
+import static frc.robot.Constants.IntakeConstants.feedShooterSpeed;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.SwerveDrive;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,17 +50,31 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
 
+  private final JoystickButton xButton;
+  // private final JoystickButton aButton;
+  
   private SwerveDrive swerve;
   // private Outtake outtake;
   
-  private XboxController joy;
+  private XboxController driver;
+  private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
+<<<<<<< HEAD
   private DriveDistance driveDistance;
   private OuttakeNote outtakeNote;
   private TimedDrive driveFoward;
   private RotateToAngle rotate90;
+=======
+  // private MoveWristToPosition moveWrist;
+
+  private Outtake shootVelocity;
+
+  private Load load;
+  private Outtake outtake;
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 
   private JoystickButton goToZeroBtn;
   private JoystickButton rotateToAngleButton;
@@ -51,17 +82,28 @@ public class RobotContainer {
   private JoystickButton toggleSlowModeBtn;
   private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
+<<<<<<< HEAD
   private JoystickButton driveDistanceButton;
+=======
+  private JoystickButton wristButton;
+  private JoystickButton intakeBtn;
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 
-  private SendableChooser<Command> autoChooser;
+  private Intake intake;
+  private JoystickButton loadButton;
+
+  private MoveWristPercent moveWristPercent;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    intake = new Intake();
+    outtake = new Outtake();
+    load = new Load(outtake, intake);
     
     swerve = new SwerveDrive();
-    System.out.println("Creating outtake...");
-    // outtake = new Outtake();
 
+<<<<<<< HEAD
     joy = new XboxController(0);
     driveWithJoystick = new DriveWithJoystick(swerve, joy);
     // outtakeNote = new OuttakeNote(0.5, outtake);
@@ -80,14 +122,32 @@ public class RobotContainer {
     // outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kB.value);
     driveDistanceButton = new JoystickButton(joy, XboxController.Button.kY.value);
 
+=======
+    driver = new XboxController(0);
+    operator = new XboxController(1);
 
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    SmartDashboard.putData(swerve);
+    xButton = new JoystickButton(operator, XboxController.Button.kX.value);
+    // aButton = new JoystickButton(joy, XboxController.Button.kA.value);
+    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
+    loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
+    intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
 
-    // Configure the trigger bindings
+    SmartDashboard.putData(outtake);
+    SmartDashboard.putData(intake);
+
+    driveWithJoystick = new DriveWithJoystick(swerve, driver, swerve.getFieldOriented());
+    // moveWrist = new MoveWristToPosition(intake);
+    moveWristPercent = new MoveWristPercent(operator, intake);
+    intake.setDefaultCommand(moveWristPercent);
+
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    
+    swerve.setDefaultCommand(driveWithJoystick);
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
+
+   // SmartDashboard.putData(swerve);
     configureBindings();
-  }
+  } 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -99,6 +159,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+<<<<<<< HEAD
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
     // outtakeNoteBtn.whileTrue(outtakeNote);
@@ -106,6 +167,13 @@ public class RobotContainer {
     timedDriveButton.whileTrue(driveFoward);
     rotateToAngleButton.whileTrue(rotate90);
     
+=======
+   xButton.whileTrue(intake.spinIntake());
+  //  aButton.whileTrue(intake.getSensors());
+  //  wristButton.whileTrue(moveWrist);
+   loadButton.whileTrue(load);
+   intakeBtn.whileTrue(intake.spinIntake());
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
   }
 
   /**
@@ -115,6 +183,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    return null;
   }
 }
