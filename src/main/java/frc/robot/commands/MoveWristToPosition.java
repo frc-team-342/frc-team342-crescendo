@@ -8,6 +8,7 @@ import com.revrobotics.AnalogInput;
 
 import static frc.robot.Constants.IntakeConstants.*;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
@@ -23,7 +24,6 @@ public class MoveWristToPosition extends Command {
     this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
-
     boolean goingDown = true;
 
   }
@@ -38,20 +38,20 @@ public class MoveWristToPosition extends Command {
 
 
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
-    if (goingDown && intake.getthroughBore().getPosition() > LOW_WRIST_POS) {
-      intake.rotateWrist(-WRIST_SPEED);
+    if (goingDown && intake.getthroughBore().getAbsolutePosition() > LOWWRISTPOS) {
+      intake.rotateWrist(-WRISTSPEED);
     }
     //makes sure that its not going too far back to avoid hitting the back
-    else if (!goingDown && intake.getthroughBore().getPosition() < HIGH_WRIST_POS){
-      intake.rotateWrist(WRIST_SPEED);
+    else if (!goingDown && intake.getthroughBore().getAbsolutePosition() < HIGHWRISTPOS){
+      intake.rotateWrist(WRISTSPEED);
     }
     
     //lets the robot know so it wont go too far back and it knows its limits
-    if (intake.getthroughBore().getPosition() >= HIGH_WRIST_POS) {
+    if (intake.getthroughBore().getAbsolutePosition() >= HIGHWRISTPOS) {
       goingDown = true;
     }
     //so it does not go too far down - sets parameters
-    else if (intake.getthroughBore().getPosition() < LOW_WRIST_POS){
+    else if (intake.getthroughBore().getAbsolutePosition() < LOWWRISTPOS){
       goingDown = false;
     }
   }

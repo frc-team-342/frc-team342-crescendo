@@ -34,7 +34,7 @@ public class Load extends Command {
     System.out.println("execute");
     //start shooter
     //doesnt work
-    outtake.shootVelocity(1);
+    outtake.shootVelocity(3000);
     //outtake.shootPercent(0.5);
     if(outtake.isUpToSpeed(DESIREDSPEED)){
       intake.feedShooter();

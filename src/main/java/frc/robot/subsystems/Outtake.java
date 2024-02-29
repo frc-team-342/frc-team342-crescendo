@@ -17,12 +17,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.OuttakeConstants.*;
+import static frc.robot.Constants.OuttakeConstants;
+
 
 public class Outtake extends SubsystemBase {
   
-  private CANSparkMax motorOne;
-  private CANSparkMax motorTwo;
+  private CANSparkMax leftMotor;
+  private CANSparkMax rightMotor;
 
   private RelativeEncoder encoder;
   private SparkPIDController pidController;
@@ -30,39 +31,42 @@ public class Outtake extends SubsystemBase {
   /** Creates a new Shooter. */
   public Outtake() {
 
-    motorOne = new CANSparkMax(MOTOR_ONE_ID, MotorType.kBrushless);
-    motorTwo = new CANSparkMax(MOTOR_TWO_ID, MotorType.kBrushless);
 
-    motorTwo.follow(motorOne);
-    motorTwo.setInverted(true);
+    leftMotor = new CANSparkMax(OuttakeConstants.MOTOR_ONE_ID, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(OuttakeConstants.MOTOR_TWO_ID, MotorType.kBrushless);
 
-    motorOne.setIdleMode(IdleMode.kCoast);
-    motorTwo.setIdleMode(IdleMode.kCoast);
+    leftMotor.setInverted(true);
+    // rightMotor.setInverted(false);
+    rightMotor.follow(leftMotor, true);
 
-    motorOne.setSmartCurrentLimit(CURRENT_LIMIT);
-    motorTwo.setSmartCurrentLimit(CURRENT_LIMIT);
+    leftMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setIdleMode(IdleMode.kCoast);
 
-    encoder = motorOne.getEncoder();    
-    pidController = motorOne.getPIDController();
+    leftMotor.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
+    rightMotor.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
+
+    encoder = leftMotor.getEncoder();    
+    pidController = leftMotor.getPIDController();
     
-    pidController.setP(0.000001);
-    pidController.setFF(0.55);
+    //This didn't help
+    pidController.setP(OuttakeConstants.P_VALUE);
+    pidController.setFF(OuttakeConstants.FF_VALUE);
     pidController.setSmartMotionAllowedClosedLoopError(100, 0);
     pidController.setOutputRange(0, 5000);
 
-    SmartDashboard.putNumber("setP", P_VALUE);
-    SmartDashboard.putNumber("setI", I_VALUE);
-    SmartDashboard.putNumber("setD", D_VALUE);
-    SmartDashboard.putNumber("setFF", 0);
+    SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
+    SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
+    SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
+    SmartDashboard.putNumber("setFF", OuttakeConstants.FF_VALUE);
   }
 
   public void shootPercent(double speed){
-    motorOne.set(speed);
+    leftMotor.set(speed);
     System.out.println("Shooting at " + speed);
   }
 
   public void stop(){
-    motorOne.set(0);
+    leftMotor.set(0);
   }
 
   public void shootVelocity(double velocity){
@@ -90,7 +94,7 @@ public class Outtake extends SubsystemBase {
     pidController.setD(d);
     pidController.setFF(ff);
 
-    System.out.println(encoder.getVelocity());
+    // System.out.println(encoder.getVelocity());
 
   }
 }

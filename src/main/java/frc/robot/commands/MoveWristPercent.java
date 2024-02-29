@@ -4,29 +4,26 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
-import edu.wpi.first.math.MathUtil;
+import frc.robot.subsystems.Outtake;
 
+public class MoveWristPercent extends Command {
 
+private XboxController joy;
+private Intake intake;
 
-public class RaiseElevatorWithJoystick extends Command {
+  /** Creates a new MoveWristPercent. */
+  public MoveWristPercent(XboxController joy, Intake intake) {
 
-  private Elevator elevator;
-  private XboxController joyStick;
+    this.joy = joy;
+    this.intake = intake;
 
-
-  /** Creates a new RaiseElevatorWithJoystick. */
-  public RaiseElevatorWithJoystick(Elevator elevator, XboxController joyStick) {
     // Use addRequirements() here to declare subsystem dependencies.
-
-    this.elevator = elevator;
-    this.joyStick = joyStick;
-
-    addRequirements(elevator);
-    
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -37,26 +34,14 @@ public class RaiseElevatorWithJoystick extends Command {
   @Override
   public void execute() {
 
-    double speed = joyStick.getLeftY();
-    speed = MathUtil.applyDeadband(speed, 0.15);
-    System.out.println(speed);
-    //speed (-) moves up
-    if (speed > 0 && elevator.getElevatorSwitchHigh() || speed <= 0 && elevator.getElevatorSwitchLow()){
-      elevator.raiseElevatorwithSpeed(speed);
-    }
-    else{
-      elevator.raiseElevatorToPosition(elevator.getElevatorEncoder());
-    }
-   
-
+    double speed = MathUtil.applyDeadband(joy.getLeftY(), 0.15);
+    intake.rotateWrist(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("At end");
-    elevator.raiseElevatorToPosition(elevator.getElevatorEncoder());
-
+    intake.rotateWrist(0.0);
   }
 
   // Returns true when the command should end.
