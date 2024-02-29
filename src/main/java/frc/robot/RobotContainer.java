@@ -44,7 +44,6 @@ public class RobotContainer {
   private final JoystickButton xButton;
   
   private SwerveDrive swerve;
-  // private Outtake outtake;
   
   private XboxController driver;
   private XboxController operator;
@@ -111,7 +110,7 @@ public class RobotContainer {
 
     swerve.setDefaultCommand(driveWithJoystick);
 
-   // SmartDashboard.putData(swerve);
+   SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
 
