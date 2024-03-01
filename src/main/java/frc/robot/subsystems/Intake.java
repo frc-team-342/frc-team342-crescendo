@@ -42,6 +42,8 @@ public class Intake extends SubsystemBase {
     //motor ids changed for load 
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
+
+    intake.setSmartCurrentLimit(30);
     
     wristController = wrist.getPIDController();
     wristController.setP(0.01);

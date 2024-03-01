@@ -27,8 +27,6 @@ public final class Constants {
 
 public static class IntakeConstants {
   public static final int INTAKE_SENSOR = 1;
-  public static final int ELEVATOR_SWITCH_LOW = 2;
-  public static final int ELEVATOR_SWITCH_HIGH = 3;
 
   public static final int INTAKE_MOTOR = 10;
 

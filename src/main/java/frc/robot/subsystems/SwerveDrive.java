@@ -140,7 +140,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getHeading());
+    return Rotation2d.fromRadians(getHeading() * (Math.PI / 180));
   }
 
   public Pose2d getPose() {
@@ -196,7 +196,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Command toggleFieldOriented() {
-    return run(()-> fieldOriented = !fieldOriented);
+    return runEnd(()-> {}, () -> fieldOriented = !fieldOriented);
   }
 
   public boolean getFieldOriented() {
@@ -208,7 +208,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Command toggleSlowMode() {
-    return run(() -> slowMode = !slowMode);
+    return runEnd(() -> {}, () -> slowMode = !slowMode);
   }
 
   public ChassisSpeeds getChassisSpeeds() {

@@ -81,8 +81,6 @@ public class RobotContainer {
 
     intake = new Intake();
     outtake = new Outtake();
-    load = new Load(outtake, intake);
-    
     swerve = new SwerveDrive();
 
     driver = new XboxController(0);
@@ -92,26 +90,28 @@ public class RobotContainer {
     wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    wristDownBtn = new POVButton(operator, 180);
+    wristUpBtn = new POVButton(operator, 0);
+    wristRightBtn = new POVButton(operator, 270);
+
+    toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
     moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOW_WRIST_POS);
     moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGH_WRIST_POS);
     moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMP_POS);
+    load = new Load(outtake, intake);
 
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
 
     moveWristPercent = new MoveWristPercent(operator, intake);
+
     intake.setDefaultCommand(moveWristPercent);
-
-    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
-    wristDownBtn = new POVButton(operator, 180);
-    wristUpBtn = new POVButton(operator, 0);
-    wristRightBtn = new POVButton(operator, 90);
-
     swerve.setDefaultCommand(driveWithJoystick);
 
-   // SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
 
@@ -134,6 +134,9 @@ public class RobotContainer {
    wristDownBtn.onTrue(wristDownIntake);
    wristUpBtn.onTrue(moveWristUp);
    wristRightBtn.onTrue(moveWristAmp);
+
+   toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+   toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
   }
 
   /**
