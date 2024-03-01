@@ -28,6 +28,8 @@ public class Outtake extends SubsystemBase {
   private RelativeEncoder encoder;
   private SparkPIDController pidController;
 
+  private double velocity;
+
   /** Creates a new Shooter. */
   public Outtake() {
 
@@ -47,7 +49,7 @@ public class Outtake extends SubsystemBase {
 
     encoder = leftMotor.getEncoder();    
     pidController = leftMotor.getPIDController();
-    
+
     //This didn't help
     pidController.setP(OuttakeConstants.P_VALUE);
     pidController.setFF(OuttakeConstants.FF_VALUE);
@@ -80,10 +82,8 @@ public class Outtake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Velocity", encoder.getVelocity());
-    SmartDashboard.putNumber("P Report", pidController.getP());
-    SmartDashboard.putNumber("I Report", pidController.getI());
-    SmartDashboard.putNumber("D Report", pidController.getD());
+    SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
+    SmartDashboard.putNumber("Desired Velocity", velocity);
 
     double p = SmartDashboard.getNumber("setP", 1);
     double i = SmartDashboard.getNumber("setI", 1);
@@ -93,8 +93,5 @@ public class Outtake extends SubsystemBase {
     pidController.setI(i);
     pidController.setD(d);
     pidController.setFF(ff);
-
-    // System.out.println(encoder.getVelocity());
-
   }
 }

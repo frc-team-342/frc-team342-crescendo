@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
+import frc.robot.Constants.DriveConstants;
+
 import static frc.robot.Constants.DriveConstants.*;
 
 public class SwerveDrive extends SubsystemBase {
@@ -63,39 +65,36 @@ public class SwerveDrive extends SubsystemBase {
   public SwerveDrive() {
 
     frontLeft = new SwerveModule(
-      FRONT_LEFT[0],
-      FRONT_LEFT[1],
-      FL_ENCODER_PORT,
-      false,
-      false,
-      FRONT_LEFT_OFFSET,
-      PID_VALUES);
+      DriveConstants.FRONT_LEFT[0],
+      DriveConstants.FRONT_LEFT[1],
+      DriveConstants.FL_ENCODER_PORT,
+      false, false,
+      DriveConstants.FRONT_LEFT_OFFSET,
+      DriveConstants.PID_VALUES);
 
     frontRight = new SwerveModule(
-      FRONT_RIGHT[0], 
-      FRONT_RIGHT[1],
-      FR_ENCODER_PORT,
-      false, false,
-      FRONT_RIGHT_OFFSET,
-      PID_VALUES);
+      DriveConstants.FRONT_RIGHT[0], 
+      DriveConstants.FRONT_RIGHT[1],
+      DriveConstants.FR_ENCODER_PORT,
+      false, true,
+      DriveConstants.FRONT_RIGHT_OFFSET,
+      DriveConstants.PID_VALUES);
    
     backLeft = new SwerveModule(
-      BACK_LEFT[0],
-      BACK_LEFT[1],
-      BL_ENCODER_PORT,
-      false,
-      false,
-      BACK_LEFT_OFFSET,
-      PID_VALUES);  
+      DriveConstants.BACK_LEFT[0],
+      DriveConstants.BACK_LEFT[1],
+      DriveConstants.BL_ENCODER_PORT,
+      false, true,
+      DriveConstants.BACK_LEFT_OFFSET,
+      DriveConstants.PID_VALUES);  
       
     backRight = new SwerveModule(
-      BACK_RIGHT[0],
-      BACK_RIGHT[1],
-      BR_ENCODER_PORT,
-      false,
-      false,
-      BACK_RIGHT_OFFSET,
-      BL_PID_VALUES);
+      DriveConstants.BACK_RIGHT[0],
+      DriveConstants.BACK_RIGHT[1],
+      DriveConstants.BR_ENCODER_PORT,
+      false, false,
+      DriveConstants.BACK_RIGHT_OFFSET,
+      DriveConstants.BL_PID_VALUES);
 
     gyro = new AHRS(SerialPort.Port.kUSB);
 
