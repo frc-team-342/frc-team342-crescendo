@@ -54,26 +54,51 @@ private static Command RotateShootRotateScoot(SwerveDrive swere, Outtake outtake
   );
 }
 
-private static Command RotateShootRotateScootLeft(SwerveDrive swere, Outtake outtake, Intake intake){
+private static Command RotateShootRotateScootLeft(SwerveDrive swerve, Outtake outtake, Intake intake){
 
 
   return Commands.sequence(
 
   //rotate to face the speaker 
-    new RotateToAngle(45, swere),
+    new RotateToAngle(45, swerve),
     //drives up to speaker 
-    new DriveDistance(.6, 0.2, swere),
+    new DriveDistance(.6, 0.2, swerve),
     //Shoots note 
     new OuttakeNote(outtake, intake),
     //Rotates back to zero to be able to leave wing 
-    new RotateToAngle(0, swere),
+    new RotateToAngle(0, swerve),
     //leaves wing 
-    new DriveDistance(1, 0, swere)
+    new DriveDistance(1, 0, swerve)
 
 
 
 
   );
+}
+
+private static Command DoNothing(){
+
+  
+  return Commands.sequence(null);
+}
+
+private static Command MiddleShootandScoot(SwerveDrive swerve, Outtake outtake, Intake intake){
+
+  return Commands.sequence(
+
+  new Load(outtake, intake),
+
+  new TimedDrive(swerve, 2, .2, 0),
+
+  new 
+
+
+
+
+
+  )
+
+
 }
 
 
