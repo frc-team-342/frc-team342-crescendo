@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Wrist;
 
 
 
@@ -72,6 +73,7 @@ public class RobotContainer {
   private POVButton wristRightBtn;
 
   private Intake intake;
+  private Wrist wrist;
   private JoystickButton loadButton;
 
   private MoveWristPercent moveWristPercent;
@@ -95,14 +97,14 @@ public class RobotContainer {
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
-    moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOW_WRIST_POS);
-    moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGH_WRIST_POS);
-    moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMP_POS);
+    moveWristDown = new MoveWristToPosition(wrist, IntakeConstants.LOW_WRIST_POS);
+    moveWristUp = new MoveWristToPosition(wrist, IntakeConstants.HIGH_WRIST_POS);
+    moveWristAmp = new MoveWristToPosition(wrist, IntakeConstants.AMP_POS);
 
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
 
-    moveWristPercent = new MoveWristPercent(operator, intake);
-    intake.setDefaultCommand(moveWristPercent);
+    moveWristPercent = new MoveWristPercent(operator, wrist);
+    wrist.setDefaultCommand(moveWristPercent);
 
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     wristDownBtn = new POVButton(operator, 180);
