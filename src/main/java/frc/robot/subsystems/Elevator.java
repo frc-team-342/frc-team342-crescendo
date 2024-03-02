@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -22,23 +24,20 @@ public class Elevator extends SubsystemBase {
   private final CANSparkMax elevator_right;
   private final SparkPIDController pid_elevator;
 
-  private final DigitalInput elevatorSwitchHigh;
-  private final DigitalInput elevatorSwitchLow;
-
+  private final RelativeEncoder encoder;
+  
   /** Creates a new Elevator. */
   public Elevator() {
 
     elevator_left = new CANSparkMax(LEFT_ELEV_ID, MotorType.kBrushless);
     elevator_right = new CANSparkMax(RIGHT_ElEV_ID, MotorType.kBrushless);
 
-    elevatorSwitchHigh = new DigitalInput(ELEVATOR_SWITCH_HIGH);
-    elevatorSwitchLow = new DigitalInput(ELEVATOR_SWITCH_LOW);
-
     pid_elevator = elevator_left.getPIDController();
 
     elevator_left.setIdleMode(IdleMode.kBrake);
     elevator_right.setIdleMode(IdleMode.kBrake);
     
+    encoder = elevator_left.getEncoder();
     elevator_right.follow(elevator_left);
 
   }
@@ -51,13 +50,10 @@ public class Elevator extends SubsystemBase {
     pid_elevator.setReference(pos, ControlType.kPosition);
   }
 
-  public boolean getElevatorSwitchLow(){
-    return elevatorSwitchLow.get();
+  public void holdPosition (){
+    pid_elevator.setReference(elevator_left.getEncoder().getPosition(), ControlType.kPosition);
   }
 
-  public boolean getElevatorSwitchHigh(){
-    return elevatorSwitchHigh.get();
-  }
 
   public double getElevatorEncoder(){
     return elevator_left.getEncoder().getPosition();
@@ -71,7 +67,6 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
-    sendableBuilder.addBooleanProperty("elevatorSwitchLow", () -> elevatorSwitchLow.get(), null);
-    sendableBuilder.addBooleanProperty("elevatorSwitchHigh", () -> elevatorSwitchHigh.get(), null);
+  
   }
 }

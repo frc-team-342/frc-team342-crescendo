@@ -40,8 +40,6 @@ public class Wrist extends SubsystemBase {
     wrist.setIdleMode(IdleMode.kBrake);
 
     throughBore = new DutyCycleEncoder(2);
-
-
   }
 
 
