@@ -80,7 +80,7 @@ public class RotateToAngle extends Command {
     
     SwerveDriveKinematics.desaturateWheelSpeeds(swerve.getModuleStates(), MAX_ROTATE_SPEED);
    
-    swerve.drive(radial); 
+    swerve.drive(radial, MAX_DRIVE_SPEED); 
 
     SmartDashboard.putNumber("Current",current);
     SmartDashboard.putNumber("Start", start);
