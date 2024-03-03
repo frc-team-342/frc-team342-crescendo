@@ -88,51 +88,49 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    // Subsystems
     intake = new Intake();
     outtake = new Outtake();
-    load = new Load(outtake, intake);
-
     elevator = new Elevator();
     wrist = new Wrist();
     swerve = new SwerveDrive();
 
+    // Xbox Controllers
     driver = new XboxController(0);
     operator = new XboxController(1);
 
+    // Intake Buttons
     xButton = new JoystickButton(operator, XboxController.Button.kX.value);
     wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
 
+    // Climb Buttons
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
 
-    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    // Driver-assisted Buttons
     wristDownBtn = new POVButton(operator, 180);
     wristUpBtn = new POVButton(operator, 0);
     wristRightBtn = new POVButton(operator, 270);
 
+    // Toggle Buttons
     toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
-    moveWristDown = new MoveWristToPosition(wrist, IntakeConstants.LOW_WRIST_POS);
-    moveWristUp = new MoveWristToPosition(wrist, IntakeConstants.HIGH_WRIST_POS);
-    moveWristAmp = new MoveWristToPosition(wrist, IntakeConstants.AMP_POS);
     load = new Load(outtake, intake);
-
     climb = new Climb(elevator, operator);
+
+    moveWristDown = new MoveWristToPosition(wrist, intake, IntakeConstants.LOW_WRIST_POS);
+    moveWristUp = new MoveWristToPosition(wrist, intake, IntakeConstants.HIGH_WRIST_POS);
+    moveWristAmp = new MoveWristToPosition(wrist, intake, IntakeConstants.AMP_POS);
+
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
-
     moveWristPercent = new MoveWristPercent(operator, wrist);
+
     wrist.setDefaultCommand(moveWristPercent);
-
-    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
-    wristDownBtn = new POVButton(operator, 180);
-    wristUpBtn = new POVButton(operator, 0);
-    wristRightBtn = new POVButton(operator, 90);
-
-    intake.setDefaultCommand(moveWristPercent);
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
 
@@ -153,17 +151,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   xButton.whileTrue(intake.outtake()); // X
-   loadButton.whileTrue(load); // B
-   intakeBtn.whileTrue(intake.spinIntake()); // A
-   wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
-   wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
-   wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
+    xButton.whileTrue(intake.outtake()); // X
+    loadButton.whileTrue(load); // B
+    intakeBtn.whileTrue(intake.spinIntake()); // A
+    wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
+    wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
+    wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
     climbButton.whileTrue(elevator.toggleClimbMode());
 
-   toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
-   toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
   }
 
   /**

@@ -38,7 +38,6 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake(){
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);      
-    
     intake.setIdleMode(IdleMode.kBrake);
 
     intakeSensor = new DigitalInput(5);
@@ -51,11 +50,8 @@ public class Intake extends SubsystemBase {
   //command version
   public Command spinIntake(){
     return runEnd( () -> {
-      if(!intakeSensor.get()){
-
-      intake.set(INTAKE_SPEED);
-
-      intake.set(-INTAKE_SPEED);
+      if(intakeSensor.get()){
+        intake.set(-INTAKE_SPEED);
       }
       else {
         intake.set(0);
@@ -103,6 +99,7 @@ public class Intake extends SubsystemBase {
     // velocity = SmartDashboard.getNumber("Set Velocity", velocity);
     SmartDashboard.putBoolean("STUCK", isStuck());
     SmartDashboard.putNumber("Current", intake.getOutputCurrent());
+    SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
   }
 
   @Override

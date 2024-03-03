@@ -22,13 +22,17 @@ import frc.robot.subsystems.Wrist;
 public class MoveWristToPosition extends Command {
   /** Creates a new MoveWristToPosition. */
   private Wrist wrist;
+  private Intake intake;
+
   private XboxController joyStick;
   private boolean goingDown;
   private double position;
 
-  public MoveWristToPosition(Wrist wrist, double position) {
+  public MoveWristToPosition(Wrist wrist, Intake intake, double position) {
      
-    this.wrist = wrist;    
+    this.wrist = wrist;
+    this.intake = intake;
+    
     boolean goingDown = false;
     this.position = position;
 
@@ -49,22 +53,23 @@ public class MoveWristToPosition extends Command {
 
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
     if (goingDown && currPosition < LOW_WRIST_POS) {
-      intake.rotateWrist(-.75);
+      wrist.rotateWrist(-.75);
       System.out.println("Moving Down");
     }
     //makes sure that its not going too far back to avoid hitting the back
     else if (!goingDown && currPosition > HIGH_WRIST_POS){
-      intake.rotateWrist(.75);
+      wrist.rotateWrist(.75);
       System.out.println("Moving Up");
     }
   
-   /*if(intake.getIntakeSensor()) {
+   if(intake.getIntakeSensor()) {
       intake.hold();
+      System.out.println("Holding)");
     }
     else {
       intake.stop();
+      System.out.println("Stopping");
     }
- */ 
   }
 
 
@@ -78,6 +83,7 @@ public class MoveWristToPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println("Finished moving arm");
     return (wrist.getthroughBore().getAbsolutePosition() >= position - 0.01) && (wrist.getthroughBore().getAbsolutePosition() <= position + 0.01);
   }
 }
