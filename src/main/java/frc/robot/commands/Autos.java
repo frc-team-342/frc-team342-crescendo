@@ -4,17 +4,23 @@
 
 package frc.robot.commands;
 
+import static frc.robot.Constants.IntakeConstants.HIGH_WRIST_POS;
+import static frc.robot.Constants.IntakeConstants.LOW_WRIST_POS;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.Drive.DriveDistance;
 import frc.robot.commands.Outtake.OuttakeNote;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Wrist;
 import frc.robot.RobotContainer;
+import frc.robot.Constants;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -24,79 +30,122 @@ private static Command shootAndScoot(SwerveDrive swere, Outtake outtake, Intake 
   return Commands.sequence(
 
     //Shoots the note into Speaker 
-    new Load(outtake, intake).withTimeout(.5),
+    new Load(outtake, intake),
 
     //Drives out of the wing 
-    new DriveDistance(1, 0.2 , swere)
+    new DriveDistance(-1, 0.2 , swere)
     
   );
 
 }
 
-private static Command RotateShootRotateScoot(SwerveDrive swere, Outtake outtake, Intake intake){
+private static Command LEftAuto(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
+
 
   return Commands.sequence(
 
+  //Shoots preloaded note 
+  new Load(outtake, intake),
 
-    //rotate to face the speaker 
-    new RotateToAngle(45, swere),
-    //drives up to speaker 
-    new DriveDistance(.6, 0.2, swere),
-    //Shoots note 
-    new OuttakeNote(outtake, intake),
-    //Rotates back to zero to be able to leave wing 
-    new RotateToAngle(0, swere),
-    //leaves wing 
-    new DriveDistance(1, 0, swere)
+  //Rotates the robot back to staright 
+  new RotateToAngle(0, swerve),
 
 
+    new ParallelCommandGroup(
+
+    //Drives back to pick up the note 
+
+      new TimedDrive(swerve, .2, .2, .2),
+
+    //Puts wrist down in order to pick up
+
+      new MoveWristToPosition(wrist, LOW_WRIST_POS)
+    
+  ),
+
+    new ParallelCommandGroup(
+
+
+    //Drives back to speaker 
+    
+      new TimedDrive(swerve,.2,0,0),
+
+      new MoveWristToPosition(wrist, HIGH_WRIST_POS)
+
+
+  ),
+  
+
+  new RotateToAngle(60, swerve),
+
+  new Load(outtake, intake)
 
   );
 }
-
-private static Command RotateShootRotateScootLeft(SwerveDrive swerve, Outtake outtake, Intake intake){
+private static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
 
 
   return Commands.sequence(
 
-  //rotate to face the speaker 
-    new RotateToAngle(45, swerve),
-    //drives up to speaker 
-    new DriveDistance(.6, 0.2, swerve),
-    //Shoots note 
-    new OuttakeNote(outtake, intake),
-    //Rotates back to zero to be able to leave wing 
-    new RotateToAngle(0, swerve),
-    //leaves wing 
-    new DriveDistance(1, 0, swerve)
+  new Load(outtake, intake),
 
+  new RotateToAngle(0, swerve),
 
+    new ParallelCommandGroup(
 
+      new TimedDrive(swerve, .2, .2, .2),
+
+      new MoveWristToPosition(wrist, LOW_WRIST_POS)
+    
+  ),
+
+  new TimedDrive(swerve,.2,0,0),
+
+  new Load(outtake, intake)
 
   );
 }
 
 private static Command DoNothing(){
 
-  
-  return Commands.sequence(null);
+  return Commands.none();
+
 }
 
-private static Command MiddleShootandScoot(SwerveDrive swerve, Outtake outtake, Intake intake){
+private static Command MiddleShoot(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
 
   return Commands.sequence(
 
   new Load(outtake, intake),
 
+  new ParallelCommandGroup(
+    
   new TimedDrive(swerve, 2, .2, 0),
 
-  new 
+  new MoveWristToPosition(wrist, LOW_WRIST_POS)
+  
+  
+  
+  ),
 
 
+  new TimedDrive(swerve, 2, .2, 0),
+
+  new MoveWristToPosition(wrist,LOW_WRIST_POS),
+
+    new ParallelCommandGroup(
+      
+     new MoveWristToPosition(wrist, HIGH_WRIST_POS),
+
+      new TimedDrive(swerve, .2, -.2, 0)
+    
+    ),
+
+  new Load(outtake, intake)
+
+  );
 
 
-
-  )
 
 
 }
