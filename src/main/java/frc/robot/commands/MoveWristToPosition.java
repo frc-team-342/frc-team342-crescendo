@@ -16,21 +16,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
+import frc.robot.subsystems.Wrist;
+
+
 public class MoveWristToPosition extends Command {
   /** Creates a new MoveWristToPosition. */
-  private Intake intake;
+  private Wrist wrist;
   private XboxController joyStick;
   private boolean goingDown;
   private double position;
 
-  public MoveWristToPosition(Intake intake, double position) {
+  public MoveWristToPosition(Wrist wrist, double position) {
      
-    this.intake = intake;    
+    this.wrist = wrist;    
     boolean goingDown = false;
     this.position = position;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+    addRequirements(wrist);
   }
 
   // Called when the command is initially scheduled.
@@ -41,7 +44,7 @@ public class MoveWristToPosition extends Command {
   @Override
   public void execute() {
 
-    double currPosition = intake.getthroughBore().getAbsolutePosition();
+    double currPosition = wrist.getthroughBore().getAbsolutePosition();
     goingDown = currPosition < position;
 
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
@@ -55,24 +58,26 @@ public class MoveWristToPosition extends Command {
       System.out.println("Moving Up");
     }
   
-    if(intake.getIntakeSensor()) {
+   /*if(intake.getIntakeSensor()) {
       intake.hold();
     }
     else {
       intake.stop();
     }
+ */ 
   }
+
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     //intake.rotateWristToPosition(position);
-    intake.rotateWrist(0);
+    wrist.rotateWrist(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (intake.getthroughBore().getAbsolutePosition() >= position - 0.01) && (intake.getthroughBore().getAbsolutePosition() <= position + 0.01);
+    return (wrist.getthroughBore().getAbsolutePosition() >= position - 0.01) && (wrist.getthroughBore().getAbsolutePosition() <= position + 0.01);
   }
 }
