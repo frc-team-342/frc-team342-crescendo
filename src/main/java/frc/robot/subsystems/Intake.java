@@ -107,8 +107,6 @@ public class Intake extends SubsystemBase {
 
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
-      sendableBuilder.setSmartDashboardType("intake Values");
-      sendableBuilder.addBooleanProperty("intake Sensor", () -> intakeSensor.get(), null);
-      sendableBuilder.addBooleanProperty("Intake sensor connection", () -> throughBore.isConnected(), null);
+     
     }
 }

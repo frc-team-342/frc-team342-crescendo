@@ -15,6 +15,7 @@ public class Climb extends Command {
   /** Creates a new Climb. */
   private Elevator elevator;
   private XboxController joyStick;
+  private final double maxInput = 0.50;
 
   private double initialPosition;
 
@@ -35,17 +36,18 @@ public class Climb extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double rightJoy = joyStick.getRightY();
-    double speed = MathUtil.applyDeadband(rightJoy, 0.15);
-
-    elevator.raiseElevatorwithSpeed(speed);
+    if (elevator.getClimbMode()){
+      double rightJoy = joyStick.getRightY();
+      double speed = MathUtil.applyDeadband(rightJoy, 0.15);
+      elevator.raiseElevatorwithSpeed(speed*maxInput);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     elevator.holdPosition();
-    SmartDashboard.putNumber("Initial Position",elevator.getElevatorEncoder());
+    SmartDashboard.putNumber("End of Position",elevator.getElevatorEncoder());
   }
 
   // Returns true when the command should end.

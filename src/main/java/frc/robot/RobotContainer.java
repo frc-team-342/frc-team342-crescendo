@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Load;
 import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
@@ -57,6 +59,9 @@ public class RobotContainer {
   private MoveWristToPosition moveWristAmp;
   private SequentialCommandGroup wristDownIntake;
 
+
+  private Climb climb;
+
   private Outtake shootVelocity;
 
   private Load load;
@@ -68,6 +73,8 @@ public class RobotContainer {
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
 
+  private JoystickButton climbButton;
+
   private POVButton wristDownBtn;
   private POVButton wristUpBtn;
   private POVButton wristRightBtn;
@@ -75,6 +82,7 @@ public class RobotContainer {
   private Intake intake;
   private Wrist wrist;
   private JoystickButton loadButton;
+  private Elevator elevator;
 
   private MoveWristPercent moveWristPercent;
 
@@ -84,7 +92,9 @@ public class RobotContainer {
     intake = new Intake();
     outtake = new Outtake();
     load = new Load(outtake, intake);
-    
+
+    elevator = new Elevator();
+    wrist = new Wrist();
     swerve = new SwerveDrive();
 
     driver = new XboxController(0);
@@ -94,6 +104,8 @@ public class RobotContainer {
     wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+
+    climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
@@ -101,7 +113,10 @@ public class RobotContainer {
     moveWristUp = new MoveWristToPosition(wrist, IntakeConstants.HIGH_WRIST_POS);
     moveWristAmp = new MoveWristToPosition(wrist, IntakeConstants.AMP_POS);
 
+    climb = new Climb(elevator, operator);
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+
+    
 
     moveWristPercent = new MoveWristPercent(operator, wrist);
     wrist.setDefaultCommand(moveWristPercent);
@@ -112,6 +127,7 @@ public class RobotContainer {
     wristRightBtn = new POVButton(operator, 90);
 
     swerve.setDefaultCommand(driveWithJoystick);
+    elevator.setDefaultCommand(climb);
 
    // SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
@@ -136,6 +152,7 @@ public class RobotContainer {
    wristDownBtn.onTrue(wristDownIntake);
    wristUpBtn.onTrue(moveWristUp);
    wristRightBtn.onTrue(moveWristAmp);
+   climbButton.whileTrue(elevator.toggleClimbMode());
   }
 
   /**
