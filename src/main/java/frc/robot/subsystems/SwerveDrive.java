@@ -31,11 +31,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+
+import static frc.robot.Constants.DriveConstants.*;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -112,12 +115,12 @@ public class SwerveDrive extends SubsystemBase {
       backRight.getState()
     };
 
-    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
+    swerveOdometry = new SwerveDriveOdometry(KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
     chassisSpeeds = new ChassisSpeeds();
 
     poseSupplier = () -> getPose();
     resetPoseConsumer = pose -> resetOdometry(pose);
-    robotRelativeOutput = inputSpeed -> drive(inputSpeed, DriveConstants.SLOWER_DRIVE_SPEED);
+    robotRelativeOutput = inputSpeed -> drive(inputSpeed, SLOWER_DRIVE_SPEED);
     chassisSpeedSupplier = () -> getChassisSpeeds();
     shouldFlipSupplier = () -> false;
 
@@ -193,7 +196,7 @@ public class SwerveDrive extends SubsystemBase {
   public Command goToZero() {
     return run(() -> {
       SwerveModuleState[] zeroStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
-      setModuleStates(zeroStates, DriveConstants.MAX_DRIVE_SPEED);
+      setModuleStates(zeroStates, MAX_DRIVE_SPEED);
     });
   }
 
@@ -225,6 +228,10 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(double xInput, double yInput, double rotateInput) {
+    SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+    SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+    SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+    
     double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
     double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
     double rotateSpeed = rotateLimiter.calculate(rotateInput) * DriveConstants.MAX_ROTATE_SPEED;
@@ -234,8 +241,8 @@ public class SwerveDrive extends SubsystemBase {
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
       }
-    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates, DriveConstants.MAX_DRIVE_SPEED);
+    SwerveModuleState moduleStates[] = KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(moduleStates, MAX_DRIVE_SPEED);
   }
     
   public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
@@ -243,7 +250,7 @@ public class SwerveDrive extends SubsystemBase {
     System.out.println(chassisSpeeds + "[\n]" + this.getChassisSpeeds());
     chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     
-    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState moduleStates[] = KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, maxDriveSpeed);
   }
 
@@ -265,7 +272,7 @@ public class SwerveDrive extends SubsystemBase {
       resetPoseConsumer,
       chassisSpeedSupplier,
       robotRelativeOutput,
-      DriveConstants.PATH_CONFIG,
+      PATH_CONFIG,
       shouldFlipSupplier,
       this
       );

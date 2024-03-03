@@ -17,7 +17,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.OuttakeConstants;
+import static frc.robot.Constants.OuttakeConstants;
+
 
 public class Outtake extends SubsystemBase {
   
@@ -31,6 +32,7 @@ public class Outtake extends SubsystemBase {
 
   /** Creates a new Shooter. */
   public Outtake() {
+
 
     leftMotor = new CANSparkMax(OuttakeConstants.MOTOR_ONE_ID, MotorType.kBrushless);
     rightMotor = new CANSparkMax(OuttakeConstants.MOTOR_TWO_ID, MotorType.kBrushless);

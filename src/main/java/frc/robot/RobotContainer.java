@@ -7,13 +7,28 @@ package frc.robot;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+<<<<<<< HEAD
+import frc.robot.commands.Drive.DriveDistance;
+import frc.robot.commands.RotateToAngle;
+import frc.robot.commands.TimedDrive;
+import frc.robot.commands.Drive.DriveWithJoystick;
+import frc.robot.commands.Outtake.OuttakeNote;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.SwerveDrive;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Joystick;
+=======
 import frc.robot.commands.Load;
 import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.Drive.DriveWithJoystick;
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 import edu.wpi.first.wpilibj.XboxController;
 
-import static frc.robot.Constants.IntakeConstants.FEED_SHOOTER_SPEED;
+import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 
@@ -29,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Wrist;
 
 
 
@@ -49,28 +65,47 @@ public class RobotContainer {
   private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  private DriveDistance driveDistance;
+  private OuttakeNote outtakeNote;
+  private TimedDrive driveFoward;
+  private RotateToAngle rotate90;
+=======
+  // private MoveWristToPosition moveWrist;
+=======
 
   private MoveWristToPosition moveWristDown;
   private MoveWristToPosition moveWristUp;
   private MoveWristToPosition moveWristAmp;
   private SequentialCommandGroup wristDownIntake;
+>>>>>>> 8f4cd22c60b747839737dab3fdc03569ac8c4f9b
 
   private Outtake shootVelocity;
 
   private Load load;
   private Outtake outtake;
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 
+  private JoystickButton goToZeroBtn;
+  private JoystickButton rotateToAngleButton;
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
+  private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
+<<<<<<< HEAD
+  private JoystickButton driveDistanceButton;
+=======
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 
   private POVButton wristDownBtn;
   private POVButton wristUpBtn;
   private POVButton wristRightBtn;
 
   private Intake intake;
+  private Wrist wrist;
   private JoystickButton loadButton;
 
   private MoveWristPercent moveWristPercent;
@@ -82,6 +117,29 @@ public class RobotContainer {
     outtake = new Outtake();
     swerve = new SwerveDrive();
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+    joy = new XboxController(0);
+    driveWithJoystick = new DriveWithJoystick(swerve, joy);
+    // outtakeNote = new OuttakeNote(0.5, outtake);
+    driveDistance = new DriveDistance(1, 5, swerve);
+
+    //driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+    timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
+    driveFoward = new TimedDrive(swerve, 2, 0, 0);
+    rotate90 = new RotateToAngle( 270, swerve);
+    rotateToAngleButton = new JoystickButton(joy, XboxController.Button.kB.value);
+
+    
+    swerve.setDefaultCommand(driveWithJoystick);
+    toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
+    // outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kB.value);
+    driveDistanceButton = new JoystickButton(joy, XboxController.Button.kY.value);
+
+=======
+=======
+>>>>>>> 8f4cd22c60b747839737dab3fdc03569ac8c4f9b
     driver = new XboxController(0);
     operator = new XboxController(1);
 
@@ -99,17 +157,22 @@ public class RobotContainer {
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
-    moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOW_WRIST_POS);
-    moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGH_WRIST_POS);
-    moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMP_POS);
-    load = new Load(outtake, intake);
+    moveWristDown = new MoveWristToPosition(wrist, IntakeConstants.LOW_WRIST_POS);
+    moveWristUp = new MoveWristToPosition(wrist, IntakeConstants.HIGH_WRIST_POS);
+    moveWristAmp = new MoveWristToPosition(wrist, IntakeConstants.AMP_POS);
 
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
 
-    moveWristPercent = new MoveWristPercent(operator, intake);
+    moveWristPercent = new MoveWristPercent(operator, wrist);
+    wrist.setDefaultCommand(moveWristPercent);
 
-    intake.setDefaultCommand(moveWristPercent);
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    wristDownBtn = new POVButton(operator, 180);
+    wristUpBtn = new POVButton(operator, 0);
+    wristRightBtn = new POVButton(operator, 90);
+
     swerve.setDefaultCommand(driveWithJoystick);
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
@@ -128,6 +191,23 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    // outtakeNoteBtn.whileTrue(outtakeNote);
+    goToZeroBtn.whileTrue(swerve.goToZero());
+    timedDriveButton.whileTrue(driveFoward);
+    rotateToAngleButton.whileTrue(rotate90);
+    
+=======
+   xButton.whileTrue(intake.spinIntake());
+  //  aButton.whileTrue(intake.getSensors());
+  //  wristButton.whileTrue(moveWrist);
+   loadButton.whileTrue(load);
+   intakeBtn.whileTrue(intake.spinIntake());
+>>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
+=======
    xButton.whileTrue(intake.outtake()); // X
    loadButton.whileTrue(load);
    intakeBtn.whileTrue(intake.spinIntake()); // A

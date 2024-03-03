@@ -119,6 +119,15 @@ public static class IntakeConstants {
       (TRACK_WIDTH / 2), 
       new ReplanningConfig()
       );
+
+      //PID Constants for the DriveDistance Rotation PID Controller
+      public static final double DRIVE_DISTANCE_ROTATE_CONTROLLER_P = 0.3;
+      public static final double DRIVE_DISTANCE_ROTATE_CONTROLLER_I = 0.0;
+      public static final double DRIVE_DISTANCE_ROTATE_CONTROLLER_D = 0.0;
+
+      //Tolerance for the DriveDistance Command
+      public static final double DISTANCE_TOLERANCE = Units.metersToFeet(0.3);
+
   }
 
   public static class OperatorConstants {
