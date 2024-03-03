@@ -25,9 +25,7 @@ import frc.robot.Constants;
 public final class Autos {
   /** Example static factory for an autonomous command. */
 
-<<<<<<< HEAD
-=======
-private static Command shootAndScoot(SwerveDrive swere, Outtake outtake, Intake intake){
+private static Command shootAndScoot(SwerveDrive swerve, Outtake outtake, Intake intake){
   
   return Commands.sequence(
 
@@ -35,14 +33,13 @@ private static Command shootAndScoot(SwerveDrive swere, Outtake outtake, Intake 
     new Load(outtake, intake),
 
     //Drives out of the wing 
-    new DriveDistance(-1, 0.2 , swere)
+    new DriveDistance(-1, 0.2 , swerve)
     
   );
 
 }
 
-private static Command LEftAuto(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
-
+private static Command leftAuto(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
 
   return Commands.sequence(
 
@@ -84,7 +81,8 @@ private static Command LEftAuto(SwerveDrive swerve, Outtake outtake, Intake inta
 
   );
 }
-private static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
+
+private static Command rightAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
 
 
   return Commands.sequence(
@@ -108,13 +106,13 @@ private static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake in
   );
 }
 
-private static Command DoNothing(){
+private static Command doNothing(){
 
   return Commands.none();
 
 }
 
-private static Command MiddleShoot(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
+private static Command middleShoot(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
 
   return Commands.sequence(
 
@@ -146,17 +144,8 @@ private static Command MiddleShoot(SwerveDrive swerve, Outtake outtake, Intake i
   new Load(outtake, intake)
 
   );
-
-
-
-
 }
 
-
-  
-
-
->>>>>>> a4ae1c3288df56e52c9aa4a372dcd38dab8224fd
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }

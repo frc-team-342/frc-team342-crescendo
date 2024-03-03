@@ -39,12 +39,13 @@ public class DriveDistance extends Command {
     : -Math.abs(MathUtil.clamp(velocityInput, -DriveConstants.MAX_DRIVE_SPEED, DriveConstants.MAX_DRIVE_SPEED));
 
     this.drive = drive;
-    addRequirements(drive);
 
     rotationController = new PIDController(
       DriveConstants.DRIVE_DISTANCE_ROTATE_CONTROLLER_P, 
       DriveConstants.DRIVE_DISTANCE_ROTATE_CONTROLLER_I,
       DriveConstants.DRIVE_DISTANCE_ROTATE_CONTROLLER_D);
+
+    addRequirements(drive);
   }
 
 

@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-<<<<<<< HEAD
 import frc.robot.commands.Drive.DriveDistance;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.TimedDrive;
@@ -20,12 +19,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Joystick;
-=======
 import frc.robot.commands.Load;
 import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.Drive.DriveWithJoystick;
->>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 import edu.wpi.first.wpilibj.XboxController;
 
 import static frc.robot.Constants.IntakeConstants.*;
@@ -65,40 +62,32 @@ public class RobotContainer {
   private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
-<<<<<<< HEAD
-<<<<<<< HEAD
+  
   private DriveDistance driveDistance;
   private OuttakeNote outtakeNote;
   private TimedDrive driveFoward;
   private RotateToAngle rotate90;
-=======
-  // private MoveWristToPosition moveWrist;
-=======
 
   private MoveWristToPosition moveWristDown;
   private MoveWristToPosition moveWristUp;
   private MoveWristToPosition moveWristAmp;
   private SequentialCommandGroup wristDownIntake;
->>>>>>> 8f4cd22c60b747839737dab3fdc03569ac8c4f9b
 
   private Outtake shootVelocity;
 
   private Load load;
   private Outtake outtake;
->>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
-
   private JoystickButton goToZeroBtn;
   private JoystickButton rotateToAngleButton;
+
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
+
   private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
-<<<<<<< HEAD
   private JoystickButton driveDistanceButton;
-=======
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
->>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
 
   private POVButton wristDownBtn;
   private POVButton wristUpBtn;
@@ -117,29 +106,19 @@ public class RobotContainer {
     outtake = new Outtake();
     swerve = new SwerveDrive();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy);
-    // outtakeNote = new OuttakeNote(0.5, outtake);
-    driveDistance = new DriveDistance(1, 5, swerve);
+    operator = new XboxController(0);
+    driveWithJoystick = new DriveWithJoystick(swerve, operator);
+    driveDistance = new DriveDistance(2, 1, swerve);
 
-    //driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
-    timedDriveButton = new JoystickButton(joy,  XboxController.Button.kY.value);
+    timedDriveButton = new JoystickButton(operator,  XboxController.Button.kY.value);
     driveFoward = new TimedDrive(swerve, 2, 0, 0);
     rotate90 = new RotateToAngle( 270, swerve);
-    rotateToAngleButton = new JoystickButton(joy, XboxController.Button.kB.value);
+    rotateToAngleButton = new JoystickButton(operator, XboxController.Button.kB.value);
 
-    
-    swerve.setDefaultCommand(driveWithJoystick);
-    toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
-    toggleSlowModeBtn = new JoystickButton(joy, XboxController.Button.kX.value);
-    // outtakeNoteBtn = new JoystickButton(joy, XboxController.Button.kB.value);
-    driveDistanceButton = new JoystickButton(joy, XboxController.Button.kY.value);
+    toggleFieldOrientedBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(operator, XboxController.Button.kX.value);
+    driveDistanceButton = new JoystickButton(operator, XboxController.Button.kY.value);
 
-=======
-=======
->>>>>>> 8f4cd22c60b747839737dab3fdc03569ac8c4f9b
     driver = new XboxController(0);
     operator = new XboxController(1);
 
@@ -164,7 +143,7 @@ public class RobotContainer {
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
 
     moveWristPercent = new MoveWristPercent(operator, wrist);
-    wrist.setDefaultCommand(moveWristPercent);
+
 
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     wristDownBtn = new POVButton(operator, 180);
@@ -172,8 +151,7 @@ public class RobotContainer {
     wristRightBtn = new POVButton(operator, 90);
 
     swerve.setDefaultCommand(driveWithJoystick);
->>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
-
+    wrist.setDefaultCommand(moveWristPercent);
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
@@ -191,32 +169,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
-    // outtakeNoteBtn.whileTrue(outtakeNote);
-    goToZeroBtn.whileTrue(swerve.goToZero());
+ 
     timedDriveButton.whileTrue(driveFoward);
     rotateToAngleButton.whileTrue(rotate90);
-    
-=======
-   xButton.whileTrue(intake.spinIntake());
-  //  aButton.whileTrue(intake.getSensors());
-  //  wristButton.whileTrue(moveWrist);
-   loadButton.whileTrue(load);
-   intakeBtn.whileTrue(intake.spinIntake());
->>>>>>> da1d78a6d31e038f5f77268f33f42f8881c8589d
-=======
-   xButton.whileTrue(intake.outtake()); // X
-   loadButton.whileTrue(load);
-   intakeBtn.whileTrue(intake.spinIntake()); // A
-   wristDownBtn.onTrue(wristDownIntake);
-   wristUpBtn.onTrue(moveWristUp);
-   wristRightBtn.onTrue(moveWristAmp);
+  
+    xButton.whileTrue(intake.outtake()); // X
+    loadButton.whileTrue(load);
+    intakeBtn.whileTrue(intake.spinIntake()); // A
 
-   toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
-   toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    wristDownBtn.onTrue(wristDownIntake);
+    wristUpBtn.onTrue(moveWristUp);
+    wristRightBtn.onTrue(moveWristAmp);
   }
 
   /**
@@ -226,6 +192,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return driveDistance;
   }
 }

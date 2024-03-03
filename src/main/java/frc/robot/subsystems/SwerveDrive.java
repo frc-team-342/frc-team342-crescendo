@@ -31,14 +31,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
-
-import static frc.robot.Constants.DriveConstants.*;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -68,9 +65,7 @@ public class SwerveDrive extends SubsystemBase {
 
   private boolean fieldOriented;
   public boolean slowMode;
-
-  public static ChassisSpeeds chassisSpeeds;
-
+  
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
 
@@ -115,12 +110,12 @@ public class SwerveDrive extends SubsystemBase {
       backRight.getState()
     };
 
-    swerveOdometry = new SwerveDriveOdometry(KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
+    swerveOdometry = new SwerveDriveOdometry(DriveConstants.KINEMATICS, new Rotation2d(gyro.getAngle()), getModulePositions());
     chassisSpeeds = new ChassisSpeeds();
 
     poseSupplier = () -> getPose();
     resetPoseConsumer = pose -> resetOdometry(pose);
-    robotRelativeOutput = inputSpeed -> drive(inputSpeed, SLOWER_DRIVE_SPEED);
+    robotRelativeOutput = inputSpeed -> drive(inputSpeed, DriveConstants.SLOWER_DRIVE_SPEED);
     chassisSpeedSupplier = () -> getChassisSpeeds();
     shouldFlipSupplier = () -> false;
 
@@ -196,7 +191,7 @@ public class SwerveDrive extends SubsystemBase {
   public Command goToZero() {
     return run(() -> {
       SwerveModuleState[] zeroStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
-      setModuleStates(zeroStates, MAX_DRIVE_SPEED);
+      setModuleStates(zeroStates, DriveConstants.MAX_DRIVE_SPEED);
     });
   }
 
@@ -222,64 +217,18 @@ public class SwerveDrive extends SubsystemBase {
   public Command toggleSlowMode() {
     return runEnd(() -> {}, () -> slowMode = !slowMode);
   }
-
-  public ChassisSpeeds getChassisSpeeds() {
-    return new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-  }
-
-  public void drive(double xInput, double yInput, double rotateInput) {
-    SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-    SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-    SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
-    
-    double xSpeed = xLimiter.calculate(xInput) * DriveConstants.MAX_DRIVE_SPEED;
-    double ySpeed = yLimiter.calculate(yInput) * DriveConstants.MAX_DRIVE_SPEED;
-    double rotateSpeed = rotateLimiter.calculate(rotateInput) * DriveConstants.MAX_ROTATE_SPEED;
-
-    if(fieldOriented) {
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, getGyro().getRotation2d());
-    } else {
-      chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
-      }
-    SwerveModuleState moduleStates[] = KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates, MAX_DRIVE_SPEED);
-  }
     
   public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
     chassisSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     System.out.println(chassisSpeeds + "[\n]" + this.getChassisSpeeds());
     chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     
-    SwerveModuleState moduleStates[] = KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, maxDriveSpeed);
-  }
-
-  public boolean shouldFlip() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      return alliance.get() == DriverStation.Alliance.Red;
-    }
-    return false;
   }
 
   public double get5V() {
     return RobotController.getVoltage5V();
-  }
-
-  public void configureAutoBuilder() {
-    AutoBuilder.configureHolonomic(
-      poseSupplier, 
-      resetPoseConsumer,
-      chassisSpeedSupplier,
-      robotRelativeOutput,
-      PATH_CONFIG,
-      shouldFlipSupplier,
-      this
-      );
-    System.out.println("Auto builder configured");
-
-    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
-    SmartDashboard.putData("Field", field);
   }
 
   public ChassisSpeeds getChassisSpeeds() {
@@ -305,7 +254,7 @@ public class SwerveDrive extends SubsystemBase {
     
   public void drive(ChassisSpeeds speeds) {
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates);
+    setModuleStates(moduleStates, DriveConstants.MAX_DRIVE_SPEED);
   }
 
   public boolean shouldFlip() {

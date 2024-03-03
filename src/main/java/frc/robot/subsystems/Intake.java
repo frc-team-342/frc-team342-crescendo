@@ -37,16 +37,10 @@ public class Intake extends SubsystemBase {
   
   /** Creates a new Intake. */
   public Intake() {
-    //motor ids changed for load 
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
-    wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
 
     intake.setSmartCurrentLimit(30);
     
-    wristController = wrist.getPIDController();
-    wristController.setP(0.01);
-    wristController.setSmartMotionAllowedClosedLoopError(0.01, 0);
-
     throughBore = new DutyCycleEncoder(2);
 
     intake.setIdleMode(IdleMode.kBrake);
