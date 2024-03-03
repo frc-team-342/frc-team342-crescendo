@@ -4,17 +4,33 @@
 
 package frc.robot;
 
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Load;
+import frc.robot.commands.MoveWristPercent;
+import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.Drive.DriveWithJoystick;
-import frc.robot.subsystems.SwerveDrive;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+
+import static frc.robot.Constants.IntakeConstants.FEED_SHOOTER_SPEED;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.SwerveDrive;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,28 +39,84 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
 
+  private final JoystickButton xButton;
+  
   private SwerveDrive swerve;
   
-  private XboxController joy;
+  private XboxController driver;
+  private XboxController operator;
+
   private DriveWithJoystick driveWithJoystick;
+
+  private MoveWristToPosition moveWristDown;
+  private MoveWristToPosition moveWristUp;
+  private MoveWristToPosition moveWristAmp;
+  private SequentialCommandGroup wristDownIntake;
+
+  private Outtake shootVelocity;
+
+  private Load load;
+  private Outtake outtake;
+
   private JoystickButton toggleFieldOrientedBtn;
+  private JoystickButton toggleSlowModeBtn;
+  private JoystickButton outtakeNoteBtn;
+  private JoystickButton wristButton;
+  private JoystickButton intakeBtn;
+
+  private POVButton wristDownBtn;
+  private POVButton wristUpBtn;
+  private POVButton wristRightBtn;
+
+  private Intake intake;
+  private JoystickButton loadButton;
+
+  private MoveWristPercent moveWristPercent;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+
+    intake = new Intake();
+    outtake = new Outtake();
     swerve = new SwerveDrive();
-    joy = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, joy, swerve.getFieldOriented());
+
+    driver = new XboxController(0);
+    operator = new XboxController(1);
+
+    xButton = new JoystickButton(operator, XboxController.Button.kX.value);
+    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
+    loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
+    intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    wristDownBtn = new POVButton(operator, 180);
+    wristUpBtn = new POVButton(operator, 0);
+    wristRightBtn = new POVButton(operator, 270);
+
+    toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
     
+    driveWithJoystick = new DriveWithJoystick(swerve, driver);
+
+    moveWristDown = new MoveWristToPosition(intake, IntakeConstants.LOW_WRIST_POS);
+    moveWristUp = new MoveWristToPosition(intake, IntakeConstants.HIGH_WRIST_POS);
+    moveWristAmp = new MoveWristToPosition(intake, IntakeConstants.AMP_POS);
+    load = new Load(outtake, intake);
+
+    wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+
+    moveWristPercent = new MoveWristPercent(operator, intake);
+
+    intake.setDefaultCommand(moveWristPercent);
     swerve.setDefaultCommand(driveWithJoystick);
-    toggleFieldOrientedBtn = new JoystickButton(joy, XboxController.Button.kA.value);
 
-    SmartDashboard.putData(swerve);
+   SmartDashboard.putData(swerve);
+   SmartDashboard.putData(outtake);
+   SmartDashboard.putData(intake);
 
-    // Configure the trigger bindings
     configureBindings();
-  }
+  } 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -56,7 +128,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+   xButton.whileTrue(intake.outtake()); // X
+   loadButton.whileTrue(load);
+   intakeBtn.whileTrue(intake.spinIntake()); // A
+   wristDownBtn.onTrue(wristDownIntake);
+   wristUpBtn.onTrue(moveWristUp);
+   wristRightBtn.onTrue(moveWristAmp);
+
+   toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+   toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
   }
 
   /**
