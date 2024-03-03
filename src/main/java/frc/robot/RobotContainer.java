@@ -47,7 +47,6 @@ public class RobotContainer {
   private final JoystickButton xButton;
   
   private SwerveDrive swerve;
-  // private Outtake outtake;
   
   private XboxController driver;
   private XboxController operator;
@@ -106,17 +105,24 @@ public class RobotContainer {
     intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
 
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
+
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    wristDownBtn = new POVButton(operator, 180);
+    wristUpBtn = new POVButton(operator, 0);
+    wristRightBtn = new POVButton(operator, 270);
+
+    toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
     
     driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
     moveWristDown = new MoveWristToPosition(wrist, IntakeConstants.LOW_WRIST_POS);
     moveWristUp = new MoveWristToPosition(wrist, IntakeConstants.HIGH_WRIST_POS);
     moveWristAmp = new MoveWristToPosition(wrist, IntakeConstants.AMP_POS);
+    load = new Load(outtake, intake);
 
     climb = new Climb(elevator, operator);
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
-
-    
 
     moveWristPercent = new MoveWristPercent(operator, wrist);
     wrist.setDefaultCommand(moveWristPercent);
@@ -126,10 +132,11 @@ public class RobotContainer {
     wristUpBtn = new POVButton(operator, 0);
     wristRightBtn = new POVButton(operator, 90);
 
+    intake.setDefaultCommand(moveWristPercent);
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
 
-   // SmartDashboard.putData(swerve);
+   SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
 
@@ -152,7 +159,11 @@ public class RobotContainer {
    wristDownBtn.onTrue(wristDownIntake);
    wristUpBtn.onTrue(moveWristUp);
    wristRightBtn.onTrue(moveWristAmp);
-   climbButton.whileTrue(elevator.toggleClimbMode());
+
+    climbButton.whileTrue(elevator.toggleClimbMode());
+
+   toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+   toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
   }
 
   /**

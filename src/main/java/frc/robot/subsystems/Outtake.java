@@ -37,8 +37,10 @@ public class Outtake extends SubsystemBase {
     leftMotor = new CANSparkMax(OuttakeConstants.MOTOR_ONE_ID, MotorType.kBrushless);
     rightMotor = new CANSparkMax(OuttakeConstants.MOTOR_TWO_ID, MotorType.kBrushless);
 
+    leftMotor.setSmartCurrentLimit(30);
+    rightMotor.setSmartCurrentLimit(30);
+
     leftMotor.setInverted(true);
-    // rightMotor.setInverted(false);
     rightMotor.follow(leftMotor, true);
 
     leftMotor.setIdleMode(IdleMode.kCoast);

@@ -40,6 +40,9 @@ public class SwerveModule extends SubsystemBase {
     driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
     rotateMotor = new CANSparkMax(rotateID, MotorType.kBrushless);
 
+    driveMotor.setSmartCurrentLimit(60);
+    rotateMotor.setSmartCurrentLimit(60);
+
     this.encoderOffset = encoderOffset;
 
     driveMotor.setIdleMode(IdleMode.kBrake);
