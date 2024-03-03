@@ -34,16 +34,16 @@ public static class IntakeConstants {
   public static final int LEFT_ELEV_ID = 13;
   public static final int RIGHT_ElEV_ID = 14;
 
-  public static final double INTAKE_SPEED = 0.4;
+  public static final double INTAKE_SPEED = 0.6;
   public static final double INTAKE_SHOOT_SPEED = 1;
   public static final double FEED_SHOOTER_SPEED = -0.2;
   public static final double WRIST_SPEED = 0.2;
 
-  public static final double LOW_WRIST_POS = 0.74;
-  public static final double HIGH_WRIST_POS = 0.145;
-  public static final double AMP_POS = 0.342;
+  public static final double LOW_WRIST_POS = 0.9;
+  public static final double HIGH_WRIST_POS = 0.3;
+  public static final double AMP_POS = 0.535; // In memoriam of 0.342 :(
 
-  public static final double DESIRED_SPEED = 3000;
+  public static final double DESIRED_SPEED = 4000;
   
   public static final double DEFAULT_CURRENT = 30;
 }
@@ -130,10 +130,10 @@ public static class IntakeConstants {
     public static final int MOTOR_ONE_ID = 12;
     public static final int MOTOR_TWO_ID = 11;
 
-    public static final double P_VALUE = 0.00001;
+    public static final double P_VALUE = 0.0001;
     public static final double I_VALUE = 0;
     public static final double D_VALUE = 0;
-    public static final double FF_VALUE = 0.0002;
+    public static final double FF_VALUE = 0.5;
     
     public static final int CURRENT_LIMIT = 60;
   }

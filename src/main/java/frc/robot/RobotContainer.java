@@ -131,9 +131,9 @@ public class RobotContainer {
    xButton.whileTrue(intake.outtake()); // X
    loadButton.whileTrue(load); // B
    intakeBtn.whileTrue(intake.spinIntake()); // A
-   wristDownBtn.onTrue(wristDownIntake);
-   wristUpBtn.onTrue(moveWristUp);
-   wristRightBtn.onTrue(moveWristAmp);
+   wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
+   wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
+   wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());

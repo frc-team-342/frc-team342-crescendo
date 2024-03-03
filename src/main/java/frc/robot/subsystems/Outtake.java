@@ -35,17 +35,14 @@ public class Outtake extends SubsystemBase {
     leftMotor = new CANSparkMax(OuttakeConstants.MOTOR_ONE_ID, MotorType.kBrushless);
     rightMotor = new CANSparkMax(OuttakeConstants.MOTOR_TWO_ID, MotorType.kBrushless);
 
-    leftMotor.setSmartCurrentLimit(30);
-    rightMotor.setSmartCurrentLimit(30);
+    leftMotor.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
+    rightMotor.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
 
     leftMotor.setInverted(true);
     rightMotor.follow(leftMotor, true);
 
     leftMotor.setIdleMode(IdleMode.kCoast);
     rightMotor.setIdleMode(IdleMode.kCoast);
-
-    leftMotor.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
-    rightMotor.setSmartCurrentLimit(OuttakeConstants.CURRENT_LIMIT);
 
     encoder = leftMotor.getEncoder();    
     pidController = leftMotor.getPIDController();
@@ -82,16 +79,8 @@ public class Outtake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
-    SmartDashboard.putNumber("Desired Velocity", velocity);
-
-    double p = SmartDashboard.getNumber("setP", 1);
-    double i = SmartDashboard.getNumber("setI", 1);
-    double d = SmartDashboard.getNumber("setD", 1);
-    double ff = SmartDashboard.getNumber("setFF", 0);
-    pidController.setP(p);
-    pidController.setI(i);
-    pidController.setD(d);
-    pidController.setFF(ff);
+    SmartDashboard.putNumber("Actual Outtake Velocity", encoder.getVelocity());
+    SmartDashboard.putNumber("Desired Outtake Velocity", velocity);
+    SmartDashboard.putNumber("Outtake Current", leftMotor.getOutputCurrent());
   }
 }

@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
 
-    intake.setSmartCurrentLimit(30);
+    intake.setSmartCurrentLimit(60);
     
     wristController = wrist.getPIDController();
     wristController.setP(0.01);
@@ -56,8 +56,8 @@ public class Intake extends SubsystemBase {
 
     intakeSensor = new DigitalInput(5);
 
-    velocity = 0.1;
-    SmartDashboard.putNumber("Set Velocity", 0.3);
+    velocity = 0.3;
+    // SmartDashboard.putNumber("Set Velocity", 0.3);
   }
 
   //command version
@@ -121,9 +121,9 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("wrist", throughBore.getAbsolutePosition());
-    velocity = SmartDashboard.getNumber("Set Velocity", velocity);
+    // velocity = SmartDashboard.getNumber("Set Velocity", velocity);
     SmartDashboard.putBoolean("STUCK", isStuck());
+    SmartDashboard.putNumber("Current", intake.getOutputCurrent());
   }
 
   @Override
