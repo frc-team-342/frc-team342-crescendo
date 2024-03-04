@@ -37,7 +37,7 @@ public class Climb extends Command {
   @Override
   public void execute() {
     if (elevator.getClimbMode()){
-      double rightJoy = joyStick.getRightY();
+      double rightJoy = -joyStick.getRightY();
       double speed = MathUtil.applyDeadband(rightJoy, 0.15);
       elevator.raiseElevatorwithSpeed(speed*maxInput);
     }

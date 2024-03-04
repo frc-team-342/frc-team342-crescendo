@@ -68,7 +68,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FRONT_LEFT[0],
       DriveConstants.FRONT_LEFT[1],
       DriveConstants.FL_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.FRONT_LEFT_OFFSET,
       DriveConstants.PID_VALUES);
 
@@ -76,7 +76,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FRONT_RIGHT[0], 
       DriveConstants.FRONT_RIGHT[1],
       DriveConstants.FR_ENCODER_PORT,
-      false, true,
+      false, false,
       DriveConstants.FRONT_RIGHT_OFFSET,
       DriveConstants.PID_VALUES);
    
@@ -281,5 +281,9 @@ public class SwerveDrive extends SubsystemBase {
     // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     SmartDashboard.putBoolean("Field Oriented", fieldOriented);
     // SmartDashboard.putString("Pose", getPose().toString());
+    SmartDashboard.putNumber("Front Left Offset", frontLeft.getOffsets());
+    SmartDashboard.putNumber("Front Right Offset", frontRight.getOffsets());
+    SmartDashboard.putNumber("Back Left Offset", backLeft.getOffsets());
+    SmartDashboard.putNumber("Back Right Offset", backRight.getOffsets());
   }
 }

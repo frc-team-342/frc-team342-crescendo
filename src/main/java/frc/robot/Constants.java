@@ -107,10 +107,10 @@ public static class IntakeConstants {
     public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
 
     // Offsets
-    public static final double FRONT_LEFT_OFFSET = 1.88;
-    public static final double FRONT_RIGHT_OFFSET = 2.35 + Math.PI;
-    public static final double BACK_LEFT_OFFSET = 3.39 + Math.PI;
-    public static final double BACK_RIGHT_OFFSET = 1.12;
+    public static final double FRONT_LEFT_OFFSET = 5.03;
+    public static final double FRONT_RIGHT_OFFSET = 2.36;
+    public static final double BACK_LEFT_OFFSET = 0.24;
+    public static final double BACK_RIGHT_OFFSET = 1.08;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 

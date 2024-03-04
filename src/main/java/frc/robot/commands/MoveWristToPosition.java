@@ -54,21 +54,21 @@ public class MoveWristToPosition extends Command {
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
     if (goingDown && currPosition < LOW_WRIST_POS) {
       wrist.rotateWrist(-.75);
-      System.out.println("Moving Down");
+      // System.out.println("Moving Down");
     }
     //makes sure that its not going too far back to avoid hitting the back
     else if (!goingDown && currPosition > HIGH_WRIST_POS){
       wrist.rotateWrist(.75);
-      System.out.println("Moving Up");
+      // System.out.println("Moving Up");
     }
   
    if(intake.getIntakeSensor()) {
       intake.hold();
-      System.out.println("Holding)");
+      // System.out.println("Holding)");
     }
     else {
       intake.stop();
-      System.out.println("Stopping");
+      // System.out.println("Stopping");
     }
   }
 
