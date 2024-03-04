@@ -68,7 +68,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void feedShooter(){
-    intake.set(-FEED_SHOOTER_SPEED);
+    intake.set(FEED_SHOOTER_SPEED);
   }
 
   public void hold(){

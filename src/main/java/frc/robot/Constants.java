@@ -36,11 +36,11 @@ public static class IntakeConstants {
 
   public static final double INTAKE_SPEED = 0.6;
   public static final double INTAKE_SHOOT_SPEED = 1;
-  public static final double FEED_SHOOTER_SPEED = -0.2;
+  public static final double FEED_SHOOTER_SPEED = 1;
   public static final double WRIST_SPEED = 0.2;
 
   public static final double LOW_WRIST_POS = 0.9;
-  public static final double HIGH_WRIST_POS = 0.3;
+  public static final double HIGH_WRIST_POS = 0.314;
   public static final double AMP_POS = 0.535; // In memoriam of 0.342 :(
 
   public static final double DESIRED_SPEED = 4000;

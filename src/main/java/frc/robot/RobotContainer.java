@@ -77,6 +77,7 @@ public class RobotContainer {
   private POVButton wristDownBtn;
   private POVButton wristUpBtn;
   private POVButton wristRightBtn;
+  private POVButton wristLeftBtn;
 
   private Intake intake;
   private Wrist wrist;
@@ -102,8 +103,8 @@ public class RobotContainer {
     // Intake Buttons
     xButton = new JoystickButton(operator, XboxController.Button.kX.value);
     wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
-    loadButton = new JoystickButton(operator, XboxController.Button.kB.value);
-    intakeBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    loadButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+    intakeBtn = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
 
     // Climb Buttons
@@ -113,6 +114,7 @@ public class RobotContainer {
     wristDownBtn = new POVButton(operator, 180);
     wristUpBtn = new POVButton(operator, 0);
     wristRightBtn = new POVButton(operator, 270);
+    wristLeftBtn = new POVButton(operator, 90);
 
     // Toggle Buttons
     toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
@@ -137,6 +139,7 @@ public class RobotContainer {
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
+   SmartDashboard.putData(wrist);
 
     configureBindings();
   } 
@@ -156,6 +159,7 @@ public class RobotContainer {
     intakeBtn.whileTrue(intake.spinIntake()); // A
     wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
     wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
+    wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
     wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
     climbButton.whileTrue(elevator.toggleClimbMode());
