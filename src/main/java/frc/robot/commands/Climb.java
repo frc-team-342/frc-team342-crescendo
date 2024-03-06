@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Elevator;
 
 
@@ -30,23 +31,34 @@ public class Climb extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("Initial Position",elevator.getElevatorEncoder());
+    SmartDashboard.putNumber("Initial Position", elevator.getElevatorEncoder());
+    initialPosition = elevator.getElevatorEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double rightJoy = -joyStick.getRightY();
+    double speed = MathUtil.applyDeadband(rightJoy, 0.15);
+
     if (elevator.getClimbMode()){
-      double rightJoy = -joyStick.getRightY();
-      double speed = MathUtil.applyDeadband(rightJoy, 0.15);
-      elevator.raiseElevatorwithSpeed(speed*maxInput);
+      double curr = elevator.getElevatorEncoder();
+
+      if(curr < initialPosition + IntakeConstants.MAX_DISTANCE && speed > 0){ // Go up if the current pos is less than max height and joy is up
+        elevator.raiseElevatorwithSpeed(speed * maxInput);
+      }
+      else if(/*curr > initialPosition &&*/ speed < 0) { // Go down if current pos is greater than initial position (minimum height) and joy is down
+        elevator.raiseElevatorwithSpeed(speed * maxInput);
+      }
+      else {
+        elevator.holdPosition();
+      }
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.holdPosition();
     SmartDashboard.putNumber("End of Position",elevator.getElevatorEncoder());
   }
 

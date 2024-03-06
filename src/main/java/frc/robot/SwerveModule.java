@@ -144,6 +144,16 @@ public class SwerveModule extends SubsystemBase {
     rotateMotor.set(rotateController.calculate(getRotatePosition(), state.angle.getRadians()));
   }
 
+  public void setCoastMode() {
+    driveMotor.setIdleMode(IdleMode.kCoast);
+    rotateMotor.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void setBrakeMode() {
+    driveMotor.setIdleMode(IdleMode.kBrake);
+    rotateMotor.setIdleMode(IdleMode.kBrake);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

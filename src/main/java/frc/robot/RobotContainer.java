@@ -6,18 +6,19 @@ package frc.robot;
 
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Load;
 import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
+import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import static frc.robot.Constants.IntakeConstants.*;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableBuilder;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -86,6 +87,8 @@ public class RobotContainer {
 
   private MoveWristPercent moveWristPercent;
 
+  private SendableChooser<Command> autoChooser;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -132,10 +135,24 @@ public class RobotContainer {
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
     moveWristPercent = new MoveWristPercent(operator, wrist);
 
+    autoChooser = new SendableChooser<>();
+    
     wrist.setDefaultCommand(moveWristPercent);
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
 
+
+    autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
+
+    autoChooser.addOption("Left Side Speaker 2 piece", Autos.LeftAuto(swerve, outtake, intake, wrist));
+    
+    autoChooser.addOption("Right Side Speaker 2 Piece", Autos.RightAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1,0,0)));
+
+    autoChooser.addOption("Do nothing", Autos.DoNothing());
+
+    autoChooser.addOption("Shoot and Scoot", Autos.shootAndScoot(swerve,outtake,intake, new ChassisSpeeds(1,0,0)));
+
+   SmartDashboard.putData(autoChooser);
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
@@ -143,6 +160,14 @@ public class RobotContainer {
 
     configureBindings();
   } 
+
+  public void setBrakeMode() {
+    swerve.setBrakeMode();
+  }
+
+  public void setCoastMode() {
+    swerve.setCoastMode();
+  }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -175,6 +200,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return autoChooser.getSelected();
   }
 }

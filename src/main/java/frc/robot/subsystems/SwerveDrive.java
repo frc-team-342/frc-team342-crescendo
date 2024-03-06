@@ -248,6 +248,20 @@ public class SwerveDrive extends SubsystemBase {
     return false;
   }
 
+  public void setBrakeMode() {
+    frontLeft.setBrakeMode();
+    frontRight.setBrakeMode();
+    backLeft.setBrakeMode();
+    backRight.setBrakeMode();
+  }
+
+  public void setCoastMode() {
+    frontLeft.setCoastMode();
+    frontRight.setCoastMode();
+    backLeft.setCoastMode();
+    backRight.setCoastMode();
+  }
+
   public double get5V() {
     return RobotController.getVoltage5V();
   }
@@ -272,6 +286,7 @@ public class SwerveDrive extends SubsystemBase {
   public void initSendable(SendableBuilder sendableBuilder) {
     sendableBuilder.setSmartDashboardType("Encoder Values");
     sendableBuilder.addDoubleProperty("5 Volt", () -> get5V(), null);
+    sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
   }
 
   @Override
@@ -279,7 +294,6 @@ public class SwerveDrive extends SubsystemBase {
     swerveOdometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("Robot Heading", getHeading());
     // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-    SmartDashboard.putBoolean("Field Oriented", fieldOriented);
     // SmartDashboard.putString("Pose", getPose().toString());
     SmartDashboard.putNumber("Front Left Offset", frontLeft.getOffsets());
     SmartDashboard.putNumber("Front Right Offset", frontRight.getOffsets());
