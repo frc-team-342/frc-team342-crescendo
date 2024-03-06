@@ -96,9 +96,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // velocity = SmartDashboard.getNumber("Set Velocity", velocity);
     SmartDashboard.putBoolean("STUCK", isStuck());
-    SmartDashboard.putNumber("Current", intake.getOutputCurrent());
     SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
   }
 

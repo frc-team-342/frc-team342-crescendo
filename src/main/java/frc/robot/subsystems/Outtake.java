@@ -81,8 +81,5 @@ public class Outtake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Actual Outtake Velocity", encoder.getVelocity());
-    SmartDashboard.putNumber("Desired Outtake Velocity", velocity);
-    SmartDashboard.putNumber("Outtake Current", leftMotor.getOutputCurrent());
   }
 }

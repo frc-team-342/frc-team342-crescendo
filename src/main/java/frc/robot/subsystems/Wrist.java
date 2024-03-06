@@ -62,7 +62,6 @@ public class Wrist extends SubsystemBase {
 
    @Override
     public void initSendable(SendableBuilder sendableBuilder) {
-      sendableBuilder.addDoubleProperty("wrist value", () -> throughBore.getAbsolutePosition(), null);
       sendableBuilder.addBooleanProperty("In connected", () -> throughBore.isConnected(), null);
     }
 }

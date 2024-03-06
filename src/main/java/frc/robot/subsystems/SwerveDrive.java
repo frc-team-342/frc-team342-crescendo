@@ -293,11 +293,5 @@ public class SwerveDrive extends SubsystemBase {
   public void periodic() {
     swerveOdometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("Robot Heading", getHeading());
-    // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-    // SmartDashboard.putString("Pose", getPose().toString());
-    SmartDashboard.putNumber("Front Left Offset", frontLeft.getOffsets());
-    SmartDashboard.putNumber("Front Right Offset", frontRight.getOffsets());
-    SmartDashboard.putNumber("Back Left Offset", backLeft.getOffsets());
-    SmartDashboard.putNumber("Back Right Offset", backRight.getOffsets());
   }
 }

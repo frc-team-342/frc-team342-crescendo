@@ -32,35 +32,20 @@ public class TimedDrive extends Command {
       this.maxDriveSpeed = maxDriveSpeed;
       this.chassisSpeeds = chassisSpeed;
       
-    
-
       addRequirements(swerve);
-
-
-
-  
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-  
-
     m_timer.restart();
-    System.out.println("Initializing Timer");
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
 
   @Override
   public void execute() {
-
-    System.out.println("Timer: " + m_timer.get() + " ");
-
     swerve.drive(chassisSpeeds, MAX_DRIVE_SPEED);
-
   }
 
   // Called once the command ends or is interrupted.

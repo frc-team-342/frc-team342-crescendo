@@ -141,7 +141,6 @@ public class RobotContainer {
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
 
-
     autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
 
     autoChooser.addOption("Left Side Speaker 2 piece", Autos.LeftAuto(swerve, outtake, intake, wrist));
