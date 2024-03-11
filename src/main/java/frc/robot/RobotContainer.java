@@ -143,7 +143,7 @@ public class RobotContainer {
 
     autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
 
-    autoChooser.addOption("Left Side Speaker 2 piece", Autos.LeftAuto(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Left Side Speaker 2 piece", Autos.LeftAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1, 0, 0)));
     
     autoChooser.addOption("Right Side Speaker 2 Piece", Autos.RightAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1,0,0)));
 
