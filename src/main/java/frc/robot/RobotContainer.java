@@ -4,13 +4,37 @@
 
 package frc.robot;
 
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.Climb;
+import frc.robot.commands.Load;
+import frc.robot.commands.MoveWristPercent;
+import frc.robot.commands.MoveWristToPosition;
+import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Drive.DriveWithJoystick;
+import edu.wpi.first.wpilibj.XboxController;
+
+import static frc.robot.Constants.IntakeConstants.*;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Wrist;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,16 +44,129 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final JoystickButton xButton;
+  
+  private SwerveDrive swerve;
+  
+  private XboxController driver;
+  private XboxController operator;
+
+  private DriveWithJoystick driveWithJoystick;
+
+  private MoveWristToPosition moveWristDown;
+  private MoveWristToPosition moveWristUp;
+  private MoveWristToPosition moveWristAmp;
+  private SequentialCommandGroup wristDownIntake;
+
+
+  private Climb climb;
+
+  private Outtake shootVelocity;
+
+  private Load load;
+  private Outtake outtake;
+
+  private JoystickButton toggleFieldOrientedBtn;
+  private JoystickButton toggleSlowModeBtn;
+  private JoystickButton outtakeNoteBtn;
+  private JoystickButton wristButton;
+  private JoystickButton intakeBtn;
+
+  private JoystickButton climbButton;
+
+  private POVButton wristDownBtn;
+  private POVButton wristUpBtn;
+  private POVButton wristRightBtn;
+  private POVButton wristLeftBtn;
+
+  private Intake intake;
+  private Wrist wrist;
+  private JoystickButton loadButton;
+  private Elevator elevator;
+
+  private MoveWristPercent moveWristPercent;
+
+  private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
+
+    // Subsystems
+    intake = new Intake();
+    outtake = new Outtake();
+    elevator = new Elevator();
+    wrist = new Wrist();
+    swerve = new SwerveDrive();
+
+    // Xbox Controllers
+    driver = new XboxController(0);
+    operator = new XboxController(1);
+
+    // Intake Buttons
+    xButton = new JoystickButton(operator, XboxController.Button.kX.value);
+    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
+    loadButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+    intakeBtn = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+    outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+
+    // Climb Buttons
+    climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
+
+    // Driver-assisted Buttons
+    wristDownBtn = new POVButton(operator, 180);
+    wristUpBtn = new POVButton(operator, 0);
+    wristRightBtn = new POVButton(operator, 270);
+    wristLeftBtn = new POVButton(operator, 90);
+
+    // Toggle Buttons
+    toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
+    
+    driveWithJoystick = new DriveWithJoystick(swerve, driver);
+
+    load = new Load(outtake, intake);
+    climb = new Climb(elevator, operator);
+
+    moveWristDown = new MoveWristToPosition(wrist, intake, IntakeConstants.LOW_WRIST_POS);
+    moveWristUp = new MoveWristToPosition(wrist, intake, IntakeConstants.HIGH_WRIST_POS);
+    moveWristAmp = new MoveWristToPosition(wrist, intake, IntakeConstants.AMP_POS);
+
+    wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+    moveWristPercent = new MoveWristPercent(operator, wrist);
+
+    autoChooser = new SendableChooser<>();
+    
+    wrist.setDefaultCommand(moveWristPercent);
+    swerve.setDefaultCommand(driveWithJoystick);
+    elevator.setDefaultCommand(climb);
+
+    // autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
+
+    autoChooser.addOption("Left Side Speaker Piece", Autos.LeftAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1, 0, 0)));
+    
+    autoChooser.addOption("Right Side Speaker Piece", Autos.RightAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1,0,0)));
+
+    autoChooser.addOption("Do nothing", Autos.DoNothing());
+
+    autoChooser.addOption("Middle Speaker", Autos.shootAndScoot(swerve,outtake,intake, new ChassisSpeeds(1,0,0)));
+
+   SmartDashboard.putData(autoChooser);
+   SmartDashboard.putData(swerve);
+   SmartDashboard.putData(outtake);
+   SmartDashboard.putData(intake);
+   SmartDashboard.putData(wrist);
+   SmartDashboard.putData(elevator);
+
     configureBindings();
+  } 
+
+  public void setBrakeMode() {
+    swerve.setBrakeMode();
+  }
+
+  public void setCoastMode() {
+    swerve.setCoastMode();
   }
 
   /**
@@ -42,13 +179,18 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    xButton.whileTrue(intake.outtake()); // X
+    loadButton.whileTrue(load); // B
+    intakeBtn.whileTrue(intake.spinIntake()); // A
+    wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
+    wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
+    wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
+    wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    climbButton.whileTrue(elevator.toggleClimbMode());
+
+    toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
+    toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
   }
 
   /**
@@ -58,6 +200,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return autoChooser.getSelected();
   }
 }
