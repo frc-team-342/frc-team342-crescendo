@@ -43,7 +43,8 @@ public class Elevator extends SubsystemBase {
 
     elevator_left.setSmartCurrentLimit(30);
     elevator_right.setSmartCurrentLimit(30);
-  
+
+    elevator_left.setInverted(true);
     elevator_right.follow(elevator_left,true);
     
     encoder = elevator_left.getEncoder();
@@ -77,12 +78,11 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
-    SmartDashboard.putBoolean("Climb Mode", climbMode);
+    // SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
   }
 
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
-  
+    sendableBuilder.addBooleanProperty("Climb Mode", () -> climbMode, null);
   }
 }

@@ -96,12 +96,11 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("STUCK", isStuck());
-    SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
   }
 
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
-     
+    //  sendableBuilder.addBooleanProperty("Note Stuck", () -> isStuck(), null);
+     sendableBuilder.addBooleanProperty("Note Detected", () -> !getIntakeSensor(), null);
     }
 }

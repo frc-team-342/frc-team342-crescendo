@@ -110,7 +110,7 @@ public static class IntakeConstants {
     // Offsets
     public static final double FRONT_LEFT_OFFSET = 5.03;
     public static final double FRONT_RIGHT_OFFSET = 2.36;
-    public static final double BACK_LEFT_OFFSET = 0.24;
+    public static final double BACK_LEFT_OFFSET = 2.35;
     public static final double BACK_RIGHT_OFFSET = 1.08;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
