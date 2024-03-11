@@ -24,7 +24,7 @@ public class TimedDrive extends Command {
   private ChassisSpeeds chassisSpeeds;
   
   
-  public TimedDrive( SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
+  public  TimedDrive( SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     
       this.swerve = swerve; 

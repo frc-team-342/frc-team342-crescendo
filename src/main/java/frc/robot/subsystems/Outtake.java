@@ -55,15 +55,15 @@ public class Outtake extends SubsystemBase {
     pidController.setSmartMotionAllowedClosedLoopError(100, 0);
     pidController.setOutputRange(0, 5000);
 
-    SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
-    SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
-    SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
-    SmartDashboard.putNumber("setFF", OuttakeConstants.FF_VALUE);
+    // SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
+    // SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
+    // SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
+    // SmartDashboard.putNumber("setFF", OuttakeConstants.FF_VALUE);
   }
 
   public void shootPercent(double speed){
     leftMotor.set(speed);
-    System.out.println("Shooting at " + speed);
+    // System.out.println("Shooting at " + speed);
   }
 
   public void stop(){

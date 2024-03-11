@@ -31,7 +31,7 @@ public class Climb extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("Initial Position", elevator.getElevatorEncoder());
+    // SmartDashboard.putNumber("Initial Position", elevator.getElevatorEncoder());
     initialPosition = elevator.getElevatorEncoder();
   }
 
@@ -47,7 +47,7 @@ public class Climb extends Command {
       if(curr < initialPosition + IntakeConstants.MAX_DISTANCE && speed > 0){ // Go up if the current pos is less than max height and joy is up
         elevator.raiseElevatorwithSpeed(speed * maxInput);
       }
-      else if(/*curr > initialPosition &&*/ speed < 0) { // Go down if current pos is greater than initial position (minimum height) and joy is down
+      else if(curr > initialPosition && speed < 0) { // Go down if current pos is greater than initial position (minimum height) and joy is down
         elevator.raiseElevatorwithSpeed(speed * maxInput);
       }
       else {
@@ -59,7 +59,7 @@ public class Climb extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putNumber("End of Position",elevator.getElevatorEncoder());
+    // SmartDashboard.putNumber("End of Position",elevator.getElevatorEncoder());
   }
 
   // Returns true when the command should end.
