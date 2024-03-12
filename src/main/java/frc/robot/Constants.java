@@ -27,7 +27,7 @@ public final class Constants {
 
 public static class IntakeConstants {
   public static final int INTAKE_SENSOR = 1;
-
+  
   public static final int INTAKE_MOTOR = 10;
 
   public static final int WRIST_ID = 9;
@@ -36,17 +36,17 @@ public static class IntakeConstants {
 
   public static final double INTAKE_SPEED = 0.6;
   public static final double INTAKE_SHOOT_SPEED = 1;
-  public static final double FEED_SHOOTER_SPEED = 1;
+  public static final double FEED_SHOOTER_SPEED = 1; 
   public static final double WRIST_SPEED = 0.7;
 
-  public static final double LOW_WRIST_POS = 0.9;
+public static final double LOW_WRIST_POS = 0.9;
   public static final double HIGH_WRIST_POS = 0.311;
   public static final double AMP_POS = 0.535; // In memoriam of 0.342 :(
 
   public static final double MAX_DISTANCE = 88.49;
 
   public static final double DESIRED_SPEED = 4800;
-  
+
   public static final double DEFAULT_CURRENT = 30;
 }
 
@@ -81,6 +81,7 @@ public static class IntakeConstants {
     );
 
     public static final double[] PID_VALUES = {0.5, 0, 0};
+    // public static final double[] BL_PID_VALUES = {0.5, 0.075, 0};
     public static final double[] BL_PID_VALUES = {0.5, 0.01, 0};
 
     // Drive Motor IDs
@@ -134,7 +135,7 @@ public static class IntakeConstants {
     public static final double P_VALUE = 0.0001;
     public static final double I_VALUE = 0;
     public static final double D_VALUE = 0;
-    public static final double FF_VALUE = 0.5;
+public static final double FF_VALUE = 0.5;
     
     public static final int CURRENT_LIMIT = 60;
   }
