@@ -34,6 +34,8 @@ public static class IntakeConstants {
   public static final int LEFT_ELEV_ID = 13;
   public static final int RIGHT_ElEV_ID = 14;
 
+  public static final int LIMIT_SWITCH = 7;
+
   public static final double INTAKE_SPEED = 0.6;
   public static final double INTAKE_SHOOT_SPEED = 1;
   public static final double FEED_SHOOTER_SPEED = 1;

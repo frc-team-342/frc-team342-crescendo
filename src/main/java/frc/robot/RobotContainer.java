@@ -10,6 +10,8 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.Load;
 import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
+import frc.robot.commands.RumbleWhenNote;
+import frc.robot.commands.ToggleClimbMode;
 import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -59,6 +61,7 @@ public class RobotContainer {
   private MoveWristToPosition moveWristAmp;
   private SequentialCommandGroup wristDownIntake;
 
+  private ToggleClimbMode toggleClimbMode;
 
   private Climb climb;
 
@@ -86,6 +89,7 @@ public class RobotContainer {
   private Elevator elevator;
 
   private MoveWristPercent moveWristPercent;
+  private RumbleWhenNote rumbleWhenNote;
 
   private SendableChooser<Command> autoChooser;
 
@@ -112,6 +116,7 @@ public class RobotContainer {
 
     // Climb Buttons
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
+    toggleClimbMode = new ToggleClimbMode(wrist, intake, elevator);
 
     // Driver-assisted Buttons
     wristDownBtn = new POVButton(operator, 180);
@@ -134,12 +139,14 @@ public class RobotContainer {
 
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
     moveWristPercent = new MoveWristPercent(operator, wrist);
+    rumbleWhenNote = new RumbleWhenNote(intake, operator);
 
     autoChooser = new SendableChooser<>();
     
     wrist.setDefaultCommand(moveWristPercent);
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
+    intake.setDefaultCommand(rumbleWhenNote);
 
     // autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
 
@@ -187,7 +194,7 @@ public class RobotContainer {
     wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
     wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
-    climbButton.whileTrue(elevator.toggleClimbMode());
+    climbButton.whileTrue(toggleClimbMode);
 
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
