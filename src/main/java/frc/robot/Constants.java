@@ -43,7 +43,7 @@ public static final double LOW_WRIST_POS = 0.9;
   public static final double HIGH_WRIST_POS = 0.311;
   public static final double AMP_POS = 0.535; // In memoriam of 0.342 :(
 
-  public static final double MAX_DISTANCE = 88.49;
+  public static final double MAX_DISTANCE = 83;
 
   public static final double DESIRED_SPEED = 4800;
 

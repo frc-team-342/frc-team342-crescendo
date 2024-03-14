@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,12 +19,15 @@ public class Climb extends Command {
   private XboxController joyStick;
   private final double maxInput = 0.50;
 
+  private DigitalInput magneticLimit;
+
   private double initialPosition;
 
   public Climb(Elevator elevator, XboxController joyStick) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.joyStick = joyStick;
     this.elevator = elevator;
+    magneticLimit = new DigitalInput(7);
 
     addRequirements(elevator);
   }
@@ -47,7 +51,7 @@ public class Climb extends Command {
       if(curr < initialPosition + IntakeConstants.MAX_DISTANCE && speed > 0){ // Go up if the current pos is less than max height and joy is up
         elevator.raiseElevatorwithSpeed(speed * maxInput);
       }
-      else if(curr > initialPosition && speed < 0) { // Go down if current pos is greater than initial position (minimum height) and joy is down
+      else if(curr > initialPosition && speed < 0 && magneticLimit.get()) { // Go down if current pos is greater than initial position (minimum height) and joy is down
         elevator.raiseElevatorwithSpeed(speed * maxInput);
       }
       else {
