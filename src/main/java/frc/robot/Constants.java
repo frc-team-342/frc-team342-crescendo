@@ -34,7 +34,7 @@ public static class IntakeConstants {
   public static final int LEFT_ELEV_ID = 13;
   public static final int RIGHT_ElEV_ID = 14;
 
-  public static final int LIMIT_SWITCH = 7;
+  public static final int MAG_ENCODER = 7;
 
   public static final double INTAKE_SPEED = 0.6;
   public static final double INTAKE_SHOOT_SPEED = 1;
@@ -110,10 +110,10 @@ public static class IntakeConstants {
     public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
 
     // Offsets
-    public static final double FRONT_LEFT_OFFSET = 5.03;
-    public static final double FRONT_RIGHT_OFFSET = 2.36;
-    public static final double BACK_LEFT_OFFSET = 2.35;
-    public static final double BACK_RIGHT_OFFSET = 1.08;
+    public static final double FRONT_LEFT_OFFSET = 4.94;
+    public static final double FRONT_RIGHT_OFFSET = 5.47;
+    public static final double BACK_LEFT_OFFSET = 5.47;
+    public static final double BACK_RIGHT_OFFSET = 4.23;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 

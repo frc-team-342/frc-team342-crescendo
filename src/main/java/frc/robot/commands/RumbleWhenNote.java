@@ -14,7 +14,9 @@ import frc.robot.subsystems.Intake;
 public class RumbleWhenNote extends Command {
 
   private Intake intake;
-  private double lastCall;
+
+  private Timer rumbleTime;
+  private Timer coolDownTime;
 
   private boolean sensor;
   private XboxController joy;
@@ -25,6 +27,9 @@ public class RumbleWhenNote extends Command {
     this.intake = intake;
     sensor = intake.getIntakeSensor();
     this.joy = joy; 
+
+    rumbleTime = new Timer();
+    coolDownTime = new Timer();
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
@@ -37,25 +42,30 @@ public class RumbleWhenNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sensor = intake.getIntakeSensor();
+    sensor = !intake.getIntakeSensor();
 
-    if(lastCall == 0 || DriverStation.getMatchTime() > lastCall + 5){
-      if(sensor) {
+   if(coolDownTime.get() > 3 && intake.isStuck()) {
         joy.setRumble(RumbleType.kBothRumble, 0.5);
-        lastCall = DriverStation.getMatchTime();
-      }
-    }
+        rumbleTime.start();
+
+        coolDownTime.stop();
+        coolDownTime.reset();
+
+        System.out.println("Rumbling");
+   }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     joy.setRumble(RumbleType.kBothRumble, 0);
+    rumbleTime.stop();
+    rumbleTime.reset();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return rumbleTime.get() > 3;
   }
 }

@@ -75,6 +75,7 @@ public class RobotContainer {
   private JoystickButton outtakeNoteBtn;
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
+  private JoystickButton softOuttakeBtn;
 
   private JoystickButton climbButton;
 
@@ -113,6 +114,7 @@ public class RobotContainer {
     loadButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    softOuttakeBtn = new JoystickButton(operator, XboxController.Axis.kLeftTrigger.value);
 
     // Climb Buttons
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
@@ -187,6 +189,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     xButton.whileTrue(intake.outtake()); // X
+    softOuttakeBtn.whileTrue(intake.softOuttake()); // Left Trigger
     loadButton.whileTrue(load); // B
     intakeBtn.whileTrue(intake.spinIntake()); // A
     wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
