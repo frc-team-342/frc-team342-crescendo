@@ -69,6 +69,7 @@ public class Intake extends SubsystemBase {
   public Command softOuttake() {
     return runEnd(() -> {
       intake.set(0.05);
+      System.out.println("going");
     }, () -> {intake.set(0);});
   }
 

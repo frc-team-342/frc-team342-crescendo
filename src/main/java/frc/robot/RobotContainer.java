@@ -189,7 +189,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     xButton.whileTrue(intake.outtake()); // X
-    softOuttakeBtn.whileTrue(intake.softOuttake()); // Left Trigger
+    softOuttakeBtn.whileTrue(intake.softOuttake());
     loadButton.whileTrue(load); // B
     intakeBtn.whileTrue(intake.spinIntake()); // A
     wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
