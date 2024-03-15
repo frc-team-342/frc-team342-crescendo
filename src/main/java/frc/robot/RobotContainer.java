@@ -150,8 +150,9 @@ public class RobotContainer {
     elevator.setDefaultCommand(climb);
     intake.setDefaultCommand(rumbleWhenNote);
 
-    // autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
-
+    autoChooser.addOption("Middle Two Piece Speaker", Autos.shootAndScootTwoPiece(swerve, outtake, intake, new ChassisSpeeds(1, 0, 0), wrist));
+    autoChooser.addOption("Right Side Two Piece", Autos.RightTwoPieceAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1, 0, 0)));
+    
     autoChooser.addOption("Left Side Speaker Piece", Autos.LeftAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1, 0, 0)));
     
     autoChooser.addOption("Right Side Speaker Piece", Autos.RightAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1,0,0)));
@@ -160,13 +161,15 @@ public class RobotContainer {
 
     autoChooser.addOption("Middle Speaker", Autos.shootAndScoot(swerve,outtake,intake, new ChassisSpeeds(1,0,0)));
 
-   SmartDashboard.putData(autoChooser);
+    autoChooser.setDefaultOption("Default", Autos.DoNothing());
+
+   
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
    SmartDashboard.putData(wrist);
    SmartDashboard.putData(elevator);
-
+   SmartDashboard.putData(autoChooser);
     configureBindings();
   } 
 

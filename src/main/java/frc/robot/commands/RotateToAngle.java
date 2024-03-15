@@ -74,7 +74,7 @@ public class RotateToAngle extends Command {
 
     ChassisSpeeds radial = new ChassisSpeeds(0, 0, rotationSpeed);
     
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerve.getModuleStates(), MAX_ROTATE_SPEED);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerve.getModuleStates(), MAX_ROTATE_SPEED * 0.3);
    
     swerve.drive(radial, MAX_DRIVE_SPEED); 
   }
