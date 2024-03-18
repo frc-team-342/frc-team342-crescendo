@@ -10,18 +10,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Wrist;
 
 
 public class Climb extends Command {
   /** Creates a new Climb. */
   private Elevator elevator;
+
   private XboxController joyStick;
+
+  private MoveWristToPosition moveUp;
+
   private final double maxInput = 0.50;
 
   private double initialPosition;
 
   public Climb(Elevator elevator, XboxController joyStick) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.joyStick = joyStick;
     this.elevator = elevator;
 
@@ -31,7 +36,6 @@ public class Climb extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // SmartDashboard.putNumber("Initial Position", elevator.getElevatorEncoder());
     initialPosition = elevator.getElevatorEncoder();
   }
 
@@ -43,6 +47,7 @@ public class Climb extends Command {
 
     if (elevator.getClimbMode()){
       double curr = elevator.getElevatorEncoder();
+
 
       if(curr < initialPosition + IntakeConstants.MAX_DISTANCE && speed > 0){ // Go up if the current pos is less than max height and joy is up
         elevator.raiseElevatorwithSpeed(speed * maxInput);

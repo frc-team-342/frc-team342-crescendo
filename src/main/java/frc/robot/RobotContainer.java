@@ -10,6 +10,8 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.Load;
 import frc.robot.commands.MoveWristPercent;
 import frc.robot.commands.MoveWristToPosition;
+import frc.robot.commands.RumbleWhenNote;
+import frc.robot.commands.ToggleClimbMode;
 import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -59,6 +61,7 @@ public class RobotContainer {
   private MoveWristToPosition moveWristAmp;
   private SequentialCommandGroup wristDownIntake;
 
+  private ToggleClimbMode toggleClimbMode;
 
   private Climb climb;
 
@@ -72,6 +75,7 @@ public class RobotContainer {
   private JoystickButton outtakeNoteBtn;
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
+  private JoystickButton softOuttakeBtn;
 
   private JoystickButton climbButton;
 
@@ -86,6 +90,7 @@ public class RobotContainer {
   private Elevator elevator;
 
   private MoveWristPercent moveWristPercent;
+  private RumbleWhenNote rumbleWhenNote;
 
   private SendableChooser<Command> autoChooser;
 
@@ -109,9 +114,11 @@ public class RobotContainer {
     loadButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    softOuttakeBtn = new JoystickButton(operator, XboxController.Axis.kLeftTrigger.value);
 
     // Climb Buttons
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
+    toggleClimbMode = new ToggleClimbMode(wrist, intake, elevator);
 
     // Driver-assisted Buttons
     wristDownBtn = new POVButton(operator, 180);
@@ -134,6 +141,7 @@ public class RobotContainer {
 
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
     moveWristPercent = new MoveWristPercent(operator, wrist);
+    rumbleWhenNote = new RumbleWhenNote(intake, operator);
 
     autoChooser = new SendableChooser<>();
     
@@ -141,23 +149,24 @@ public class RobotContainer {
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
 
-    // autoChooser.addOption("Middle Auto 2 Piece", Autos.MiddleShoot(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Middle Two Piece Speaker", Autos.MiddleTwoShoot(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Middle Speaker", Autos.MiddleShoot(swerve, outtake, intake));
 
-    autoChooser.addOption("Left Side Speaker Piece", Autos.LeftAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1, 0, 0)));
+    autoChooser.addOption("Right Side Two Piece", Autos.RightTwoPieceAuto(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Right Side Speaker Piece", Autos.RightAuto(swerve, outtake, intake, wrist));
     
-    autoChooser.addOption("Right Side Speaker Piece", Autos.RightAuto(swerve, outtake, intake, wrist, new ChassisSpeeds(1,0,0)));
+    autoChooser.addOption("Left Side Speaker Piece", Autos.LeftAuto(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Left Side Two Piece", Autos.LeftTwoAuto(swerve, outtake, intake, wrist));
 
     autoChooser.addOption("Do nothing", Autos.DoNothing());
-
-    autoChooser.addOption("Middle Speaker", Autos.shootAndScoot(swerve,outtake,intake, new ChassisSpeeds(1,0,0)));
-
-   SmartDashboard.putData(autoChooser);
+    autoChooser.setDefaultOption("Default", Autos.DoNothing());
+   
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
    SmartDashboard.putData(intake);
    SmartDashboard.putData(wrist);
    SmartDashboard.putData(elevator);
-
+   SmartDashboard.putData(autoChooser);
     configureBindings();
   } 
 
@@ -180,6 +189,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     xButton.whileTrue(intake.outtake()); // X
+    softOuttakeBtn.whileTrue(intake.softOuttake());
     loadButton.whileTrue(load); // B
     intakeBtn.whileTrue(intake.spinIntake()); // A
     wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
@@ -187,7 +197,7 @@ public class RobotContainer {
     wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
     wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
-    climbButton.whileTrue(elevator.toggleClimbMode());
+    climbButton.whileTrue(toggleClimbMode);
 
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
