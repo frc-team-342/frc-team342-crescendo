@@ -148,7 +148,6 @@ public class RobotContainer {
     wrist.setDefaultCommand(moveWristPercent);
     swerve.setDefaultCommand(driveWithJoystick);
     elevator.setDefaultCommand(climb);
-    intake.setDefaultCommand(rumbleWhenNote);
 
     autoChooser.addOption("Middle Two Piece Speaker", Autos.MiddleTwoShoot(swerve, outtake, intake, wrist));
     autoChooser.addOption("Middle Speaker", Autos.MiddleShoot(swerve, outtake, intake));
