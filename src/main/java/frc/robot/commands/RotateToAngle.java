@@ -41,8 +41,8 @@ public class RotateToAngle extends Command {
 
     rotateController = new PIDController(
      
-      0.1,
-      0, 
+      0.045,
+      0.001, 
       0.000
     );
     

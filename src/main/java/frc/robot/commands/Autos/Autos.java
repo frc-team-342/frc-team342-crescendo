@@ -23,8 +23,10 @@ import frc.robot.subsystems.Wrist;
 public final class Autos {
   /** Example static factory for an autonomous command. */
 
-public static Command shootAndScoot(SwerveDrive swerve, Outtake outtake, Intake intake, ChassisSpeeds chassisSpeeds){
-  
+public static Command MiddleShoot(SwerveDrive swerve, Outtake outtake, Intake intake) {
+
+  ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
+
   return Commands.sequence(
 
     //move Towards the speaker 
@@ -40,9 +42,10 @@ public static Command shootAndScoot(SwerveDrive swerve, Outtake outtake, Intake 
 
 }
 
-public static Command shootAndScootTwoPiece(SwerveDrive swerve, Outtake outtake, Intake intake, ChassisSpeeds chassisSpeeds, Wrist wrist){
+public static Command MiddleTwoShoot(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
   
-  ChassisSpeeds negChassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+  ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
+  ChassisSpeeds negChassisSpeeds = new ChassisSpeeds(-1,0,0);
 
   return Commands.sequence(
 
@@ -69,7 +72,9 @@ public static Command shootAndScootTwoPiece(SwerveDrive swerve, Outtake outtake,
   ); 
 }
 
-public static Command LeftAuto(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist, ChassisSpeeds chassisSpeeds){
+public static Command LeftAuto(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
+
+  ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
 
   if(swerve.shouldFlip()){  
     return Commands.sequence(
@@ -102,60 +107,117 @@ public static Command LeftAuto(SwerveDrive swerve, Outtake outtake, Intake intak
   );
 }
 
-public static Command RightTwoPieceAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist, ChassisSpeeds chassisSpeeds){
+public static Command LeftTwoAuto(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
+
+  ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
+  ChassisSpeeds negChassisSpeeds = new ChassisSpeeds(-1,0,0);
+
+  if(swerve.shouldFlip()){  
+    return Commands.sequence(
+    new TimedDrive(swerve, 1, chassisSpeeds , MAX_DRIVE_SPEED),
+    new RotateToAngle(50.3, swerve).withTimeout(2),
+
+    //Shoots preloaded note 
+    new Load(outtake, intake).withTimeout(2),
+
+    //Rotates the robot back to staright 
+    new RotateToAngle(0, swerve).withTimeout(2),
+    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
+    new TimedDrive(swerve, 2, chassisSpeeds, MAX_DRIVE_SPEED),
+    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS)
+    );
+  }
+
+  return Commands.sequence(
+    //drivesout
+    new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
+    //lines up shot
+    new RotateToAngle(-43, swerve).withTimeout(1.5),
+    
+    //Shoots preloaded note 
+    new Load(outtake, intake).withTimeout(1.5),
+
+    //Rotates the robot back straight 
+    new RotateToAngle(0, swerve).withTimeout(2),
+    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
+    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
+    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
+    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
+    new TimedDrive(swerve, 0.2, new ChassisSpeeds(0, -1,0), MAX_DRIVE_SPEED),
+    new TimedDrive(swerve, 2, negChassisSpeeds, MAX_DRIVE_SPEED),
+    new RotateToAngle(-43, swerve).withTimeout(2),
+    new Load(outtake, intake).withTimeout(2)
+  );
+}
+
+
+public static Command RightTwoPieceAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
   
-  ChassisSpeeds negChassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-  ChassisSpeeds horizontalSpeeds = new ChassisSpeeds(0,1,0);
+  ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
+  ChassisSpeeds negChassisSpeeds = new ChassisSpeeds(-1, 0, 0);
   
   if(swerve.shouldFlip()) {
    return Commands.sequence(
 
-    new TimedDrive(swerve,1,chassisSpeeds,MAX_DRIVE_SPEED),
+  //drive out
+  new TimedDrive(swerve,1,chassisSpeeds,MAX_DRIVE_SPEED),
 
-    new RotateToAngle(-50.3, swerve).withTimeout(2),
+  //line up shot
+  new RotateToAngle(55, swerve).withTimeout(2),
+ 
+  //shoot
+  new Load(outtake, intake).withTimeout(1.5),
 
-    new Load(outtake, intake).withTimeout(2),
+  //rotate and lower wrist
+  new ParallelCommandGroup(
+    new RotateToAngle(-12, swerve), 
+    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
+  
+  //drive to note
+  new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
+  
+  new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
 
-    new RotateToAngle(1, swerve).withTimeout(2),
-    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
+  new TimedDrive(swerve,1.3, negChassisSpeeds,MAX_DRIVE_SPEED),
 
-    new TimedDrive(swerve, 1.5, chassisSpeeds, MAX_DRIVE_SPEED),
-    new RotateToAngle(0, swerve),
-    new TimedDrive(swerve,1.5, negChassisSpeeds,MAX_DRIVE_SPEED),
-
-    new RotateToAngle(-50.3, swerve).withTimeout(2),
-    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
-    new Load(outtake, intake).withTimeout(2),
-    new RotateToAngle(-40, swerve),
-    new TimedDrive(swerve, 1, new ChassisSpeeds(2,0,0), MAX_DRIVE_SPEED),
-    new RotateToAngle(0, swerve),
-    new TimedDrive(swerve, 1, new ChassisSpeeds(2,0,0), MAX_DRIVE_SPEED));}
+  new RotateToAngle(55, swerve).withTimeout(2),
+  new Load(outtake, intake).withTimeout(2),
+  new RotateToAngle(20, swerve).withTimeout(2),
+  new TimedDrive(swerve, 1, new ChassisSpeeds(2.5,0,0), MAX_DRIVE_SPEED));}
 
   return Commands.sequence(
 
+  //drive out
   new TimedDrive(swerve,1,chassisSpeeds,MAX_DRIVE_SPEED),
 
-  new RotateToAngle(50.3, swerve).withTimeout(2),
+  //line up shot
+  new RotateToAngle(55, swerve).withTimeout(2),
+ 
+  //shoot
+  new Load(outtake, intake).withTimeout(1.5),
 
-  new Load(outtake, intake).withTimeout(2),
-
-  new RotateToAngle(-1, swerve).withTimeout(2),
-  new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
-
-  new TimedDrive(swerve, 1.5, chassisSpeeds, MAX_DRIVE_SPEED),
-  new RotateToAngle(0, swerve),
-  new TimedDrive(swerve,1.5, negChassisSpeeds,MAX_DRIVE_SPEED),
-
-  new RotateToAngle(50.3, swerve).withTimeout(2),
+  //rotate and lower wrist
+  new ParallelCommandGroup(
+    new RotateToAngle(-12, swerve), 
+    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
+  
+  //drive to note
+  new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
+  
   new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
-  new Load(outtake, intake).withTimeout(2),
-  new RotateToAngle(40, swerve),
-  new TimedDrive(swerve, 1, new ChassisSpeeds(2,0,0), MAX_DRIVE_SPEED),
-  new RotateToAngle(0, swerve),
-  new TimedDrive(swerve, 1, new ChassisSpeeds(2,0,0), MAX_DRIVE_SPEED));
-}
 
-public static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist, ChassisSpeeds chassisSpeeds){
+  new TimedDrive(swerve,1.3, negChassisSpeeds,MAX_DRIVE_SPEED),
+
+  new RotateToAngle(55, swerve).withTimeout(2),
+  new Load(outtake, intake).withTimeout(2),
+  new RotateToAngle(20, swerve).withTimeout(2),
+  new TimedDrive(swerve, 1, new ChassisSpeeds(2.5,0,0), MAX_DRIVE_SPEED));
+  }
+
+public static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
+
+  ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
+
   if(swerve.shouldFlip()) {
    return Commands.sequence(
     new TimedDrive(swerve,1,chassisSpeeds,MAX_DRIVE_SPEED),
@@ -194,35 +256,9 @@ public static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake int
   );
 }
 
-
 public static Command DoNothing(){
 
   return Commands.none();
-}
-
-// TWO PIECE!
-public static Command MiddleShoot(SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
-
-  return Commands.sequence(
-
-  new Load(outtake, intake),
-
-  new ParallelCommandGroup(
-    
-  new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)
-  
-  ),
-
-  new MoveWristToPosition(wrist,intake,LOW_WRIST_POS),
-
-    new ParallelCommandGroup(
-      
-     new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS)
-
-    ),
-
-  new Load(outtake, intake)
-  );
 }
 
   private Autos() {
