@@ -151,19 +151,16 @@ public class RobotContainer {
     intake.setDefaultCommand(rumbleWhenNote);
 
     autoChooser.addOption("Middle Two Piece Speaker", Autos.MiddleTwoShoot(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Middle Speaker", Autos.MiddleShoot(swerve, outtake, intake));
+
     autoChooser.addOption("Right Side Two Piece", Autos.RightTwoPieceAuto(swerve, outtake, intake, wrist));
+    autoChooser.addOption("Right Side Speaker Piece", Autos.RightAuto(swerve, outtake, intake, wrist));
     
     autoChooser.addOption("Left Side Speaker Piece", Autos.LeftAuto(swerve, outtake, intake, wrist));
     autoChooser.addOption("Left Side Two Piece", Autos.LeftTwoAuto(swerve, outtake, intake, wrist));
 
-    autoChooser.addOption("Right Side Speaker Piece", Autos.RightAuto(swerve, outtake, intake, wrist));
-
     autoChooser.addOption("Do nothing", Autos.DoNothing());
-
-    autoChooser.addOption("Middle Speaker", Autos.MiddleShoot(swerve, outtake, intake));
-
     autoChooser.setDefaultOption("Default", Autos.DoNothing());
-
    
    SmartDashboard.putData(swerve);
    SmartDashboard.putData(outtake);
