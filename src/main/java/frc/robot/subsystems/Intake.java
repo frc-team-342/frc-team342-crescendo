@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
 
     intakeSensor = new DigitalInput(5);
 
-    velocity = 0.3;
+    velocity = 0.25;
   }
 
 

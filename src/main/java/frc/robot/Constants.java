@@ -47,7 +47,7 @@ public static class IntakeConstants {
 
   public static final double MAX_DISTANCE = 88.49;
 
-  public static final double DESIRED_SPEED = 4800;
+  public static final double DESIRED_SPEED = 5100;
   
   public static final double DEFAULT_CURRENT = 30;
 }
