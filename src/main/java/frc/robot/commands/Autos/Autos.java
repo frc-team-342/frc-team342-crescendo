@@ -156,7 +156,6 @@ public static Command LeftTwoAuto(SwerveDrive swerve, Outtake outtake, Intake in
   );
 }
 
-
 public static Command RightTwoPieceAuto (SwerveDrive swerve, Outtake outtake, Intake intake, Wrist wrist){
   
   ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
@@ -251,6 +250,15 @@ public static Command RightAuto (SwerveDrive swerve, Outtake outtake, Intake int
 public static Command DoNothing(){
 
   return Commands.none();
+}
+
+public static Command AmpAuto(SwerveDrive swerve){
+  return Commands.sequence(
+    new TimedDrive(swerve, 1.5, new ChassisSpeeds(1,0,0), MAX_DRIVE_SPEED),
+    new TimedDrive(swerve, 0.5, new ChassisSpeeds(0,-1,0), MAX_DRIVE_SPEED),
+    swerve.rotateToAmp(),
+    new TimedDrive(swerve, 0.5, new ChassisSpeeds(1,0,0), MAX_DRIVE_SPEED)
+  );
 }
 
   private Autos() {

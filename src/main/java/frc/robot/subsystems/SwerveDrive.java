@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.RotateToAngle;
 
 import static frc.robot.Constants.DriveConstants.*;
 
@@ -188,6 +189,13 @@ public class SwerveDrive extends SubsystemBase {
       SwerveModuleState[] zeroStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
       setModuleStates(zeroStates, MAX_DRIVE_SPEED);
     });
+  }
+
+  public Command rotateToAmp() {
+    boolean redAlliance = shouldFlip(); // Depending on the starting alliance side, the amp would be at different angle. Account for that.
+    RotateToAngle rotate = redAlliance ? new RotateToAngle(90, this) : new RotateToAngle(-90, this); // If red, go to 90. If blue, go to -90.
+
+    return rotate;
   }
 
   public void stopModules() {
