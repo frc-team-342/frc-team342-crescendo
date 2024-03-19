@@ -42,8 +42,7 @@ public class Intake extends SubsystemBase {
 
     intakeSensor = new DigitalInput(5);
 
-    velocity = 0.3;
-    // SmartDashboard.putNumber("Set Velocity", 0.3);
+    velocity = 0.25;
   }
 
 
@@ -64,6 +63,13 @@ public class Intake extends SubsystemBase {
   public Command outtake() {
     return runEnd(() -> {
       intake.set(velocity);
+    }, () -> {intake.set(0);});
+  }
+
+  public Command softOuttake() {
+    return runEnd(() -> {
+      intake.set(0.05);
+      System.out.println("going");
     }, () -> {intake.set(0);});
   }
 
@@ -90,12 +96,13 @@ public class Intake extends SubsystemBase {
  
 
   public boolean isStuck() {
-    return intake.getOutputCurrent() < IntakeConstants.DEFAULT_CURRENT; 
+    return intake.getOutputCurrent() > IntakeConstants.DEFAULT_CURRENT; 
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
+
   }
 
   @Override

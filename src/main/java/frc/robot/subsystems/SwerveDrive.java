@@ -68,7 +68,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FRONT_LEFT[0],
       DriveConstants.FRONT_LEFT[1],
       DriveConstants.FL_ENCODER_PORT,
-      false, true,
+      false, false,
       DriveConstants.FRONT_LEFT_OFFSET,
       DriveConstants.PID_VALUES);
 
@@ -76,7 +76,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FRONT_RIGHT[0], 
       DriveConstants.FRONT_RIGHT[1],
       DriveConstants.FR_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.FRONT_RIGHT_OFFSET,
       DriveConstants.PID_VALUES);
    
@@ -92,7 +92,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT[0],
       DriveConstants.BACK_RIGHT[1],
       DriveConstants.BR_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.BACK_RIGHT_OFFSET,
       DriveConstants.BL_PID_VALUES);
 
@@ -289,10 +289,11 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addDoubleProperty("Robot Heading", () -> getHeading(), null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
-    // sendableBuilder.addDoubleProperty("FL Offsets", () -> frontLeft.getOffsets(), null);
-    // sendableBuilder.addDoubleProperty("FR Offsets", () -> frontRight.getOffsets(), null);
-    // sendableBuilder.addDoubleProperty("BL Offsets", () -> backLeft.getOffsets(), null);
-    // sendableBuilder.addDoubleProperty("BR Offsets", () -> backRight.getOffsets(), null);
+
+    sendableBuilder.addDoubleProperty("FL Offsets", () -> frontLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("FR Offsets", () -> frontRight.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("BL Offsets", () -> backLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("BR Offsets", () -> backRight.getOffsets(), null);
   }
 
   @Override

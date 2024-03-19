@@ -35,9 +35,12 @@ private Wrist wrist;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double currPosition = wrist.getthroughBore().getAbsolutePosition();
 
     double speed = MathUtil.applyDeadband(joy.getLeftY(), 0.15);
-    wrist.rotateWrist(speed);
+    if(currPosition > 30 && currPosition < 90){
+      wrist.rotateWrist(speed);
+    }
   }
 
   // Called once the command ends or is interrupted.
