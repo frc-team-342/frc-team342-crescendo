@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Elevator;
 
-
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
@@ -23,7 +22,7 @@ public class OperatorCommands extends ParallelCommandGroup {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    //addCommands(new RaiseElevatorWithJoystick(elevator, xboxController));
+    addCommands(new Climb(elevator, xboxController));
     addRequirements(elevator);
   }
 }
