@@ -55,9 +55,11 @@ public class Climb extends Command {
 
       if(curr > initialPosition - IntakeConstants.MAX_DISTANCE && speed < 0){ // Go up if the current pos is less than max height and joy is up
         elevator.raiseElevatorwithSpeed(speed * maxInput);
+        // System.out.println("Going up");
       }
       else if(curr < initialPosition && speed > 0 && magneticLimit.get()) { // Go down if current pos is greater than initial position (minimum height) and joy is down
         elevator.raiseElevatorwithSpeed(speed * maxInput);
+        // System.out.println("Going down");
       }
       else {
         elevator.holdPosition();
@@ -65,6 +67,11 @@ public class Climb extends Command {
     }
 
     SmartDashboard.putNumber("Climb Position", elevator.getElevatorEncoder());
+    
+    // SmartDashboard.putNumber("Init pos", initialPosition);
+    // SmartDashboard.putNumber("Position", elevator.getElevatorEncoder());
+    // SmartDashboard.putNumber("Top pos", initialPosition + IntakeConstants.MAX_DISTANCE);
+    // SmartDashboard.putBoolean("Magnetic Encoder", magneticLimit.get());
   }
 
   // Called once the command ends or is interrupted.
