@@ -54,11 +54,6 @@ public class Outtake extends SubsystemBase {
     pidController.setFF(OuttakeConstants.FF_VALUE);
     pidController.setSmartMotionAllowedClosedLoopError(100, 0);
     pidController.setOutputRange(0, 5000);
-
-    // SmartDashboard.putNumber("setP", OuttakeConstants.P_VALUE);
-    // SmartDashboard.putNumber("setI", OuttakeConstants.I_VALUE);
-    // SmartDashboard.putNumber("setD", OuttakeConstants.D_VALUE);
-    // SmartDashboard.putNumber("setFF", OuttakeConstants.FF_VALUE);
   }
 
   public void shootPercent(double speed){
@@ -81,6 +76,6 @@ public class Outtake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Shooter RPM", encoder.getVelocity());
+    // SmartDashboard.putNumber("Shooter RPM", encoder.getVelocity());
   }
 }
