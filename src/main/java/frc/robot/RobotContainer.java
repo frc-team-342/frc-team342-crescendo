@@ -76,6 +76,7 @@ public class RobotContainer {
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
   private JoystickButton softOuttakeBtn;
+  private JoystickButton leftRotateToAmpBtn, rightRotateToAmpBtn;
 
   private JoystickButton climbButton;
 
@@ -120,7 +121,10 @@ public class RobotContainer {
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
     toggleClimbMode = new ToggleClimbMode(wrist, intake, elevator);
 
-    // Driver-assisted Buttons
+    leftRotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    rightRotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+
+    // Operator assistance Buttons
     wristDownBtn = new POVButton(operator, 180);
     wristUpBtn = new POVButton(operator, 0);
     wristRightBtn = new POVButton(operator, 270);
@@ -135,10 +139,12 @@ public class RobotContainer {
     load = new Load(outtake, intake);
     climb = new Climb(elevator, operator);
 
+    // Operator assistance Commands
     moveWristDown = new MoveWristToPosition(wrist, intake, IntakeConstants.LOW_WRIST_POS);
     moveWristUp = new MoveWristToPosition(wrist, intake, IntakeConstants.HIGH_WRIST_POS);
     moveWristAmp = new MoveWristToPosition(wrist, intake, IntakeConstants.AMP_POS);
 
+    // Operator Commands
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);
@@ -196,6 +202,9 @@ public class RobotContainer {
     wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
     wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
     wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
+
+    leftRotateToAmpBtn.whileTrue(swerve.rotateToAmp());
+    rightRotateToAmpBtn.whileTrue(swerve.rotateToAmp());
 
     climbButton.whileTrue(toggleClimbMode);
 
