@@ -32,7 +32,7 @@ public class RotateToAngle extends Command {
 
   /** Creates a new RotateToAngle. */
 
-  public RotateToAngle( double angle, SwerveDrive swerve) {
+  public RotateToAngle(double angle, SwerveDrive swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     this.angle = angle;

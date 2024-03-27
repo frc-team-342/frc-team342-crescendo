@@ -84,8 +84,7 @@ public static final double LOW_WRIST_POS = 0.9;
 
     public static final double[] PID_VALUES = {0.5, 0, 0};
     // public static final double[] BL_PID_VALUES = {0.5, 0.075, 0};
-    public static final double[] BL_PID_VALUES = {0.5, 0.01, 0};
-    public static final double[] BR_PID_VALUES = {0.1, 0, 0};
+    public static final double[] FR_PID_VALUES = {0.2, 0, 0};
 
     // Drive Motor IDs
     public static final int FRONT_LEFT_DRIVE_ID = 1;
@@ -113,9 +112,9 @@ public static final double LOW_WRIST_POS = 0.9;
 
     // Offsets
     public static final double FRONT_LEFT_OFFSET = 4.94;
-    public static final double FRONT_RIGHT_OFFSET = 5.47;
-    public static final double BACK_LEFT_OFFSET = 5.47;
-    public static final double BACK_RIGHT_OFFSET = 4.22;
+    public static final double FRONT_RIGHT_OFFSET = 5.49;
+    public static final double BACK_LEFT_OFFSET = 2.65;
+    public static final double BACK_RIGHT_OFFSET = 0.78;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 

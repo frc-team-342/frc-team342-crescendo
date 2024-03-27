@@ -4,8 +4,6 @@
 
 //Help me Cadence, you're my only hope!
 
-
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -121,46 +119,43 @@ public static Command LeftTwoAuto(SwerveDrive swerve, Outtake outtake, Intake in
   ChassisSpeeds negChassisSpeeds = new ChassisSpeeds(-1,0,0);
 
   if(swerve.shouldFlip()){  
-    return Commands.sequence(
-    //drivesout
-    new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
-    //lines up shot
-    new RotateToAngle(43, swerve).withTimeout(1.5),
-    
-    //Shoots preloaded note 
-    new Load(outtake, intake).withTimeout(1.5),
+    return Commands.sequence( // Red Left
+      new TimedDrive(swerve,1,chassisSpeeds,MAX_DRIVE_SPEED), // Drive out
+      new RotateToAngle(-55, swerve).withTimeout(2), // Rotate to shoot position
+      new Load(outtake, intake).withTimeout(1.5), // Shoot
 
-    //Rotates the robot back straight 
-    new RotateToAngle(0, swerve).withTimeout(2),
-    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
-    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
-    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
-    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
-    new TimedDrive(swerve, 0.2, new ChassisSpeeds(0, -1,0), MAX_DRIVE_SPEED),
-    new TimedDrive(swerve, 2, negChassisSpeeds, MAX_DRIVE_SPEED),
-    new RotateToAngle(43, swerve).withTimeout(2),
-    new Load(outtake, intake).withTimeout(2));
+      new ParallelCommandGroup( // Rotate toward note while lowering wrist
+        new RotateToAngle(12, swerve), 
+        new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
+      
+      new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED), // Drive to note and pick it up
+      new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS), // Prep note for shooting
+
+      new TimedDrive(swerve,1.3, negChassisSpeeds,MAX_DRIVE_SPEED), // Drive back to speaker
+      new RotateToAngle(-55, swerve).withTimeout(2), // Rotate to shoot position
+      new Load(outtake, intake).withTimeout(2), // Shoot
+      new RotateToAngle(-20, swerve).withTimeout(2), // Rotate to leave position
+      new TimedDrive(swerve, 1, new ChassisSpeeds(2.5,0,0), MAX_DRIVE_SPEED)); // Leave
   }
 
-  return Commands.sequence(
-    //drivesout
-    new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
-    //lines up shot
-    new RotateToAngle(-43, swerve).withTimeout(1.5),
-    
-    //Shoots preloaded note 
-    new Load(outtake, intake).withTimeout(1.5),
+  return Commands.sequence( // Blue Left
+    new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED), // Drive out
+    new RotateToAngle(-43, swerve).withTimeout(1.5), // Rotate to shoot position
+    new Load(outtake, intake).withTimeout(1.5), // Shoot
 
-    //Rotates the robot back straight 
-    new RotateToAngle(0, swerve).withTimeout(2),
-    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
-    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
-    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
-    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
-    new TimedDrive(swerve, 0.2, new ChassisSpeeds(0, -1,0), MAX_DRIVE_SPEED),
-    new TimedDrive(swerve, 2, negChassisSpeeds, MAX_DRIVE_SPEED),
-    new RotateToAngle(-43, swerve).withTimeout(2),
-    new Load(outtake, intake).withTimeout(2)
+    new ParallelCommandGroup( // Rotate toward note while lowering wrist
+      new RotateToAngle(0, swerve).withTimeout(2),
+      new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
+
+    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED), // Drive to note and pick it up
+    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS), // Prep note for shooting
+
+    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED), // Leave
+    new TimedDrive(swerve, 0.2, new ChassisSpeeds(0, -1,0), MAX_DRIVE_SPEED), // Shuffle right
+    new TimedDrive(swerve, 2, negChassisSpeeds, MAX_DRIVE_SPEED), // Drive back to speaker
+
+    new RotateToAngle(-43, swerve).withTimeout(2), // Rotate to shoot position
+    new Load(outtake, intake).withTimeout(2) // Shoot
   );
 }
 

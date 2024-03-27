@@ -83,7 +83,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.FR_ENCODER_PORT,
       false, true,
       DriveConstants.FRONT_RIGHT_OFFSET,
-      DriveConstants.PID_VALUES);
+      DriveConstants.FR_PID_VALUES);
    
     backLeft = new SwerveModule(
       DriveConstants.BACK_LEFT[0],
@@ -99,7 +99,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BR_ENCODER_PORT,
       false, true,
       DriveConstants.BACK_RIGHT_OFFSET,
-      DriveConstants.BR_PID_VALUES);
+      DriveConstants.PID_VALUES);
 
     gyro = new AHRS(SerialPort.Port.kUSB);
 
@@ -294,7 +294,6 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
-    // sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
    }  
 
   @Override
