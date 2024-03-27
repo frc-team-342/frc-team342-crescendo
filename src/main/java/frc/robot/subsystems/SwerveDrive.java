@@ -36,8 +36,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.RotateToAngle;
 
 public class SwerveDrive extends SubsystemBase {
+
+  private double BR_P;
+  private double BR_I;
+  private double BR_D;
 
   private SwerveModule frontLeft;
   private SwerveModule frontRight;
@@ -89,7 +94,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_LEFT[0],
       DriveConstants.BACK_LEFT[1],
       DriveConstants.BL_ENCODER_PORT,
-      false, true,
+      false, false,
       DriveConstants.BACK_LEFT_OFFSET,
       DriveConstants.PID_VALUES);  
       
@@ -97,9 +102,9 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT[0],
       DriveConstants.BACK_RIGHT[1],
       DriveConstants.BR_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.BACK_RIGHT_OFFSET,
-      DriveConstants.BL_PID_VALUES);
+      DriveConstants.BR_PID_VALUES);
 
     gyro = new AHRS(SerialPort.Port.kUSB);
 
@@ -119,7 +124,7 @@ public class SwerveDrive extends SubsystemBase {
     chassisSpeedSupplier = () -> getChassisSpeeds();
     shouldFlipSupplier = () -> false;
 
-    fieldOriented = false;
+    fieldOriented = true;
     slowMode = false;
 
     field = new Field2d();
@@ -195,6 +200,13 @@ public class SwerveDrive extends SubsystemBase {
     });
   }
 
+  public Command rotateToAmp() {
+    boolean redAlliance = shouldFlip(); // Depending on the starting alliance side, the amp would be at different angle. Account for that.
+    RotateToAngle rotate = redAlliance ? new RotateToAngle(90, this) : new RotateToAngle(-90, this); // If red, go to 90. If blue, go to -90.
+
+    return rotate;
+  }
+
   public void stopModules() {
     frontLeft.stop();
     frontRight.stop();
@@ -220,13 +232,37 @@ public class SwerveDrive extends SubsystemBase {
     
   public void drive(ChassisSpeeds speeds, double maxDriveSpeed) {
     chassisSpeeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-    System.out.println(chassisSpeeds + "[\n]" + this.getChassisSpeeds());
     chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
     
     SwerveModuleState moduleStates[] = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, maxDriveSpeed);
   }
 
+<<<<<<< HEAD
+=======
+  public boolean shouldFlip() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
+  }
+
+  public void setBrakeMode() {
+    frontLeft.setBrakeMode();
+    frontRight.setBrakeMode();
+    backLeft.setBrakeMode();
+    backRight.setBrakeMode();
+  }
+
+  public void setCoastMode() {
+    frontLeft.setCoastMode();
+    frontRight.setCoastMode();
+    backLeft.setCoastMode();
+    backRight.setCoastMode();
+  }
+
+>>>>>>> 187e1594b3aa41e02778501c32034abe4a158cc9
   public double get5V() {
     return RobotController.getVoltage5V();
   }
@@ -274,21 +310,23 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.PATH_CONFIG,
       this::shouldFlip,
       this
+<<<<<<< HEAD
       ); 
+=======
+      );
+>>>>>>> 187e1594b3aa41e02778501c32034abe4a158cc9
   }
 
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
-    sendableBuilder.setSmartDashboardType("Encoder Values");
-    sendableBuilder.addDoubleProperty("5 Volt", () -> get5V(), null);
-  }
+    sendableBuilder.setSmartDashboardType("Swerve drive");
+    sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
+    sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
+    // sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
+   }  
 
   @Override
   public void periodic() {
     swerveOdometry.update(getRotation2d(), getModulePositions());
-    SmartDashboard.putNumber("Robot Heading", getHeading());
-    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-    SmartDashboard.putBoolean("Field Oriented", fieldOriented);
-    SmartDashboard.putString("Pose", getPose().toString());
   }
 }

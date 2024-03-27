@@ -36,30 +36,21 @@ public class Intake extends SubsystemBase {
   private double velocity;
   
   /** Creates a new Intake. */
-  public Intake() {
-    intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
-
-    intake.setSmartCurrentLimit(30);
-    
-    throughBore = new DutyCycleEncoder(2);
-
+  public Intake(){
+    intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);      
     intake.setIdleMode(IdleMode.kBrake);
 
     intakeSensor = new DigitalInput(5);
 
-    velocity = 0.1;
-    SmartDashboard.putNumber("Set Velocity", 0.3);
+    velocity = 0.27;
   }
 
 
   //command version
   public Command spinIntake(){
     return runEnd( () -> {
-      if(!intakeSensor.get()){
-
-      intake.set(INTAKE_SPEED);
-
-      intake.set(-INTAKE_SPEED);
+      if(intakeSensor.get()){
+        intake.set(-INTAKE_SPEED);
       }
       else {
         intake.set(0);
@@ -75,8 +66,15 @@ public class Intake extends SubsystemBase {
     }, () -> {intake.set(0);});
   }
 
+  public Command softOuttake() {
+    return runEnd(() -> {
+      intake.set(0.05);
+      System.out.println("going");
+    }, () -> {intake.set(0);});
+  }
+
   public void feedShooter(){
-    intake.set(-FEED_SHOOTER_SPEED);
+    intake.set(FEED_SHOOTER_SPEED);
   }
 
   public void hold(){
@@ -98,21 +96,18 @@ public class Intake extends SubsystemBase {
  
 
   public boolean isStuck() {
-    return intake.getOutputCurrent() < IntakeConstants.DEFAULT_CURRENT; 
+    return intake.getOutputCurrent() > IntakeConstants.DEFAULT_CURRENT; 
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("wrist", throughBore.getAbsolutePosition());
-    velocity = SmartDashboard.getNumber("Set Velocity", velocity);
-    SmartDashboard.putBoolean("STUCK", isStuck());
+    
+
   }
 
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
-      sendableBuilder.setSmartDashboardType("intake Values");
-      sendableBuilder.addBooleanProperty("intake Sensor", () -> intakeSensor.get(), null);
-      sendableBuilder.addBooleanProperty("Intake sensor connection", () -> throughBore.isConnected(), null);
+    //  sendableBuilder.addBooleanProperty("Note Stuck", () -> isStuck(), null);
+     sendableBuilder.addBooleanProperty("Note Detected", () -> !getIntakeSensor(), null);
     }
 }

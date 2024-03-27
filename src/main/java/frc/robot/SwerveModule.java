@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -36,7 +37,7 @@ public class SwerveModule extends SubsystemBase {
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveID, int rotateID, int magEncoderPort, boolean invertRotate, boolean invertDrive, double encoderOffset, double[] PID_values) {
     
-    System.out.println("Drive: " + driveID + " rotate: " + rotateID);
+    // System.out.println("Drive: " + driveID + " rotate: " + rotateID);
     driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
     rotateMotor = new CANSparkMax(rotateID, MotorType.kBrushless);
 
@@ -144,9 +145,19 @@ public class SwerveModule extends SubsystemBase {
     rotateMotor.set(rotateController.calculate(getRotatePosition(), state.angle.getRadians()));
   }
 
+  public void setCoastMode() {
+    driveMotor.setIdleMode(IdleMode.kCoast);
+    rotateMotor.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void setBrakeMode() {
+    driveMotor.setIdleMode(IdleMode.kBrake);
+    rotateMotor.setIdleMode(IdleMode.kBrake);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-     
+    SmartDashboard.putNumber("Rotate encoder" + rotateEncoder, rotateEncoder.getPosition());
   }
 }

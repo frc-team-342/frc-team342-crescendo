@@ -77,20 +77,13 @@ public class DriveWithJoystick extends Command {
     rotateSpeed = rotateLimiter.calculate(rotateSpeed) * DriveConstants.MAX_ROTATE_SPEED;
 
     if(fieldOriented) {
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getRotation2d());
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getGyro().getRotation2d());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
     }
 
     moduleStates = DriveConstants.KINEMATICS.toSwerveModuleStates(chassisSpeeds);
     swerve.setModuleStates(moduleStates, maxDriveSpeed);
-
-    SmartDashboard.putNumber("Chassis x-speed", chassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("Chassis y-speed", chassisSpeeds.vyMetersPerSecond);
-    SmartDashboard.putNumber("Chassis rotate-speed", chassisSpeeds.omegaRadiansPerSecond);
-    SmartDashboard.putNumber("Gyro", swerve.getGyro().getRotation2d().getRadians());
-    SmartDashboard.putBoolean("Slow Mode", swerve.getSlowMode());
-    SmartDashboard.putNumber("Current Max Speed", maxDriveSpeed);
   }
 
   // Called once the command ends or is interrupted.
