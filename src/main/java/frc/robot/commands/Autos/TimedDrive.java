@@ -24,8 +24,6 @@ public class TimedDrive extends Command {
   private double maxDriveSpeed;
   private ChassisSpeeds chassisSpeeds;
 
-  private PIDController rotateController;
-  
   public  TimedDrive( SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     
@@ -34,18 +32,12 @@ public class TimedDrive extends Command {
       this.maxDriveSpeed = maxDriveSpeed;
       this.chassisSpeeds = chassisSpeed;
 
-      rotateController = new PIDController(0.045, 0.001, 0);
-
-      rotateController.reset();
-      rotateController.setTolerance(2);
-
       addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    rotateController.enableContinuousInput(0, 360);
     m_timer.restart();
   }
 
