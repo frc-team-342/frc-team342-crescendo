@@ -151,4 +151,40 @@ public static final double FF_VALUE = 0.5;
     
     public static final int CURRENT_LIMIT = 60;
   }
+
+  public static class LimelightConstants{
+
+    //Amp Side Limelight height constants
+    public static final double AMP_SIDE_LIMELIGHT_HEIGHT_TO_SPEAKER = 0;
+    public static final double AMP_SIDE_LIMELIGHT_HEIGHT_TO_AMP = 0;
+    public static final double AMP_SIDE_LIMELIGHT_HEIGHT_TO_SOURCE = 0;
+
+    //Shooter Side Limelight height constants
+    public static final double SHOOTER_SIDE_LIMELIGHT_HEIGHT_TO_SPEAKER = Units.inchesToMeters(38.225);
+    public static final double SHOOTER_SIDE_LIMELIGHT_HEIGHT_TO_AMP = 0;
+    public static final double SHOOTER_SIDE_LIMELIGHT_HEIGHT_TO_SOURCE = 0;
+
+    //Amp Side Apriltag offset constants
+    public static final double AMP_SIDE_APRILTAG_DRIVE_OFFSET = 0;
+    public static final double AMP_SIDE_APRILTAG_STRAFE_OFFSET = 0;
+    public static final double AMP_SIDE_APRILTAG_ROTATE_OFFSET = 0;
+
+    //Shooter Side Apriltag offset constants
+    public static final double SHOOTER_SIDE_APRILTAG_DRIVE_OFFSET = 0;
+    public static final double SHOOTER_SIDE_APRILTAG_STRAFE_OFFSET = 0;
+    public static final double SHOOTER_SIDE_APRILTAG_ROTATE_OFFSET = 0;
+
+    //Ready-to-Shoot offset constants
+    public static final double MINIMUM_DISTANCE_FROM_SUBWOOFER = Units.inchesToMeters(33.25);
+    public static final double MAXIMUM_DISTANCE_FROM_SUBWOOFER = Units.inchesToMeters(44);
+    public static final double MINIMUM_DISTANCE_FROM_SPEAKER = Units.inchesToMeters(37.7) + MINIMUM_DISTANCE_FROM_SUBWOOFER; //Adds distance from subwoofer to apriltag 8 and minimum distance from subwoofer
+    public static final double MAXIMUM_DISTANCE_FROM_SPEAKER = Units.inchesToMeters(37.7) + MAXIMUM_DISTANCE_FROM_SUBWOOFER; //Adds distance from subwoofer to apriltag 8 and maximum distance from subwoofer
+    public static final double MINIMUM_ANGLE_OFFSET_FROM_SPEAKER = -27;
+    public static final double MAXIMUM_ANGLE_OFFSET_FROM_SPEAKER = 27;
+    
+    //Limelight name constants
+    public static final String AMP_SIDE_LIMELIGHT_NAME = "limelight-amp";
+    public static final String SHOOTER_SIDE_LIMELIGHT_NAME = "limelight-shooter";
+  }
+
 }

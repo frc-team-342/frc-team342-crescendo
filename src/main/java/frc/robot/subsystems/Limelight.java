@@ -17,7 +17,6 @@ public class Limelight extends SubsystemBase {
     public Limelight(String limelightName){
 
         this.limelightName = limelightName;
-
     }
 
     public double calculateHorizontalDistanceToSpeaker(String limelightName){
