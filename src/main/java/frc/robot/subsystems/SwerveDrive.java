@@ -87,7 +87,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_LEFT[0],
       DriveConstants.BACK_LEFT[1],
       DriveConstants.BL_ENCODER_PORT,
-      false, true,
+      false, false,
       DriveConstants.BACK_LEFT_OFFSET,
       DriveConstants.BL_PID_VALUES);  
       
@@ -95,7 +95,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT[0],
       DriveConstants.BACK_RIGHT[1],
       DriveConstants.BR_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.BACK_RIGHT_OFFSET,
       DriveConstants.BR_PID_VALUES);
 
@@ -292,7 +292,6 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
-    sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
    }  
 
   @Override

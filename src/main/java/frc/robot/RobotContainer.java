@@ -164,7 +164,7 @@ public class RobotContainer {
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);
 
-    timeMove = new TimedDrive(swerve, 5, new ChassisSpeeds(0.3, 0, 0), MAX_DRIVE_SPEED);
+    timeMove = new TimedDrive(swerve, 5, new ChassisSpeeds(0.5, 0, 0), MAX_DRIVE_SPEED);
 
     autoChooser = new SendableChooser<>();
     
@@ -236,6 +236,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return timeMove;
+    return autoChooser.getSelected();
   }
 }

@@ -114,8 +114,8 @@ public static final double LOW_WRIST_POS = 0.9;
     // Offsets
     public static final double FRONT_LEFT_OFFSET = 4.94;
     public static final double FRONT_RIGHT_OFFSET = 5.47;
-    public static final double BACK_LEFT_OFFSET = 5.47;
-    public static final double BACK_RIGHT_OFFSET = 4.22;
+    public static final double BACK_LEFT_OFFSET = 2.64;
+    public static final double BACK_RIGHT_OFFSET = 0.78;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 
@@ -147,7 +147,7 @@ public static final double LOW_WRIST_POS = 0.9;
     public static final double P_VALUE = 0.0001;
     public static final double I_VALUE = 0;
     public static final double D_VALUE = 0;
-public static final double FF_VALUE = 0.5;
+    public static final double FF_VALUE = 0.5;
     
     public static final int CURRENT_LIMIT = 60;
   }
