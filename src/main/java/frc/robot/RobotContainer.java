@@ -13,9 +13,11 @@ import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.RumbleWhenNote;
 import frc.robot.commands.ToggleClimbMode;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
+import static frc.robot.Constants.DriveConstants.MAX_DRIVE_SPEED;
 import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -69,10 +71,15 @@ public class RobotContainer {
 
   private Load load;
   private Outtake outtake;
+  private JoystickButton goToZeroBtn;
+  private JoystickButton rotateToAngleButton;
 
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
+
+  private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
+  private JoystickButton driveDistanceButton;
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
   private JoystickButton softOuttakeBtn;
@@ -91,6 +98,7 @@ public class RobotContainer {
   private Elevator elevator;
 
   private MoveWristPercent moveWristPercent;
+  private TimedDrive timeMove;
   private RumbleWhenNote rumbleWhenNote;
 
   private SendableChooser<Command> autoChooser;
@@ -104,6 +112,13 @@ public class RobotContainer {
     elevator = new Elevator();
     wrist = new Wrist();
     swerve = new SwerveDrive();
+
+    operator = new XboxController(0);
+    driveWithJoystick = new DriveWithJoystick(swerve, operator);
+
+    toggleFieldOrientedBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(operator, XboxController.Button.kX.value);
+    driveDistanceButton = new JoystickButton(operator, XboxController.Button.kY.value);
 
     // Xbox Controllers
     driver = new XboxController(0);
@@ -148,6 +163,8 @@ public class RobotContainer {
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);
+
+    timeMove = new TimedDrive(swerve, 5, new ChassisSpeeds(0.3, 0, 0), MAX_DRIVE_SPEED);
 
     autoChooser = new SendableChooser<>();
     
@@ -219,6 +236,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    return timeMove;
   }
 }

@@ -2,11 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos;
+package frc.robot.commands;
 
-import static frc.robot.Constants.DriveConstants.MAX_DRIVE_SPEED;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveDrive;
@@ -20,39 +17,45 @@ public class TimedDrive extends Command {
 
   private final Timer m_timer = new Timer();
   private SwerveDrive swerve;
-  private PIDController rotateController;
   private double driveTime;
-  private double maxDriveSpeed;
-  private ChassisSpeeds chassisSpeeds;
-  private double startAngle; //Mr. Neal
-
-  public  TimedDrive(SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
+  private double xSpeed;
+  private double ySpeed;
+  private double rotate;
+  
+  public TimedDrive( SwerveDrive swerve, double driveTime, double xSpeed, double ySpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     
       this.swerve = swerve; 
       this.driveTime = driveTime; 
-      this.maxDriveSpeed = maxDriveSpeed;
-      this.chassisSpeeds = chassisSpeed;
-
-      rotateController = new PIDController(0.2,0,0);
+      this.xSpeed = xSpeed;
+      this.ySpeed = ySpeed;
+      this.rotate = rotate;
+    
 
       addRequirements(swerve);
+
+
+
+  
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     m_timer.restart();
-    startAngle = swerve.getHeading();
+    System.out.println("Initializing Timer");
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+
   @Override
   public void execute() {
-    double speed = rotateController.calculate(swerve.getGyro().getAngle(), startAngle);
 
-    //Mr. Neal was here
-    swerve.drive(new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, speed), MAX_DRIVE_SPEED);
+    System.out.println("Timer: " + m_timer.get() + " ");
+    swerve.drive(xSpeed, ySpeed, rotate);
+
   }
 
   // Called once the command ends or is interrupted.

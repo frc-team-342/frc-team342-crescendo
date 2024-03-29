@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.kauailabs.navx.frc.AHRS;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -34,10 +36,6 @@ import frc.robot.commands.RotateToAngle;
 import static frc.robot.Constants.DriveConstants.*;
 
 public class SwerveDrive extends SubsystemBase {
-
-  private double BR_P;
-  private double BR_I;
-  private double BR_D;
 
   private SwerveModule frontLeft;
   private SwerveModule frontRight;
@@ -89,7 +87,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_LEFT[0],
       DriveConstants.BACK_LEFT[1],
       DriveConstants.BL_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.BACK_LEFT_OFFSET,
       DriveConstants.BL_PID_VALUES);  
       
@@ -97,7 +95,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT[0],
       DriveConstants.BACK_RIGHT[1],
       DriveConstants.BR_ENCODER_PORT,
-      false, true,
+      false, false,
       DriveConstants.BACK_RIGHT_OFFSET,
       DriveConstants.BR_PID_VALUES);
 
@@ -294,10 +292,7 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
-    sendableBuilder.addDoubleProperty("Front Left", ()-> frontLeft.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Front Right", ()-> frontRight.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Back Left", ()-> backLeft.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
+    // sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
    }  
 
   @Override

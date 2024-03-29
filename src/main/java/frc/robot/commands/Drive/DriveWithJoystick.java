@@ -34,7 +34,7 @@ public class DriveWithJoystick extends Command {
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter rotateLimiter;
 
-  private ChassisSpeeds chassisSpeeds;
+  public ChassisSpeeds chassisSpeeds;
   private SwerveModuleState[] moduleStates;
   private SwerveDriveKinematics swerveKinematics;
 
