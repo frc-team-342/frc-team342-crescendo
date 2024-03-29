@@ -57,15 +57,19 @@ public class SwerveDrive extends SubsystemBase {
   private BooleanSupplier shouldFlipSupplier;
   private Field2d field;
 
-  SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-  SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+  private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+
+  private Limelight shooterSideLimelight;
 
   private boolean fieldOriented;
   public boolean slowMode;
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive() {
+  public SwerveDrive(Limelight shooterSideLimelight) {
+
+    this.shooterSideLimelight = shooterSideLimelight;
 
     frontLeft = new SwerveModule(
       DriveConstants.FRONT_LEFT[0],
@@ -287,15 +291,19 @@ public class SwerveDrive extends SubsystemBase {
       );
   }
 
+  public void putOffsets(SendableBuilder sendableBuilder) {
+    sendableBuilder.addDoubleProperty("Front Left", ()-> frontLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Front Right", ()-> frontRight.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Back Left", ()-> backLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
+  }
+
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
-    sendableBuilder.addDoubleProperty("Front Left", ()-> frontLeft.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Front Right", ()-> frontRight.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Back Left", ()-> backLeft.getOffsets(), null);
-    sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
+    sendableBuilder.addBooleanProperty("Ready to Shoot?", () -> true, null);
    }  
 
   @Override

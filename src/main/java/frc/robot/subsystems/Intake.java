@@ -106,7 +106,6 @@ public class Intake extends SubsystemBase {
 
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
-    //  sendableBuilder.addBooleanProperty("Note Stuck", () -> isStuck(), null);
      sendableBuilder.addBooleanProperty("Note Detected", () -> !getIntakeSensor(), null);
     }
 }

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Load;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Wrist;
@@ -52,6 +54,7 @@ public class RobotContainer {
   private final JoystickButton xButton;
   
   private SwerveDrive swerve;
+  private Limelight shooterSideLimelight;
   
   private XboxController driver;
   private XboxController operator;
@@ -111,7 +114,8 @@ public class RobotContainer {
     outtake = new Outtake();
     elevator = new Elevator();
     wrist = new Wrist();
-    swerve = new SwerveDrive();
+    shooterSideLimelight = new Limelight(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME);
+    swerve = new SwerveDrive(shooterSideLimelight);
 
     operator = new XboxController(0);
     driveWithJoystick = new DriveWithJoystick(swerve, operator);
