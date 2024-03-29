@@ -20,17 +20,21 @@ public class TimedDrive extends Command {
 
   private final Timer m_timer = new Timer();
   private SwerveDrive swerve;
+  private PIDController rotateController;
   private double driveTime;
   private double maxDriveSpeed;
   private ChassisSpeeds chassisSpeeds;
+  private double startAngle; //Mr. Neal
 
-  public  TimedDrive( SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
+  public  TimedDrive(SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     
       this.swerve = swerve; 
       this.driveTime = driveTime; 
       this.maxDriveSpeed = maxDriveSpeed;
       this.chassisSpeeds = chassisSpeed;
+
+      rotateController = new PIDController(0.2,0,0);
 
       addRequirements(swerve);
   }
@@ -39,13 +43,16 @@ public class TimedDrive extends Command {
   @Override
   public void initialize() {
     m_timer.restart();
+    startAngle = swerve.getHeading();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-
   @Override
   public void execute() {
-    swerve.drive(chassisSpeeds, MAX_DRIVE_SPEED);
+    double speed = rotateController.calculate(swerve.getGyro().getAngle(), startAngle);
+
+    //Mr. Neal was here
+    swerve.drive(new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, speed), MAX_DRIVE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

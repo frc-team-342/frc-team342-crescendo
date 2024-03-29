@@ -82,10 +82,10 @@ public static final double LOW_WRIST_POS = 0.9;
       new Translation2d(-TRACK_WIDTH / 2, -TRACK_WIDTH / 2)
     );
 
-    public static final double[] PID_VALUES = {0.5, 0, 0};
-    // public static final double[] BL_PID_VALUES = {0.5, 0.075, 0};
+    public static final double[] FL_PID_VALUES = {0.5, 0, 0};
+    public static final double[] FR_PID_VALUES = {0.3, 0, 0};
     public static final double[] BL_PID_VALUES = {0.5, 0.01, 0};
-    public static final double[] BR_PID_VALUES = {0.1, 0, 0};
+    public static final double[] BR_PID_VALUES = {0.3, 0, 0};
 
     // Drive Motor IDs
     public static final int FRONT_LEFT_DRIVE_ID = 1;

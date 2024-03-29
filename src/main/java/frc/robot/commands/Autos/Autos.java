@@ -145,7 +145,7 @@ public static Command LeftTwoAuto(SwerveDrive swerve, Outtake outtake, Intake in
 
     new ParallelCommandGroup(
       new RotateToAngle(0, swerve).withTimeout(2), // Rotate toward note while lowering wrist
-      new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),),
+      new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
 
     new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED),
     new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),

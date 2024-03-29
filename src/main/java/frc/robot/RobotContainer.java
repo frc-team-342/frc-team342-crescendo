@@ -13,9 +13,11 @@ import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.RumbleWhenNote;
 import frc.robot.commands.ToggleClimbMode;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
 import edu.wpi.first.wpilibj.XboxController;
 
+import static frc.robot.Constants.DriveConstants.MAX_DRIVE_SPEED;
 import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -96,6 +98,7 @@ public class RobotContainer {
   private Elevator elevator;
 
   private MoveWristPercent moveWristPercent;
+  private TimedDrive timeMove;
   private RumbleWhenNote rumbleWhenNote;
 
   private SendableChooser<Command> autoChooser;
@@ -112,9 +115,6 @@ public class RobotContainer {
 
     operator = new XboxController(0);
     driveWithJoystick = new DriveWithJoystick(swerve, operator);
-
-    timedDriveButton = new JoystickButton(operator,  XboxController.Button.kY.value);
-    rotateToAngleButton = new JoystickButton(operator, XboxController.Button.kB.value);
 
     toggleFieldOrientedBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(operator, XboxController.Button.kX.value);
@@ -163,6 +163,8 @@ public class RobotContainer {
     wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);
+
+    timeMove = new TimedDrive(swerve, 5, new ChassisSpeeds(0.3, 0, 0), MAX_DRIVE_SPEED);
 
     autoChooser = new SendableChooser<>();
     
@@ -234,6 +236,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    return timeMove;
   }
 }
