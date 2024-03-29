@@ -292,6 +292,10 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
+    sendableBuilder.addDoubleProperty("Front Left", ()-> frontLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Front Right", ()-> frontRight.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Back Left", ()-> backLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
    }  
 
   @Override

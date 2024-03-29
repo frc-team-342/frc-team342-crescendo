@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
 
     intakeSensor = new DigitalInput(5);
 
-    velocity = 0.27;
+    velocity = 0.32;
   }
 
 
@@ -69,7 +69,6 @@ public class Intake extends SubsystemBase {
   public Command softOuttake() {
     return runEnd(() -> {
       intake.set(0.05);
-      System.out.println("going");
     }, () -> {intake.set(0);});
   }
 

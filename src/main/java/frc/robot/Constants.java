@@ -112,7 +112,7 @@ public static final double LOW_WRIST_POS = 0.9;
     public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
 
     // Offsets
-    public static final double FRONT_LEFT_OFFSET = 4.94;
+    public static final double FRONT_LEFT_OFFSET = 4.92;
     public static final double FRONT_RIGHT_OFFSET = 5.47;
     public static final double BACK_LEFT_OFFSET = 2.64;
     public static final double BACK_RIGHT_OFFSET = 0.78;
