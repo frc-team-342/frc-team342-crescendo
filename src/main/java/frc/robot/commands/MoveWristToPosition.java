@@ -37,7 +37,7 @@ public class MoveWristToPosition extends Command {
     boolean goingDown = false;
     this.position = position;
 
-    pidController = new PIDController(3,0,0.01);
+    pidController = new PIDController(11,0,0.01);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(wrist);
@@ -73,6 +73,8 @@ public class MoveWristToPosition extends Command {
     else {
       intake.stop();
     }
+
+    if(intake.getIntakeSensor())
 
     SmartDashboard.putNumber("Wrist Speed", speed);
   }

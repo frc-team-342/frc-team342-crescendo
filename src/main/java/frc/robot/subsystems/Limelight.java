@@ -81,22 +81,28 @@ public class Limelight extends SubsystemBase {
         }
 
 
-    public boolean readyToShoot(){
+    public boolean readyToShoot(Intake intake){
         boolean readyToShoot = false;
 
+        if(intake.getIntakeSensor()){
+            // System.out.println("Note sensed");
         if(LimelightHelpers.getTV(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME)){
-            if(LimelightHelpers.getFiducialID(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME) == 8 ){
+            // System.out.println("Target sensed");
+            if(LimelightHelpers.getFiducialID(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME) == 8 || LimelightHelpers.getFiducialID(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME) == 4){
+                // System.out.println("Target 4 or 8");
                 if(LimelightConstants.MINIMUM_DISTANCE_FROM_SPEAKER <= calculateHorizontalDistanceToSpeaker(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME)
                     && LimelightConstants.MAXIMUM_DISTANCE_FROM_SPEAKER >= calculateHorizontalDistanceToSpeaker(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME)){
+                        // System.out.println("Ready to shoot");
                         readyToShoot = true;
                    }
                 }
             }
-            return readyToShoot;
-        };
+        }
+        return readyToShoot;
+    }
 
-    public boolean readyToRumble(){
-        return readyToShoot();
+    public boolean readyToRumble(Intake intake){
+        return readyToShoot(intake);
     }
 } 
 
