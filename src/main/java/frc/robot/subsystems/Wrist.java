@@ -33,7 +33,8 @@ public class Wrist extends SubsystemBase {
   public Wrist() {
 
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
-    
+    wrist.setSmartCurrentLimit(30);
+
     wristController = wrist.getPIDController();
     wristController.setP(0.01);
     wristController.setSmartMotionAllowedClosedLoopError(0.01, 0);

@@ -54,7 +54,7 @@ public class MoveWristToPosition extends Command {
 
     double currPosition = wrist.getthroughBore().getAbsolutePosition();
     double speed = -pidController.calculate(currPosition, position);
-    speed = MathUtil.clamp(speed, -0.8, 0.8);
+    speed = MathUtil.clamp(speed, -1, 1);
     
     goingDown = currPosition < position;
 

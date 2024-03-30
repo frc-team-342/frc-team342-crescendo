@@ -37,7 +37,8 @@ public class Intake extends SubsystemBase {
   
   /** Creates a new Intake. */
   public Intake(){
-    intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);      
+    intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
+    intake.setSmartCurrentLimit(30);
     intake.setIdleMode(IdleMode.kBrake);
 
     intakeSensor = new DigitalInput(5);
