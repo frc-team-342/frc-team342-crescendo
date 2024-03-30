@@ -17,18 +17,14 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-
 import edu.wpi.first.util.sendable.Sendable;
-
-
 
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final CANSparkMax wrist;
   private final SparkPIDController wristController;
   
-    private DutyCycleEncoder throughBore;
-
+  private DutyCycleEncoder throughBore;
 
   public Wrist() {
 

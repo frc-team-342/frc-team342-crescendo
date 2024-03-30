@@ -61,15 +61,13 @@ public class SwerveDrive extends SubsystemBase {
   private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
   private SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
 
-  private Limelight shooterSideLimelight;
-
   private boolean fieldOriented;
   public boolean slowMode;
+  public boolean ninetyLock;
+  public boolean zeroLock;
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(Limelight shooterSideLimelight) {
-
-    this.shooterSideLimelight = shooterSideLimelight;
+  public SwerveDrive() {
 
     frontLeft = new SwerveModule(
       DriveConstants.FRONT_LEFT[0],
@@ -123,6 +121,8 @@ public class SwerveDrive extends SubsystemBase {
 
     fieldOriented = true;
     slowMode = false;
+    ninetyLock = false;
+    zeroLock = false;
 
     field = new Field2d();
 
@@ -204,6 +204,10 @@ public class SwerveDrive extends SubsystemBase {
     return rotate;
   }
 
+  public Command rotateToSpeaker() {
+    return new RotateToAngle(0, this);
+  }
+
   public void stopModules() {
     frontLeft.stop();
     frontRight.stop();
@@ -225,6 +229,22 @@ public class SwerveDrive extends SubsystemBase {
 
   public Command toggleSlowMode() {
     return runEnd(() -> {}, () -> slowMode = !slowMode);
+  }
+
+  public Command toggleNinetyLock() {
+    return runEnd(() -> {
+      ninetyLock = true;
+    }, () -> {
+      ninetyLock = false;
+    });
+  }
+
+  public Command toggleZeroLock() {
+    return runEnd(() -> {
+      zeroLock = true;
+    }, () -> {
+      zeroLock = false;
+    });
   }
 
   public ChassisSpeeds getChassisSpeeds() {

@@ -191,7 +191,7 @@ public static Command RightTwoPieceAuto (SwerveDrive swerve, Outtake outtake, In
   new RotateToAngle(-55, swerve).withTimeout(2),
   new Load(outtake, intake).withTimeout(2),
   new RotateToAngle(-20, swerve).withTimeout(2),
-  new TimedDrive(swerve, 1, new ChassisSpeeds(2.5,0,0), MAX_DRIVE_SPEED));
+  new TimedDrive(swerve, 1.5, new ChassisSpeeds(2.5,0,0), MAX_DRIVE_SPEED));
   }
 
   return Commands.sequence(

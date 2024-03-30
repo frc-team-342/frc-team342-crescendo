@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Wrist;
@@ -54,12 +53,11 @@ public class RobotContainer {
   private final JoystickButton xButton;
   
   private SwerveDrive swerve;
-  private Limelight shooterSideLimelight;
-  
   private XboxController driver;
   private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
+  private ParallelCommandGroup driveAndToggle;
 
   private MoveWristToPosition moveWristDown;
   private MoveWristToPosition moveWristUp;
@@ -86,7 +84,8 @@ public class RobotContainer {
   private JoystickButton wristButton;
   private JoystickButton intakeBtn;
   private JoystickButton softOuttakeBtn;
-  private JoystickButton leftRotateToAmpBtn, rightRotateToAmpBtn;
+  private JoystickButton rotateToAmpBtn;
+  private JoystickButton rotateToSpeakerBtn;
 
   private JoystickButton climbButton;
 
@@ -114,11 +113,10 @@ public class RobotContainer {
     outtake = new Outtake();
     elevator = new Elevator();
     wrist = new Wrist();
-    shooterSideLimelight = new Limelight(LimelightConstants.SHOOTER_SIDE_LIMELIGHT_NAME);
-    swerve = new SwerveDrive(shooterSideLimelight);
+    swerve = new SwerveDrive();
 
     operator = new XboxController(0);
-    driveWithJoystick = new DriveWithJoystick(swerve, operator);
+    driveWithJoystick = new DriveWithJoystick(swerve, operator, false, false);
 
     toggleFieldOrientedBtn = new JoystickButton(operator, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(operator, XboxController.Button.kX.value);
@@ -140,8 +138,8 @@ public class RobotContainer {
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
     toggleClimbMode = new ToggleClimbMode(wrist, intake, elevator);
 
-    leftRotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    rightRotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    rotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    rotateToSpeakerBtn = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     // Operator assistance Buttons
     wristDownBtn = new POVButton(operator, 180);
@@ -152,8 +150,6 @@ public class RobotContainer {
     // Toggle Buttons
     toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
-    
-    driveWithJoystick = new DriveWithJoystick(swerve, driver);
 
     load = new Load(outtake, intake);
     climb = new Climb(elevator, operator);
@@ -224,8 +220,8 @@ public class RobotContainer {
     wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
     wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
 
-    leftRotateToAmpBtn.whileTrue(swerve.rotateToAmp());
-    rightRotateToAmpBtn.whileTrue(swerve.rotateToAmp());
+    rotateToAmpBtn.whileTrue(new DriveWithJoystick(swerve, driver, false, true));
+    rotateToSpeakerBtn.whileTrue(new DriveWithJoystick(swerve, driver, true, false));
 
     climbButton.whileTrue(toggleClimbMode);
 
