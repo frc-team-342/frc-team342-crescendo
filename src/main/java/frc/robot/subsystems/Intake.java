@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake(){
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
-    intake.setSmartCurrentLimit(40);
+    //intake.setSmartCurrentLimit(60);
     intake.setIdleMode(IdleMode.kBrake);
 
     intakeSensor = new DigitalInput(5);
@@ -59,7 +59,7 @@ public class Intake extends SubsystemBase {
   public Command spinIntake(){
     return runEnd( () -> {
       if(intakeSensor.get()){
-        intake.set(-0.6);
+        intake.set(-0.7);
       }
       else {
         intake.set(0);

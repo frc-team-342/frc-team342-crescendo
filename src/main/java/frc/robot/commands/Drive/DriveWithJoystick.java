@@ -96,6 +96,7 @@ public class DriveWithJoystick extends Command {
     }
 
     if(fieldOriented) {
+      //rotateSpeed = rotateController.calculate(swerve.getGyro().getAngle(), swerve.getLastAngle());
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getGyro().getRotation2d());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);
