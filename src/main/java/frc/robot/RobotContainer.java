@@ -62,7 +62,10 @@ public class RobotContainer {
   private MoveWristToPosition moveWristDown;
   private MoveWristToPosition moveWristUp;
   private MoveWristToPosition moveWristAmp;
-  private SequentialCommandGroup wristDownIntake;
+
+  private ParallelCommandGroup wristDownIntake;
+  private ParallelCommandGroup wristAmpIntake;
+  private ParallelCommandGroup wristUpIntake;
 
   private ToggleClimbMode toggleClimbMode;
 
@@ -160,7 +163,10 @@ public class RobotContainer {
     moveWristAmp = new MoveWristToPosition(wrist, intake, IntakeConstants.AMP_POS);
 
     // Operator Commands
-    wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+    wristDownIntake = new ParallelCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+    wristAmpIntake = new ParallelCommandGroup(moveWristAmp, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+    wristUpIntake = new ParallelCommandGroup(moveWristUp, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);
 
@@ -214,11 +220,11 @@ public class RobotContainer {
     xButton.whileTrue(intake.outtake()); // X
     softOuttakeBtn.whileTrue(intake.softOuttake());
     loadButton.whileTrue(load); // B
-    intakeBtn.whileTrue(intake.spinIntake()); // A
+    intakeBtn.whileTrue(intake.spinIntake()); // Right bumper
     wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
-    wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
-    wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
-    wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
+    wristUpBtn.onTrue(wristUpIntake); // Up on D-Pad
+    wristLeftBtn.onTrue(wristAmpIntake); // Right on D-Pad
+    wristRightBtn.onTrue(wristAmpIntake); // Left on D-Pad
 
     rotateToAmpBtn.whileTrue(new DriveWithJoystick(swerve, driver, false, true));
     rotateToSpeakerBtn.whileTrue(new DriveWithJoystick(swerve, driver, true, false));

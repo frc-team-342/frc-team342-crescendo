@@ -69,12 +69,12 @@ public class MoveWristToPosition extends Command {
   
    if(intake.getIntakeSensor()) {
       intake.hold();
+      System.out.println("Note not detected. Keep intaking");
     }
     else {
       intake.stop();
+      System.out.println("Note detected. Stop");
     }
-
-    if(intake.getIntakeSensor())
 
     SmartDashboard.putNumber("Wrist Speed", speed);
   }
@@ -84,6 +84,13 @@ public class MoveWristToPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     wrist.rotateWrist(0);
+     if(intake.getIntakeSensor()) {
+      intake.hold();
+      System.out.println("Note not detected. Keep intaking");
+    }
+    else {
+      intake.stop();
+      System.out.println("Note detected. Stop");}
   }
 
   // Returns true when the command should end.

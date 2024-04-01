@@ -60,5 +60,6 @@ public class Wrist extends SubsystemBase {
    @Override
     public void initSendable(SendableBuilder sendableBuilder) {
       sendableBuilder.addDoubleProperty("Wrist pos", ()-> throughBore.getAbsolutePosition(), null);
+      sendableBuilder.addDoubleProperty("Wrist Current", () -> wrist.getOutputCurrent(), null);
     }
 }

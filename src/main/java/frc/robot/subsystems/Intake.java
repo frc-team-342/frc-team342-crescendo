@@ -9,6 +9,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -33,17 +35,23 @@ public class Intake extends SubsystemBase {
   
   private DigitalInput intakeSensor;
   private DutyCycleEncoder throughBore;
+  private RelativeEncoder encoder;
+  private SparkPIDController controller;
   private double velocity;
   
   /** Creates a new Intake. */
   public Intake(){
     intake = new CANSparkMax(INTAKE_MOTOR, CANSparkLowLevel.MotorType.kBrushless);
-    intake.setSmartCurrentLimit(30);
+    intake.setSmartCurrentLimit(40);
     intake.setIdleMode(IdleMode.kBrake);
 
     intakeSensor = new DigitalInput(5);
+    encoder = intake.getEncoder();
 
-    velocity = 0.32;
+    controller = intake.getPIDController();
+    controller.setP(0.01);
+    controller.setFF(0.02);
+    velocity = 0.50;
   }
 
 
@@ -51,7 +59,7 @@ public class Intake extends SubsystemBase {
   public Command spinIntake(){
     return runEnd( () -> {
       if(intakeSensor.get()){
-        intake.set(-INTAKE_SPEED);
+        intake.set(-0.6);
       }
       else {
         intake.set(0);
@@ -108,5 +116,6 @@ public class Intake extends SubsystemBase {
   @Override
     public void initSendable(SendableBuilder sendableBuilder) {
      sendableBuilder.addBooleanProperty("Note Detected", () -> !getIntakeSensor(), null);
+     sendableBuilder.addDoubleProperty("Intake RPM", () -> intake.getOutputCurrent(), null);
     }
 }
