@@ -56,6 +56,7 @@ public class SwerveDrive extends SubsystemBase {
   private Supplier<ChassisSpeeds> chassisSpeedSupplier;
   private BooleanSupplier shouldFlipSupplier;
   private Field2d field;
+  private double lastAngle;
 
   private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
@@ -216,7 +217,11 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Command toggleFieldOriented() {
-    return runEnd(()-> {}, () -> fieldOriented = !fieldOriented);
+    return runEnd(()-> {}, () -> {fieldOriented = !fieldOriented; lastAngle = getHeading();});
+  }
+
+  public double getLastAngle(){
+    return lastAngle;
   }
 
   public boolean getFieldOriented() {
@@ -323,6 +328,7 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
+    sendableBuilder.addDoubleProperty("Heading", () -> getHeading(), null);
    }  
 
   @Override

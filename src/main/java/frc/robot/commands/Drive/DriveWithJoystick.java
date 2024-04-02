@@ -32,6 +32,8 @@ public class DriveWithJoystick extends Command {
   private boolean fieldOriented;
   private boolean zeroMode;
   private boolean ninetyMode;
+  private boolean cameFromZero;
+  private boolean cameFromNinety;
   private PIDController rotateController;
 
   private SlewRateLimiter xLimiter;
@@ -41,6 +43,8 @@ public class DriveWithJoystick extends Command {
   public ChassisSpeeds chassisSpeeds;
   private SwerveModuleState[] moduleStates;
   private SwerveDriveKinematics swerveKinematics;
+  private static double lastHeading;
+  int count = 0;
 
   /** Creates a new DriveWithJoystick. */
   public DriveWithJoystick(SwerveDrive swerve, XboxController joy, boolean zeroMode, boolean ninetyMode) {
@@ -86,17 +90,39 @@ public class DriveWithJoystick extends Command {
     ySpeed = yLimiter.calculate(ySpeed) * maxDriveSpeed;
     rotateSpeed = rotateLimiter.calculate(rotateSpeed) * DriveConstants.MAX_ROTATE_SPEED;
 
-    if(zeroMode) {
-      rotateSpeed = rotateController.calculate(swerve.getGyro().getAngle(), 0);
+
+    if(cameFromNinety){
+      lastHeading = swerve.shouldFlip() ? 90 : -90;
+      cameFromNinety = false;
+    }else if(cameFromZero){
+      lastHeading = 0;
+      cameFromZero = false;
+    }
+    else if((Math.abs(rotateSpeed) > 0.15)){
+      
+        lastHeading = swerve.getGyro().getAngle();
+  
     }
 
-    if(ninetyMode) {
-      double rotation = swerve.shouldFlip() ? 90 : -90;
-      rotateSpeed = rotateController.calculate(swerve.getGyro().getAngle(), rotation);
+    if(zeroMode) {
+      rotateSpeed = rotateController.calculate(swerve.getHeading(), 0);
+      lastHeading = 0;
+      cameFromZero = true;
     }
+    else if(ninetyMode) {
+      double rotation = swerve.shouldFlip() ? 90 : -90;
+      rotateSpeed = rotateController.calculate(swerve.getHeading(), rotation);
+      lastHeading = rotation;
+      cameFromNinety = true;
+    }
+    else {
+      //rotateSpeed += rotateController.calculate(swerve.getGyro().getAngle(), lastHeading);//trouble between -180 to 180
+    
+    }
+
+   
 
     if(fieldOriented) {
-      //rotateSpeed = rotateController.calculate(swerve.getGyro().getAngle(), swerve.getLastAngle());
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getGyro().getRotation2d());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotateSpeed);

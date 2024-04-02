@@ -63,6 +63,8 @@ public class RobotContainer {
   private MoveWristToPosition moveWristUp;
   private MoveWristToPosition moveWristAmp;
 
+  private SequentialCommandGroup reintake;
+
   private ParallelCommandGroup wristDownIntake;
   private ParallelCommandGroup wristAmpIntake;
   private ParallelCommandGroup wristUpIntake;
@@ -84,7 +86,6 @@ public class RobotContainer {
   private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
   private JoystickButton driveDistanceButton;
-  private JoystickButton wristButton;
   private JoystickButton intakeBtn;
   private JoystickButton softOuttakeBtn;
   private JoystickButton rotateToAmpBtn;
@@ -131,7 +132,6 @@ public class RobotContainer {
 
     // Intake Buttons
     xButton = new JoystickButton(operator, XboxController.Button.kX.value);
-    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -163,9 +163,9 @@ public class RobotContainer {
     moveWristAmp = new MoveWristToPosition(wrist, intake, IntakeConstants.AMP_POS);
 
     // Operator Commands
-    wristDownIntake = new ParallelCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
-    wristAmpIntake = new ParallelCommandGroup(moveWristAmp, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
-    wristUpIntake = new ParallelCommandGroup(moveWristUp, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+    wristDownIntake = new ParallelCommandGroup(moveWristDown, new SequentialCommandGroup(intake.spinIntake().until(() -> !intake.getIntakeSensor()), intake.spinIntake().withTimeout(0.2)));
+    wristAmpIntake = new ParallelCommandGroup(moveWristAmp, new SequentialCommandGroup(intake.spinIntake().until(() -> !intake.getIntakeSensor()), intake.spinIntake().withTimeout(0.2)));
+    wristUpIntake = new ParallelCommandGroup(moveWristUp, new SequentialCommandGroup(intake.spinIntake().until(() -> !intake.getIntakeSensor()), intake.spinIntake().withTimeout(0.2)));
 
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);

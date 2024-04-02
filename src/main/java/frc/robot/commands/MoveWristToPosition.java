@@ -66,17 +66,6 @@ public class MoveWristToPosition extends Command {
     else if (!goingDown && currPosition > HIGH_WRIST_POS){
       wrist.rotateWrist(speed);
     }
-  
-   /* 
-   if(intake.getIntakeSensor()) {
-      intake.hold();
-      System.out.println("Note not detected. Keep intaking");
-    }
-    else {
-      intake.stop();
-      System.out.println("Note detected. Stop");
-    }
-    */
 
     SmartDashboard.putNumber("Wrist Speed", speed);
   }
