@@ -84,7 +84,7 @@ public static final double LOW_WRIST_POS = 0.9;
 
     public static final double[] FL_PID_VALUES = {0.5, 0, 0};
     public static final double[] FR_PID_VALUES = {0.3, 0, 0};
-    public static final double[] BL_PID_VALUES = {0.5, 0.01, 0};
+    public static final double[] BL_PID_VALUES = {0.5, 0, 0};
     public static final double[] BR_PID_VALUES = {0.3, 0, 0};
 
     // Drive Motor IDs
@@ -147,7 +147,7 @@ public static final double LOW_WRIST_POS = 0.9;
     public static final double P_VALUE = 0.0001;
     public static final double I_VALUE = 0;
     public static final double D_VALUE = 0;
-public static final double FF_VALUE = 0.5;
+    public static final double FF_VALUE = 0.5;
     
     public static final int CURRENT_LIMIT = 60;
   }

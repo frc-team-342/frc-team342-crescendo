@@ -9,7 +9,9 @@ import static frc.robot.Constants.IntakeConstants.LOW_WRIST_POS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
@@ -35,7 +37,7 @@ public class MoveWristToPosition extends Command {
     boolean goingDown = false;
     this.position = position;
 
-    pidController = new PIDController(3,0,0.01);
+    pidController = new PIDController(11,0,0.01);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(wrist);
@@ -58,20 +60,11 @@ public class MoveWristToPosition extends Command {
 
     //to make sure the wrist is not going too low becase if it did the wrist being too low could cause a motor heatup
     if (goingDown && currPosition < LOW_WRIST_POS) { 
-      wrist.rotateWrist(speed); // should be neg
-      System.out.println("Going down");
+      wrist.rotateWrist(speed);
     }
     //makes sure that its not going too far back to avoid hitting the back
     else if (!goingDown && currPosition > HIGH_WRIST_POS){
-      wrist.rotateWrist(speed); // should be pos
-      System.out.println("Going up");
-    }
-  
-   if(intake.getIntakeSensor()) {
-      intake.hold();
-    }
-    else {
-      intake.stop();
+      wrist.rotateWrist(speed);
     }
 
     SmartDashboard.putNumber("Wrist Speed", speed);
@@ -82,6 +75,14 @@ public class MoveWristToPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     wrist.rotateWrist(0);
+     if(intake.getIntakeSensor()) {
+      intake.hold();
+      // System.out.println("Note not detected. Keep intaking");
+    }
+    else {
+      intake.stop();
+      // System.out.println("Note detected. Stop");
+    }
   }
 
   // Returns true when the command should end.

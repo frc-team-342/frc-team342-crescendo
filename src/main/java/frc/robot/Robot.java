@@ -98,26 +98,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    /* 
-    double rot = 3;
-    double gr = 12.75;
-    double input = rot/gr*42;
-
-    if (xxcontroller.getXButtonPressed()){
-     pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);
-    }
-    else {
-      pid_elevator.setReference(0, CANSparkMax.ControlType.kPosition);
-    }
-
-*/
-
-//pid_elevator.setReference(input, CANSparkMax.ControlType.kPosition);
-//gear ratio 12.76 : 1
-
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

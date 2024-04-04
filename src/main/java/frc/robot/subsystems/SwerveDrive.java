@@ -56,13 +56,16 @@ public class SwerveDrive extends SubsystemBase {
   private Supplier<ChassisSpeeds> chassisSpeedSupplier;
   private BooleanSupplier shouldFlipSupplier;
   private Field2d field;
+  private double lastAngle;
 
-  SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-  SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
+  private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private SlewRateLimiter rotateLimiter = new SlewRateLimiter(3);
 
   private boolean fieldOriented;
   public boolean slowMode;
+  public boolean ninetyLock;
+  public boolean zeroLock;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -87,7 +90,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_LEFT[0],
       DriveConstants.BACK_LEFT[1],
       DriveConstants.BL_ENCODER_PORT,
-      false, true,
+      false, false,
       DriveConstants.BACK_LEFT_OFFSET,
       DriveConstants.BL_PID_VALUES);  
       
@@ -95,7 +98,7 @@ public class SwerveDrive extends SubsystemBase {
       DriveConstants.BACK_RIGHT[0],
       DriveConstants.BACK_RIGHT[1],
       DriveConstants.BR_ENCODER_PORT,
-      false, false,
+      false, true,
       DriveConstants.BACK_RIGHT_OFFSET,
       DriveConstants.BR_PID_VALUES);
 
@@ -119,6 +122,8 @@ public class SwerveDrive extends SubsystemBase {
 
     fieldOriented = true;
     slowMode = false;
+    ninetyLock = false;
+    zeroLock = false;
 
     field = new Field2d();
 
@@ -200,6 +205,10 @@ public class SwerveDrive extends SubsystemBase {
     return rotate;
   }
 
+  public Command rotateToSpeaker() {
+    return new RotateToAngle(0, this);
+  }
+
   public void stopModules() {
     frontLeft.stop();
     frontRight.stop();
@@ -208,7 +217,11 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Command toggleFieldOriented() {
-    return runEnd(()-> {}, () -> fieldOriented = !fieldOriented);
+    return runEnd(()-> {}, () -> {fieldOriented = !fieldOriented; lastAngle = getHeading();});
+  }
+
+  public double getLastAngle(){
+    return lastAngle;
   }
 
   public boolean getFieldOriented() {
@@ -221,6 +234,22 @@ public class SwerveDrive extends SubsystemBase {
 
   public Command toggleSlowMode() {
     return runEnd(() -> {}, () -> slowMode = !slowMode);
+  }
+
+  public Command toggleNinetyLock() {
+    return runEnd(() -> {
+      ninetyLock = true;
+    }, () -> {
+      ninetyLock = false;
+    });
+  }
+
+  public Command toggleZeroLock() {
+    return runEnd(() -> {
+      zeroLock = true;
+    }, () -> {
+      zeroLock = false;
+    });
   }
 
   public ChassisSpeeds getChassisSpeeds() {
@@ -287,12 +316,19 @@ public class SwerveDrive extends SubsystemBase {
       );
   }
 
+  public void putOffsets(SendableBuilder sendableBuilder) {
+    sendableBuilder.addDoubleProperty("Front Left", ()-> frontLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Front Right", ()-> frontRight.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Back Left", ()-> backLeft.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
+  }
+
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {
     sendableBuilder.setSmartDashboardType("Swerve drive");
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
-    // sendableBuilder.addDoubleProperty("Back Right", ()-> backRight.getOffsets(), null);
+    sendableBuilder.addDoubleProperty("Heading", () -> getHeading(), null);
    }  
 
   @Override

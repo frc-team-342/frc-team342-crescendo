@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -29,6 +30,11 @@ public class DriveWithJoystick extends Command {
 
   private Supplier<Double> rotateSpeed;
   private boolean fieldOriented;
+  private boolean zeroMode;
+  private boolean ninetyMode;
+  private boolean cameFromZero;
+  private boolean cameFromNinety;
+  private PIDController rotateController;
 
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
@@ -37,19 +43,27 @@ public class DriveWithJoystick extends Command {
   public ChassisSpeeds chassisSpeeds;
   private SwerveModuleState[] moduleStates;
   private SwerveDriveKinematics swerveKinematics;
+  private static double lastHeading;
+  int count = 0;
 
   /** Creates a new DriveWithJoystick. */
-  public DriveWithJoystick(SwerveDrive swerve, XboxController joy) {
+  public DriveWithJoystick(SwerveDrive swerve, XboxController joy, boolean zeroMode, boolean ninetyMode) {
 
     this.swerve = swerve;
     this.joy = joy;
 
     fieldOriented = swerve.getFieldOriented();
+    this.zeroMode = zeroMode;
+    this.ninetyMode = ninetyMode;
+    
+    rotateController = new PIDController(0.1, 0, 0);
+    rotateController.setTolerance(1);
 
     xLimiter = new SlewRateLimiter(3);
     yLimiter = new SlewRateLimiter(3);
     rotateLimiter = new SlewRateLimiter(3);
 
+    rotateController.reset();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);  
   }
@@ -75,6 +89,38 @@ public class DriveWithJoystick extends Command {
     xSpeed = xLimiter.calculate(xSpeed) * maxDriveSpeed;
     ySpeed = yLimiter.calculate(ySpeed) * maxDriveSpeed;
     rotateSpeed = rotateLimiter.calculate(rotateSpeed) * DriveConstants.MAX_ROTATE_SPEED;
+
+
+    if(cameFromNinety){
+      lastHeading = swerve.shouldFlip() ? 90 : -90;
+      cameFromNinety = false;
+    }else if(cameFromZero){
+      lastHeading = 0;
+      cameFromZero = false;
+    }
+    else if((Math.abs(rotateSpeed) > 0.15)){
+      
+        lastHeading = swerve.getGyro().getAngle();
+  
+    }
+
+    if(zeroMode) {
+      rotateSpeed = rotateController.calculate(swerve.getHeading(), 0);
+      lastHeading = 0;
+      cameFromZero = true;
+    }
+    else if(ninetyMode) {
+      double rotation = swerve.shouldFlip() ? 90 : -90;
+      rotateSpeed = rotateController.calculate(swerve.getHeading(), rotation);
+      lastHeading = rotation;
+      cameFromNinety = true;
+    }
+    else {
+      //rotateSpeed += rotateController.calculate(swerve.getGyro().getAngle(), lastHeading);//trouble between -180 to 180
+    
+    }
+
+   
 
     if(fieldOriented) {
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotateSpeed, swerve.getGyro().getRotation2d());

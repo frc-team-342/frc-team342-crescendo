@@ -13,6 +13,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class TimedDrive extends Command {
@@ -34,7 +35,8 @@ public class TimedDrive extends Command {
       this.maxDriveSpeed = maxDriveSpeed;
       this.chassisSpeeds = chassisSpeed;
 
-      rotateController = new PIDController(0.2,0,0);
+      rotateController = new PIDController(0.1,0,0);
+      rotateController.setTolerance(1);
 
       addRequirements(swerve);
   }
@@ -44,6 +46,7 @@ public class TimedDrive extends Command {
   public void initialize() {
     m_timer.restart();
     startAngle = swerve.getHeading();
+    SmartDashboard.putNumber("Start Angle", startAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,7 +54,6 @@ public class TimedDrive extends Command {
   public void execute() {
     double speed = rotateController.calculate(swerve.getGyro().getAngle(), startAngle);
 
-    //Mr. Neal was here
     swerve.drive(new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, speed), MAX_DRIVE_SPEED);
   }
 
