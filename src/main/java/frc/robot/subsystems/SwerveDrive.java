@@ -135,6 +135,13 @@ public class SwerveDrive extends SubsystemBase {
     }).start();
     
     configureAutoBuilder();
+  } 
+
+  public void resetFrontLeft() {
+    frontLeft.resetEncoder();
+    frontRight.resetEncoder();
+    backLeft.resetEncoder();
+    backRight.resetEncoder();
   }
 
   public AHRS getGyro() {
@@ -329,6 +336,7 @@ public class SwerveDrive extends SubsystemBase {
     sendableBuilder.addBooleanProperty("Field Oriented", () -> fieldOriented, null);
     sendableBuilder.addBooleanProperty("Slow mode", () -> getSlowMode(), null);
     sendableBuilder.addDoubleProperty("Heading", () -> getHeading(), null);
+    putOffsets(sendableBuilder);
    }  
 
   @Override

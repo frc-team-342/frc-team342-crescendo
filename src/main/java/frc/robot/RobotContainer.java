@@ -16,6 +16,7 @@ import frc.robot.commands.ToggleClimbMode;
 import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Autos.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import static frc.robot.Constants.DriveConstants.MAX_DRIVE_SPEED;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -90,6 +92,8 @@ public class RobotContainer {
   private JoystickButton softOuttakeBtn;
   private JoystickButton rotateToAmpBtn;
   private JoystickButton rotateToSpeakerBtn;
+  private JoystickButton resetEncoderBtn;
+  private Command resetEncoder;
 
   private JoystickButton climbButton;
 
@@ -154,6 +158,9 @@ public class RobotContainer {
     toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
 
+    resetEncoderBtn = new JoystickButton(driver, XboxController.Button.kY.value);
+    resetEncoder = new RunCommand(() -> {swerve.resetFrontLeft();}, swerve);
+
     load = new Load(outtake, intake);
     climb = new Climb(elevator, operator);
 
@@ -188,6 +195,7 @@ public class RobotContainer {
     autoChooser.addOption("Left Side Two Piece", Autos.LeftTwoAuto(swerve, outtake, intake, wrist));
 
     autoChooser.addOption("Do nothing", Autos.DoNothing());
+    autoChooser.addOption("Leave No Shoot", Autos.Leave(swerve));
     autoChooser.setDefaultOption("Default", Autos.DoNothing());
    
    SmartDashboard.putData(swerve);
@@ -196,6 +204,7 @@ public class RobotContainer {
    SmartDashboard.putData(wrist);
    SmartDashboard.putData(elevator);
    SmartDashboard.putData(autoChooser);
+  //  swerve.putOffsets(null);
     configureBindings();
   } 
 
@@ -233,6 +242,7 @@ public class RobotContainer {
 
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    resetEncoderBtn.whileTrue(resetEncoder);
   }
 
   /**

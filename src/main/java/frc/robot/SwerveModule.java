@@ -43,6 +43,7 @@ public class SwerveModule extends SubsystemBase {
 
     driveMotor.setSmartCurrentLimit(60);
     rotateMotor.setSmartCurrentLimit(60);
+    
 
     this.encoderOffset = encoderOffset;
 

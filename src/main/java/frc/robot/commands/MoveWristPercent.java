@@ -36,10 +36,11 @@ private Wrist wrist;
   @Override
   public void execute() {
     double currPosition = wrist.getthroughBore().getAbsolutePosition();
-
     double speed = MathUtil.applyDeadband(joy.getLeftY(), 0.15);
+
+        wrist.rotateWrist(speed);
     if(currPosition > IntakeConstants.HIGH_WRIST_POS && currPosition < IntakeConstants.LOW_WRIST_POS){
-      wrist.rotateWrist(speed);
+     
     }
   }
 

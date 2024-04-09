@@ -42,7 +42,7 @@ public static class IntakeConstants {
   public static final double WRIST_SPEED = 0.7;
 
 public static final double LOW_WRIST_POS = 0.9;
-  public static final double HIGH_WRIST_POS = 0.311;
+  public static final double HIGH_WRIST_POS = 0.30;
   public static final double AMP_POS = 0.531; // In memoriam of 0.342 :(
 
   public static final double MAX_DISTANCE = 83;
@@ -82,10 +82,10 @@ public static final double LOW_WRIST_POS = 0.9;
       new Translation2d(-TRACK_WIDTH / 2, -TRACK_WIDTH / 2)
     );
 
-    public static final double[] FL_PID_VALUES = {0.5, 0, 0};
-    public static final double[] FR_PID_VALUES = {0.3, 0, 0};
-    public static final double[] BL_PID_VALUES = {0.5, 0, 0};
-    public static final double[] BR_PID_VALUES = {0.3, 0, 0};
+    public static final double[] FL_PID_VALUES = {0.12, 0.01, 0.009};
+    public static final double[] FR_PID_VALUES = {0.14, 0.001, 0.005};
+    public static final double[] BL_PID_VALUES = {0.16, 0.001, 0.005};
+    public static final double[] BR_PID_VALUES = {0.12, 0.001, 0.005};
 
     // Drive Motor IDs
     public static final int FRONT_LEFT_DRIVE_ID = 1;
@@ -112,10 +112,10 @@ public static final double LOW_WRIST_POS = 0.9;
     public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
 
     // Offsets
-    public static final double FRONT_LEFT_OFFSET = 4.92;
-    public static final double FRONT_RIGHT_OFFSET = 5.47;
+    public static final double FRONT_LEFT_OFFSET = 1.88;
+    public static final double FRONT_RIGHT_OFFSET = 5.49;
     public static final double BACK_LEFT_OFFSET = 2.64;
-    public static final double BACK_RIGHT_OFFSET = 0.78;
+    public static final double BACK_RIGHT_OFFSET = 0.79;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 

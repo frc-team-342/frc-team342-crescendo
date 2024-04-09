@@ -82,7 +82,7 @@ public static Command LeftAuto(SwerveDrive swerve, Outtake outtake, Intake intak
 
   ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1,0,0);
 
-  if(swerve.shouldFlip()){  
+  if(swerve.shouldFlip()){ // Red Left
     return Commands.sequence(
     new TimedDrive(swerve, 1, chassisSpeeds , MAX_DRIVE_SPEED),
     new RotateToAngle(50.3, swerve).withTimeout(2),
@@ -98,18 +98,18 @@ public static Command LeftAuto(SwerveDrive swerve, Outtake outtake, Intake intak
     );
   }
 
-  return Commands.sequence(
-  new TimedDrive(swerve, 1, chassisSpeeds , MAX_DRIVE_SPEED),
-  new RotateToAngle(-50.3, swerve).withTimeout(2),
-  
-  //Shoots preloaded note 
-  new Load(outtake, intake).withTimeout(2),
+  return Commands.sequence( // Blue Left
+    new TimedDrive(swerve, 1, chassisSpeeds , MAX_DRIVE_SPEED),
+    new RotateToAngle(-50.3, swerve).withTimeout(2),
+    
+    //Shoots preloaded note 
+    new Load(outtake, intake).withTimeout(2),
 
-  //Rotates the robot back to straight 
-  new RotateToAngle(0, swerve).withTimeout(2),
-  new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
-  new TimedDrive(swerve, 2, chassisSpeeds, MAX_DRIVE_SPEED),
-  new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS)
+    //Rotates the robot back to straight 
+    new RotateToAngle(0, swerve).withTimeout(2),
+    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS),
+    new TimedDrive(swerve, 2, chassisSpeeds, MAX_DRIVE_SPEED),
+    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS)
   );
 }
 
@@ -150,7 +150,7 @@ public static Command LeftTwoAuto(SwerveDrive swerve, Outtake outtake, Intake in
     new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED), // Drive to note and pick it up
     new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS), // Prep note for shooting
 
-    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED), // Leave
+    new TimedDrive(swerve, 1.5, chassisSpeeds, MAX_DRIVE_SPEED), // Leave
     new TimedDrive(swerve, 0.2, new ChassisSpeeds(0, -1,0), MAX_DRIVE_SPEED), // Shuffle right
     new TimedDrive(swerve, 2, negChassisSpeeds, MAX_DRIVE_SPEED), // Drive back to speaker
 
@@ -166,32 +166,24 @@ public static Command RightTwoPieceAuto (SwerveDrive swerve, Outtake outtake, In
   
   if(swerve.shouldFlip()) {
    return Commands.sequence(
+    new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED), // Drive out
+    new RotateToAngle(-43, swerve).withTimeout(1.5), // Rotate to shoot position
+    new Load(outtake, intake).withTimeout(1.5), // Shoot
 
-  //drive out
-  new TimedDrive(swerve,1,chassisSpeeds,MAX_DRIVE_SPEED),
+    new ParallelCommandGroup( // Rotate toward note while lowering wrist
+      new RotateToAngle(0, swerve).withTimeout(2),
+      new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
 
-  //line up shot
-  new RotateToAngle(-55, swerve).withTimeout(2),
- 
-  //shoot
-  new Load(outtake, intake).withTimeout(1.5),
+    new TimedDrive(swerve, 1, chassisSpeeds, MAX_DRIVE_SPEED), // Drive to note and pick it up
+    new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS), // Prep note for shooting
 
-  //rotate and lower wrist
-  new ParallelCommandGroup(
-    new RotateToAngle(12, swerve), 
-    new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
-  
-  //drive to note
-  new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
-  
-  new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
+    new TimedDrive(swerve, 1.5, chassisSpeeds, MAX_DRIVE_SPEED), // Leave
+    new TimedDrive(swerve, 0.2, new ChassisSpeeds(0, 1,0), MAX_DRIVE_SPEED), // Shuffle right
+    new TimedDrive(swerve, 2, negChassisSpeeds, MAX_DRIVE_SPEED), // Drive back to speaker
 
-  new TimedDrive(swerve,1.3, negChassisSpeeds,MAX_DRIVE_SPEED),
-
-  new RotateToAngle(-55, swerve).withTimeout(2),
-  new Load(outtake, intake).withTimeout(2),
-  new RotateToAngle(-20, swerve).withTimeout(2),
-  new TimedDrive(swerve, 1.5, new ChassisSpeeds(2.5,0,0), MAX_DRIVE_SPEED));
+    new RotateToAngle(-43, swerve).withTimeout(2), // Rotate to shoot position
+    new Load(outtake, intake).withTimeout(2) // Shoot
+);
   }
 
   return Commands.sequence(
@@ -207,11 +199,11 @@ public static Command RightTwoPieceAuto (SwerveDrive swerve, Outtake outtake, In
 
   //rotate and lower wrist
   new ParallelCommandGroup(
-    new RotateToAngle(-12, swerve), 
+    new RotateToAngle(-9, swerve), 
     new MoveWristToPosition(wrist, intake, LOW_WRIST_POS)),
   
   //drive to note
-  new TimedDrive(swerve, 1.3, chassisSpeeds, MAX_DRIVE_SPEED),
+  new TimedDrive(swerve, 1.5, chassisSpeeds, MAX_DRIVE_SPEED),
   
   new MoveWristToPosition(wrist, intake, HIGH_WRIST_POS),
 
@@ -262,6 +254,12 @@ public static Command AmpAuto(SwerveDrive swerve){
     swerve.rotateToAmp(),
     new TimedDrive(swerve, 0.5, new ChassisSpeeds(1,0,0), MAX_DRIVE_SPEED)
   );
+}
+
+public static Command Leave(SwerveDrive swerve) {
+  return Commands.sequence(
+  new TimedDrive(swerve, 10, new ChassisSpeeds(0,0,0), MAX_DRIVE_SPEED), // Hacky delay
+  new TimedDrive(swerve, 2.5, new ChassisSpeeds(1,0,0), MAX_DRIVE_SPEED));
 }
 
   private Autos() {

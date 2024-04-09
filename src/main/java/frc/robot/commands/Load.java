@@ -30,7 +30,7 @@ public class Load extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    outtake.shootVelocity(DESIRED_SPEED);
+    outtake.shootPercent(1);
      
     if(outtake.isUpToSpeed(DESIRED_SPEED)){
       intake.feedShooter();
