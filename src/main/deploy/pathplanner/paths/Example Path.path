@@ -12,7 +12,7 @@
         "y": 6.742640213053113
       },
       "isLocked": false,
-      "linkedName": "N1"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -39,14 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }

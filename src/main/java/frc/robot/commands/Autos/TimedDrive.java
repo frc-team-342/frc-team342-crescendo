@@ -13,6 +13,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class TimedDrive extends Command {
@@ -20,13 +21,13 @@ public class TimedDrive extends Command {
 
   private final Timer m_timer = new Timer();
   private SwerveDrive swerve;
+  private PIDController rotateController;
   private double driveTime;
   private double maxDriveSpeed;
   private ChassisSpeeds chassisSpeeds;
+  private double startAngle; //Mr. Neal
 
-  private PIDController rotateController;
-  
-  public  TimedDrive( SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
+  public  TimedDrive(SwerveDrive swerve, double driveTime, ChassisSpeeds chassisSpeed, double maxDriveSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     
       this.swerve = swerve; 
@@ -34,10 +35,8 @@ public class TimedDrive extends Command {
       this.maxDriveSpeed = maxDriveSpeed;
       this.chassisSpeeds = chassisSpeed;
 
-      rotateController = new PIDController(0.045, 0.001, 0);
-
-      rotateController.reset();
-      rotateController.setTolerance(2);
+      rotateController = new PIDController(0.1,0,0);
+      rotateController.setTolerance(1);
 
       addRequirements(swerve);
   }
@@ -45,15 +44,17 @@ public class TimedDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    rotateController.enableContinuousInput(0, 360);
     m_timer.restart();
+    startAngle = swerve.getHeading();
+    SmartDashboard.putNumber("Start Angle", startAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-
   @Override
   public void execute() {
-    swerve.drive(chassisSpeeds, MAX_DRIVE_SPEED);
+    double speed = rotateController.calculate(swerve.getGyro().getAngle(), startAngle);
+
+    swerve.drive(new ChassisSpeeds(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, speed), MAX_DRIVE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

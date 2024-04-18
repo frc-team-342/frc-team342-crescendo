@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Load;
@@ -13,9 +14,12 @@ import frc.robot.commands.MoveWristToPosition;
 import frc.robot.commands.RumbleWhenNote;
 import frc.robot.commands.ToggleClimbMode;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.TimedDrive;
 import frc.robot.commands.Drive.DriveWithJoystick;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
+import static frc.robot.Constants.DriveConstants.MAX_DRIVE_SPEED;
 import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -25,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -50,16 +55,21 @@ public class RobotContainer {
   private final JoystickButton xButton;
   
   private SwerveDrive swerve;
-  
   private XboxController driver;
   private XboxController operator;
 
   private DriveWithJoystick driveWithJoystick;
+  private ParallelCommandGroup driveAndToggle;
 
   private MoveWristToPosition moveWristDown;
   private MoveWristToPosition moveWristUp;
   private MoveWristToPosition moveWristAmp;
-  private SequentialCommandGroup wristDownIntake;
+
+  private SequentialCommandGroup reintake;
+
+  private ParallelCommandGroup wristDownIntake;
+  private ParallelCommandGroup wristAmpIntake;
+  private ParallelCommandGroup wristUpIntake;
 
   private ToggleClimbMode toggleClimbMode;
 
@@ -69,14 +79,21 @@ public class RobotContainer {
 
   private Load load;
   private Outtake outtake;
+  private JoystickButton goToZeroBtn;
+  private JoystickButton rotateToAngleButton;
 
   private JoystickButton toggleFieldOrientedBtn;
   private JoystickButton toggleSlowModeBtn;
+
+  private JoystickButton timedDriveButton;
   private JoystickButton outtakeNoteBtn;
-  private JoystickButton wristButton;
+  private JoystickButton driveDistanceButton;
   private JoystickButton intakeBtn;
   private JoystickButton softOuttakeBtn;
-  private JoystickButton leftRotateToAmpBtn, rightRotateToAmpBtn;
+  private JoystickButton rotateToAmpBtn;
+  private JoystickButton rotateToSpeakerBtn;
+  private JoystickButton resetEncoderBtn;
+  private Command resetEncoder;
 
   private JoystickButton climbButton;
 
@@ -91,6 +108,7 @@ public class RobotContainer {
   private Elevator elevator;
 
   private MoveWristPercent moveWristPercent;
+  private TimedDrive timeMove;
   private RumbleWhenNote rumbleWhenNote;
 
   private SendableChooser<Command> autoChooser;
@@ -105,13 +123,19 @@ public class RobotContainer {
     wrist = new Wrist();
     swerve = new SwerveDrive();
 
+    operator = new XboxController(0);
+    driveWithJoystick = new DriveWithJoystick(swerve, operator, false, false);
+
+    toggleFieldOrientedBtn = new JoystickButton(operator, XboxController.Button.kA.value);
+    toggleSlowModeBtn = new JoystickButton(operator, XboxController.Button.kX.value);
+    driveDistanceButton = new JoystickButton(operator, XboxController.Button.kY.value);
+
     // Xbox Controllers
     driver = new XboxController(0);
     operator = new XboxController(1);
 
     // Intake Buttons
     xButton = new JoystickButton(operator, XboxController.Button.kX.value);
-    wristButton = new JoystickButton(operator, XboxController.Button.kY.value);
     loadButton = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
     intakeBtn = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
     outtakeNoteBtn = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -121,8 +145,8 @@ public class RobotContainer {
     climbButton = new JoystickButton(operator, XboxController.Button.kStart.value);
     toggleClimbMode = new ToggleClimbMode(wrist, intake, elevator);
 
-    leftRotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    rightRotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    rotateToAmpBtn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    rotateToSpeakerBtn = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     // Operator assistance Buttons
     wristDownBtn = new POVButton(operator, 180);
@@ -133,8 +157,9 @@ public class RobotContainer {
     // Toggle Buttons
     toggleFieldOrientedBtn = new JoystickButton(driver, XboxController.Button.kA.value);
     toggleSlowModeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
-    
-    driveWithJoystick = new DriveWithJoystick(swerve, driver);
+
+    resetEncoderBtn = new JoystickButton(driver, XboxController.Button.kY.value);
+    resetEncoder = new RunCommand(() -> {swerve.resetFrontLeft();}, swerve);
 
     load = new Load(outtake, intake);
     climb = new Climb(elevator, operator);
@@ -145,9 +170,14 @@ public class RobotContainer {
     moveWristAmp = new MoveWristToPosition(wrist, intake, IntakeConstants.AMP_POS);
 
     // Operator Commands
-    wristDownIntake = new SequentialCommandGroup(moveWristDown, intake.spinIntake().until(() -> !intake.getIntakeSensor()));
+    wristDownIntake = new ParallelCommandGroup(moveWristDown, new SequentialCommandGroup(intake.spinIntake().until(() -> !intake.getIntakeSensor()), intake.spinIntake().withTimeout(0.2)));
+    wristAmpIntake = new ParallelCommandGroup(moveWristAmp, new SequentialCommandGroup(intake.spinIntake().until(() -> !intake.getIntakeSensor()), intake.spinIntake().withTimeout(0.2)));
+    wristUpIntake = new ParallelCommandGroup(moveWristUp, new SequentialCommandGroup(intake.spinIntake().until(() -> !intake.getIntakeSensor()), intake.spinIntake().withTimeout(0.2)));
+
     moveWristPercent = new MoveWristPercent(operator, wrist);
     rumbleWhenNote = new RumbleWhenNote(intake, operator);
+
+    timeMove = new TimedDrive(swerve, 5, new ChassisSpeeds(0.5, 0, 0), MAX_DRIVE_SPEED);
 
     autoChooser = new SendableChooser<>();
     
@@ -165,6 +195,7 @@ public class RobotContainer {
     autoChooser.addOption("Left Side Two Piece", Autos.LeftTwoAuto(swerve, outtake, intake, wrist));
 
     autoChooser.addOption("Do nothing", Autos.DoNothing());
+    autoChooser.addOption("Leave No Shoot", Autos.Leave(swerve));
     autoChooser.setDefaultOption("Default", Autos.DoNothing());
    
    SmartDashboard.putData(swerve);
@@ -173,6 +204,7 @@ public class RobotContainer {
    SmartDashboard.putData(wrist);
    SmartDashboard.putData(elevator);
    SmartDashboard.putData(autoChooser);
+  //  swerve.putOffsets(null);
     configureBindings();
   } 
 
@@ -197,19 +229,20 @@ public class RobotContainer {
     xButton.whileTrue(intake.outtake()); // X
     softOuttakeBtn.whileTrue(intake.softOuttake());
     loadButton.whileTrue(load); // B
-    intakeBtn.whileTrue(intake.spinIntake()); // A
+    intakeBtn.whileTrue(intake.spinIntake()); // Right bumper
     wristDownBtn.onTrue(wristDownIntake); // Down on D-Pad
-    wristUpBtn.onTrue(moveWristUp); // Up on D-Pad
-    wristLeftBtn.onTrue(moveWristAmp); // Right on D-Pad
-    wristRightBtn.onTrue(moveWristAmp); // Left on D-Pad
+    wristUpBtn.onTrue(wristUpIntake); // Up on D-Pad
+    wristLeftBtn.onTrue(wristAmpIntake); // Right on D-Pad
+    wristRightBtn.onTrue(wristAmpIntake); // Left on D-Pad
 
-    leftRotateToAmpBtn.whileTrue(swerve.rotateToAmp());
-    rightRotateToAmpBtn.whileTrue(swerve.rotateToAmp());
+    rotateToAmpBtn.whileTrue(new DriveWithJoystick(swerve, driver, false, true));
+    rotateToSpeakerBtn.whileTrue(new DriveWithJoystick(swerve, driver, true, false));
 
     climbButton.whileTrue(toggleClimbMode);
 
     toggleFieldOrientedBtn.whileTrue(swerve.toggleFieldOriented());
     toggleSlowModeBtn.whileTrue(swerve.toggleSlowMode());
+    resetEncoderBtn.whileTrue(resetEncoder);
   }
 
   /**

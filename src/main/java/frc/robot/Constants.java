@@ -42,7 +42,7 @@ public static class IntakeConstants {
   public static final double WRIST_SPEED = 0.7;
 
 public static final double LOW_WRIST_POS = 0.9;
-  public static final double HIGH_WRIST_POS = 0.311;
+  public static final double HIGH_WRIST_POS = 0.30;
   public static final double AMP_POS = 0.531; // In memoriam of 0.342 :(
 
   public static final double MAX_DISTANCE = 83;
@@ -82,10 +82,10 @@ public static final double LOW_WRIST_POS = 0.9;
       new Translation2d(-TRACK_WIDTH / 2, -TRACK_WIDTH / 2)
     );
 
-    public static final double[] PID_VALUES = {0.5, 0, 0};
-    // public static final double[] BL_PID_VALUES = {0.5, 0.075, 0};
-    public static final double[] BL_PID_VALUES = {0.5, 0.01, 0};
-    public static final double[] BR_PID_VALUES = {0.1, 0, 0};
+    public static final double[] FL_PID_VALUES = {0.12, 0.01, 0.009};
+    public static final double[] FR_PID_VALUES = {0.14, 0.001, 0.005};
+    public static final double[] BL_PID_VALUES = {0.16, 0.001, 0.005};
+    public static final double[] BR_PID_VALUES = {0.12, 0.001, 0.005};
 
     // Drive Motor IDs
     public static final int FRONT_LEFT_DRIVE_ID = 1;
@@ -112,10 +112,10 @@ public static final double LOW_WRIST_POS = 0.9;
     public static final int[] BACK_RIGHT = {BACK_RIGHT_DRIVE_ID, BACK_RIGHT_ROTATE_ID};
 
     // Offsets
-    public static final double FRONT_LEFT_OFFSET = 4.94;
-    public static final double FRONT_RIGHT_OFFSET = 5.47;
-    public static final double BACK_LEFT_OFFSET = 5.47;
-    public static final double BACK_RIGHT_OFFSET = 4.22;
+    public static final double FRONT_LEFT_OFFSET = 1.88;
+    public static final double FRONT_RIGHT_OFFSET = 5.49;
+    public static final double BACK_LEFT_OFFSET = 2.64;
+    public static final double BACK_RIGHT_OFFSET = 0.79;
 
     public static final HolonomicPathFollowerConfig PATH_CONFIG = new HolonomicPathFollowerConfig(
       new PIDConstants(5, 0, 0), 
@@ -124,6 +124,15 @@ public static final double LOW_WRIST_POS = 0.9;
       (TRACK_WIDTH / 2), 
       new ReplanningConfig()
       );
+
+      //PID Constants for the DriveDistance Rotation PID Controller
+      public static final double DRIVE_DISTANCE_ROTATE_CONTROLLER_P = 0.3;
+      public static final double DRIVE_DISTANCE_ROTATE_CONTROLLER_I = 0.0;
+      public static final double DRIVE_DISTANCE_ROTATE_CONTROLLER_D = 0.0;
+
+      //Tolerance for the DriveDistance Command
+      public static final double DISTANCE_TOLERANCE = Units.metersToFeet(0.3);
+
   }
 
   public static class OperatorConstants {
@@ -138,8 +147,44 @@ public static final double LOW_WRIST_POS = 0.9;
     public static final double P_VALUE = 0.0001;
     public static final double I_VALUE = 0;
     public static final double D_VALUE = 0;
-public static final double FF_VALUE = 0.5;
+    public static final double FF_VALUE = 0.5;
     
     public static final int CURRENT_LIMIT = 60;
   }
+
+  public static class LimelightConstants{
+
+    //Amp Side Limelight height constants
+    public static final double AMP_SIDE_LIMELIGHT_HEIGHT_TO_SPEAKER = 0;
+    public static final double AMP_SIDE_LIMELIGHT_HEIGHT_TO_AMP = 0;
+    public static final double AMP_SIDE_LIMELIGHT_HEIGHT_TO_SOURCE = 0;
+
+    //Shooter Side Limelight height constants
+    public static final double SHOOTER_SIDE_LIMELIGHT_HEIGHT_TO_SPEAKER = Units.inchesToMeters(38.225);
+    public static final double SHOOTER_SIDE_LIMELIGHT_HEIGHT_TO_AMP = 0;
+    public static final double SHOOTER_SIDE_LIMELIGHT_HEIGHT_TO_SOURCE = 0;
+
+    //Amp Side Apriltag offset constants
+    public static final double AMP_SIDE_APRILTAG_DRIVE_OFFSET = 0;
+    public static final double AMP_SIDE_APRILTAG_STRAFE_OFFSET = 0;
+    public static final double AMP_SIDE_APRILTAG_ROTATE_OFFSET = 0;
+
+    //Shooter Side Apriltag offset constants
+    public static final double SHOOTER_SIDE_APRILTAG_DRIVE_OFFSET = 0;
+    public static final double SHOOTER_SIDE_APRILTAG_STRAFE_OFFSET = 0;
+    public static final double SHOOTER_SIDE_APRILTAG_ROTATE_OFFSET = 0;
+
+    //Ready-to-Shoot offset constants
+    public static final double MINIMUM_DISTANCE_FROM_SUBWOOFER = Units.inchesToMeters(33.25);
+    public static final double MAXIMUM_DISTANCE_FROM_SUBWOOFER = Units.inchesToMeters(44);
+    public static final double MINIMUM_DISTANCE_FROM_SPEAKER = Units.inchesToMeters(37.7) + MINIMUM_DISTANCE_FROM_SUBWOOFER; //Adds distance from subwoofer to apriltag 8 and minimum distance from subwoofer
+    public static final double MAXIMUM_DISTANCE_FROM_SPEAKER = Units.inchesToMeters(37.7) + MAXIMUM_DISTANCE_FROM_SUBWOOFER; //Adds distance from subwoofer to apriltag 8 and maximum distance from subwoofer
+    public static final double MINIMUM_ANGLE_OFFSET_FROM_SPEAKER = -27;
+    public static final double MAXIMUM_ANGLE_OFFSET_FROM_SPEAKER = 27;
+    
+    //Limelight name constants
+    public static final String AMP_SIDE_LIMELIGHT_NAME = "limelight-amp";
+    public static final String SHOOTER_SIDE_LIMELIGHT_NAME = "limelight-shooter";
+  }
+
 }

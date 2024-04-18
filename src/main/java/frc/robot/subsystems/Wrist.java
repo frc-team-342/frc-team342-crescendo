@@ -17,23 +17,20 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-
 import edu.wpi.first.util.sendable.Sendable;
-
-
 
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final CANSparkMax wrist;
   private final SparkPIDController wristController;
   
-    private DutyCycleEncoder throughBore;
-
+  private DutyCycleEncoder throughBore;
 
   public Wrist() {
 
     wrist = new CANSparkMax(WRIST_ID, CANSparkLowLevel.MotorType.kBrushless);
-    
+    wrist.setSmartCurrentLimit(30);
+
     wristController = wrist.getPIDController();
     wristController.setP(0.01);
     wristController.setSmartMotionAllowedClosedLoopError(0.01, 0);
@@ -62,6 +59,7 @@ public class Wrist extends SubsystemBase {
 
    @Override
     public void initSendable(SendableBuilder sendableBuilder) {
-      // sendableBuilder.addBooleanProperty("Wrist sensor connected", () -> throughBore.isConnected(), null);
+      sendableBuilder.addDoubleProperty("Wrist pos", ()-> throughBore.getAbsolutePosition(), null);
+      sendableBuilder.addDoubleProperty("Wrist Current", () -> wrist.getOutputCurrent(), null);
     }
 }

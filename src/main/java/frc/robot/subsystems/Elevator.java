@@ -77,9 +77,7 @@ public class Elevator extends SubsystemBase {
 
 
   @Override
-  public void periodic() {
-    // SmartDashboard.putNumber("Elevator Position",elevator_left.getEncoder().getPosition());
-  }
+  public void periodic() {}
 
   @Override
   public void initSendable(SendableBuilder sendableBuilder) {

@@ -5,15 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.SwerveDrive;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics.SwerveDriveWheelStates;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 
 import static frc.robot.Constants.DriveConstants.*;
@@ -32,7 +26,7 @@ public class RotateToAngle extends Command {
 
   /** Creates a new RotateToAngle. */
 
-  public RotateToAngle( double angle, SwerveDrive swerve) {
+  public RotateToAngle(double angle, SwerveDrive swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     this.angle = angle;
@@ -42,7 +36,7 @@ public class RotateToAngle extends Command {
     rotateController = new PIDController(
      
       0.045,
-      0.001, 
+      0.005, 
       0.000
     );
     
